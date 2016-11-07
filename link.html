@@ -1,8 +1,11 @@
 <div id='demo'>
-	hello <span lk-bind='name'>
-  </span>, your age is <span lk-bind='age'></span>
-	<br>
-	<input type="text" lk-model='name'>
+  hello <span lk-bind='name'>
+  </span>, your age is <span lk-bind='age'></span> you city is <span lk-bind='address.location.area'></span>
+  <br> name: <input type="text" lk-model='name'>
+  <br> age:
+  <input type="text" lk-model='age'>
+  <br> are:
+  <input type="text" lk-model='address.location.area'>
 </div>
 
 <script src="link.js">
