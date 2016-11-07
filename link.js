@@ -6,7 +6,7 @@ function link(el, model) {
   var ar = []; // store linker item
 
 
-  function scan(el) {
+  function scanDOMElement(el) {
     if (el.hasAttribute && el.hasAttribute('lk-bind')) {
       ar.push({ el: el, prop: el.getAttribute('lk-bind'), action: 'bind' });
     }
@@ -25,7 +25,7 @@ function link(el, model) {
       node = childNodes[i];
       if (node.nodeType === 1) {
         // element
-        scan(childNodes[i]);
+        scanDOMElement(childNodes[i]);
       }
     }
   }
@@ -45,13 +45,13 @@ function link(el, model) {
     }
   }
 
-  function loadRender(model, propStack) {
+  function render(model, propStack) {
     for (var prop in model) {
       if (model.hasOwnProperty(prop)) {
         if (isObject(model[prop])) {
           propStack = propStack || [];
           propStack.push(prop);
-          loadRender(model[prop], propStack)
+          render(model[prop], propStack)
           propStack.pop();
         } else {
           if (propStack && propStack.length > 0) {
@@ -103,7 +103,7 @@ function link(el, model) {
     return obj && typeof obj === 'object';
   }
 
-  function transformModel(model, propStack) {
+  function watchModel(model, propStack) {
     // object
     for (var prop in model) {
       if (model.hasOwnProperty(prop)) {
@@ -112,7 +112,7 @@ function link(el, model) {
           //recursive
           propStack = propStack || [];
           propStack.push(prop);
-          transformModel(value, propStack);
+          watchModel(value, propStack);
           propStack.pop();
         }
         else {
@@ -142,10 +142,10 @@ function link(el, model) {
     }
   }
 
-  (function linkTogether() {
-    scan(el);
-    transformModel(model);
-    loadRender(model); // first time render model to view 
+  (function linkDOMWithModel() {
+    scanDOMElement(el);
+    watchModel(model);
+    render(model); // first time render model to view 
   })();
 
 };
