@@ -5,16 +5,42 @@ function link(el, model) {
   if (!el || !model) return;
   var ar = []; // store binding info item
 
+  //regex 
+  var interpolationRegex = /\{\{(\w+)\}\}/g;
+
+  function getInterpolationExpr(text) {
+    if (text) {
+      var ar, resultArr = [];
+      while (ar = interpolationRegex.exec(text)) {
+        resultArr.push(ar[1]);
+      }
+    }
+
+    return resultArr;
+  }
+
+  function execInterpolationExpr(binding) {
+    var len = binding.prop.length,
+      prop,
+      el = binding.el,
+      tpl = binding.tpl;
+    while (len--) {
+      prop = binding.prop[len];
+      tpl = tpl.replace(new RegExp('{{' + prop + '}}', 'g'), getPropValue(prop));
+    }
+
+    return tpl;
+  }
+
 
   function scanDOMElement(el) {
-
-
+    var prop;
     if (el.hasAttribute && el.hasAttribute('v-bind')) {
       ar.push({ el: el, prop: el.getAttribute('v-bind'), action: 'bind' });
     }
     else if (el.hasAttribute && el.hasAttribute('v-model')) {
       ar.push({ el: el, prop: el.getAttribute('v-model'), action: 'model' });
-      var prop = el.getAttribute('v-model');
+      prop = el.getAttribute('v-model');
       if (el.nodeName === 'INPUT') {
         if (el.type === 'text') {
           el.addEventListener('keyup', function () {
@@ -34,6 +60,13 @@ function link(el, model) {
           setPropValue(prop, el.value || '');
         }, false);
       }
+    }
+    else if (el.nodeType === 3) {
+      // text node , and it may contains several interpolation expr
+      prop = getInterpolationExpr(el.textContent)
+      if (prop.length > 0) {
+        ar.push({ el: el, prop: prop, action: 'bind', tpl: el.textContent });
+      }
 
     }
     var childNodes = el.childNodes,
@@ -41,24 +74,29 @@ function link(el, model) {
       node;
     for (var i = 0; i < len; i++) {
       node = childNodes[i];
-      if (node.nodeType === 1) {
-        // element
-        scanDOMElement(childNodes[i]);
-      }
+      // if (node.nodeType === 1) {
+      //   // element
+      //   scanDOMElement(childNodes[i]);
+      // }
+      scanDOMElement(childNodes[i]);
     }
   }
 
-  function propChangeRender(prop, newVal) {
+  function renderPropToView(prop, value) {
     var c = ar.length, item;
     while (c--) {
       item = ar[c];
       if (item.prop === prop) {
         if (item.action === 'bind') {
-          item.el.innerText = newVal;
+          item.el.innerText = value;
         }
         else if (item.action === 'model') {
-          item.el.value = newVal;
+          item.el.value = value;
         }
+      }
+      else if (item.prop instanceof Array && item.prop.length) {
+        // text node for interpolation expr , in this case , value is ignored 
+        item.el.textContent = execInterpolationExpr(item);
       }
     }
   }
@@ -76,10 +114,10 @@ function link(el, model) {
             var dotProp = propStack.slice(0);
             dotProp.push(prop);
             dotProp = dotProp.join('.');
-            propChangeRender(dotProp, getPropValue(dotProp));
+            renderPropToView(dotProp, getPropValue(dotProp));
           }
           else {
-            propChangeRender(prop, getPropValue(prop));
+            renderPropToView(prop, getPropValue(prop));
           }
         }
       }
@@ -146,10 +184,10 @@ function link(el, model) {
                   val = newVal;
 
                   if (propStack && propStack.length > 0) {
-                    propChangeRender(propStack.join('.') + '.' + prop, newVal);
+                    renderPropToView(propStack.join('.') + '.' + prop, newVal);
                   }
                   else {
-                    propChangeRender(prop, newVal);
+                    renderPropToView(prop, newVal);
                   }
 
                 }
