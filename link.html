@@ -1,11 +1,20 @@
 <div id='demo'>
-  hello <span lk-bind='name'>
-  </span>, your age is <span lk-bind='age'></span> you city is <span lk-bind='address.location.area'></span>
-  <br> name: <input type="text" lk-model='name'>
+  hello <span v-bind='name'>
+  </span>, your age is <span v-bind='age'></span> you city is <span v-bind='address.location.area'></span> {{name}}
+  <br> name: <input type="text" v-model='name'>
   <br> age:
-  <input type="text" lk-model='age'>
+  <input type="text" v-model='age'>
   <br> are:
-  <input type="text" lk-model='address.location.area'>
+  <input type="text" v-model='address.location.area'>
+  <br>
+  <select v-model='age'>
+    <option value="1">1</option>
+     <option value="2">2</option>
+      <option value="3">3</option>
+  </select>
+
+  <!--<br> name pick: <input type="radio" name="name" value="leon" lk-change='name'> leon
+  <input type="radio" name="name" value="wgc" v-model='name'> wgc-->
 </div>
 
 <script src="link.js">

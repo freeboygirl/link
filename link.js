@@ -3,20 +3,38 @@ var model = { name: 'leon', age: 18, address: { city: 'sh', location: { area: 'm
 
 function link(el, model) {
   if (!el || !model) return;
-  var ar = []; // store linker item
+  var ar = []; // store binding info item
 
 
   function scanDOMElement(el) {
-    if (el.hasAttribute && el.hasAttribute('lk-bind')) {
-      ar.push({ el: el, prop: el.getAttribute('lk-bind'), action: 'bind' });
+
+
+    if (el.hasAttribute && el.hasAttribute('v-bind')) {
+      ar.push({ el: el, prop: el.getAttribute('v-bind'), action: 'bind' });
     }
-    else if (el.hasAttribute && el.hasAttribute('lk-model')) {
-      ar.push({ el: el, prop: el.getAttribute('lk-model'), action: 'model' });
-      var prop = el.getAttribute('lk-model');
-      el.addEventListener('keyup', function () {
-        // model[prop] = el.value || '';
-        setPropValue(prop, el.value || '');
-      }, false);
+    else if (el.hasAttribute && el.hasAttribute('v-model')) {
+      ar.push({ el: el, prop: el.getAttribute('v-model'), action: 'model' });
+      var prop = el.getAttribute('v-model');
+      if (el.nodeName === 'INPUT') {
+        if (el.type === 'text') {
+          el.addEventListener('keyup', function () {
+            setPropValue(prop, el.value || '');
+          }, false);
+        }
+        else if (el.type === 'radio') {
+          //TODO: handler radio
+          el.addEventListener('change', function () {
+            setPropValue(prop, el.value || '');
+          }, false);
+        }
+
+      }
+      else if (el.nodeName === 'SELECT') {
+        el.addEventListener('change', function () {
+          setPropValue(prop, el.value || '');
+        }, false);
+      }
+
     }
     var childNodes = el.childNodes,
       len = childNodes.length,
@@ -30,7 +48,7 @@ function link(el, model) {
     }
   }
 
-  function propChangeHandler(prop, newVal) {
+  function propChangeRender(prop, newVal) {
     var c = ar.length, item;
     while (c--) {
       item = ar[c];
@@ -58,10 +76,10 @@ function link(el, model) {
             var dotProp = propStack.slice(0);
             dotProp.push(prop);
             dotProp = dotProp.join('.');
-            propChangeHandler(dotProp, getPropValue(dotProp));
+            propChangeRender(dotProp, getPropValue(dotProp));
           }
           else {
-            propChangeHandler(prop, getPropValue(prop));
+            propChangeRender(prop, getPropValue(prop));
           }
         }
       }
@@ -94,6 +112,7 @@ function link(el, model) {
         val = val[prop[i]]
         if (i === len - 2) {
           val[prop[len - 1]] = value;
+          return;
         }
       }
     }
@@ -127,10 +146,10 @@ function link(el, model) {
                   val = newVal;
 
                   if (propStack && propStack.length > 0) {
-                    propChangeHandler(propStack.join('.') + '.' + prop, newVal);
+                    propChangeRender(propStack.join('.') + '.' + prop, newVal);
                   }
                   else {
-                    propChangeHandler(prop, newVal);
+                    propChangeRender(prop, newVal);
                   }
 
                 }
