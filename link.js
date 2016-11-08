@@ -2,12 +2,13 @@ var testData = { name: 'leon', age: 18, address: { city: 'sh', location: { area:
 
 
 function link(el, data) {
-  if (!el || !data) return;
-  var model = data;
-  var ar = []; // store binding info item
-
-  //regex 
-  var interpolationRegex = /\{\{(\w+)\}\}/g;
+  'use strict';
+  if (!el || !data) throw Error('el and data are required!');
+  var model = data,
+    bindings = [], // store bindings
+    watchMap = Object.create(null), // stores watch prop & watchfn mapping 
+    //regex 
+    interpolationRegex = /\{\{(\w+)\}\}/g;
 
   function getInterpolationExpr(text) {
     if (text) {
@@ -37,10 +38,10 @@ function link(el, data) {
   function scanDOMElement(el) {
     var prop;
     if (el.hasAttribute && el.hasAttribute('v-bind')) {
-      ar.push({ el: el, prop: el.getAttribute('v-bind'), action: 'bind' });
+      bindings.push({ el: el, prop: el.getAttribute('v-bind'), action: 'bind' });
     }
     else if (el.hasAttribute && el.hasAttribute('v-model')) {
-      ar.push({ el: el, prop: el.getAttribute('v-model'), action: 'model' });
+      bindings.push({ el: el, prop: el.getAttribute('v-model'), action: 'model' });
       prop = el.getAttribute('v-model');
       if (el.nodeName === 'INPUT') {
         if (el.type === 'text') {
@@ -66,7 +67,7 @@ function link(el, data) {
       // text node , and it may contains several interpolation expr
       prop = getInterpolationExpr(el.textContent)
       if (prop.length > 0) {
-        ar.push({ el: el, prop: prop, action: 'bind', tpl: el.textContent });
+        bindings.push({ el: el, prop: prop, action: 'bind', tpl: el.textContent });
       }
 
     }
@@ -83,25 +84,6 @@ function link(el, data) {
     }
   }
 
-  function renderPropToView(prop, value) {
-    var c = ar.length, item;
-    while (c--) {
-      item = ar[c];
-      if (item.prop === prop) {
-        if (item.action === 'bind') {
-          item.el.innerText = value;
-        }
-        else if (item.action === 'model') {
-          item.el.value = value;
-        }
-      }
-      else if (item.prop instanceof Array && item.prop.length) {
-        // text node for interpolation expr , in this case , value is ignored 
-        item.el.textContent = execInterpolationExpr(item);
-      }
-    }
-  }
-
   function render(model, propStack) {
     for (var prop in model) {
       if (model.hasOwnProperty(prop)) {
@@ -111,15 +93,13 @@ function link(el, data) {
           render(model[prop], propStack)
           propStack.pop();
         } else {
+          var watch = prop;
           if (propStack && propStack.length > 0) {
-            var dotProp = propStack.slice(0);
-            dotProp.push(prop);
-            dotProp = dotProp.join('.');
-            renderPropToView(dotProp, getPropValue(dotProp));
+            watch = propStack.slice(0);
+            watch.push(prop);
+            watch = watch.join('.');
           }
-          else {
-            renderPropToView(prop, getPropValue(prop));
-          }
+          applyWatchFn(watchMap[watch]);
         }
       }
     }
@@ -157,17 +137,39 @@ function link(el, data) {
     }
   }
 
+  function propRenderBuilder(binding) {
+    //return ui render fn
+    return function () {
+      if (binding.action === 'bind' && !(binding.prop instanceof Array)) {
+        binding.el.innerText = getPropValue(binding.prop);
+      }
+      else if (binding.action === 'model') {
+        binding.el.value = getPropValue(binding.prop);
+      }
+      else if (binding.prop instanceof Array) {
+        // text node for interpolation expr 
+        binding.el.textContent = execInterpolationExpr(binding);
+      }
+    }
+  }
+
   function isObject(obj) {
     return obj && typeof obj === 'object';
   }
 
+  function applyWatchFn(watchFn) {
+    var len = watchFn.length;
+    while (len--) {
+      watchFn[len].apply();
+    }
+  }
+
   function watchModel(model, propStack) {
-    // object
+    //object
     for (var prop in model) {
       if (model.hasOwnProperty(prop)) {
         var value = model[prop];
         if (isObject(value)) {
-          //recursive
           propStack = propStack || [];
           propStack.push(prop);
           watchModel(value, propStack);
@@ -175,22 +177,42 @@ function link(el, data) {
         }
         else {
           (function (prop, value, propStack) {
-            var val = value, prop = prop, propStack = propStack;
+            if (propStack) {
+              propStack.push(prop);
+            }
+            else {
+              propStack = [prop];
+            }
+
+            var watchProp = propStack.join('.'),
+              watchFn = [];
+
+            // look up binding and prop map.
+            var c = bindings.length, binding;
+            while (c--) {
+              binding = bindings[c];
+              if (binding.prop === watchProp
+                || (binding.prop instanceof Array && binding.prop.indexOf(prop) > -1)) {
+                watchFn.push(propRenderBuilder(binding));
+              }
+            }
+            binding = null;
+            propStack.length = 0;
+            propStack = null;
+
+            // store a mapping between watch prop and watch fn
+            if (!watchMap[watchProp]) {
+              watchMap[watchProp] = watchFn;
+            }
+
             Object.defineProperty(model, prop, {
               get: function () {
-                return val;
+                return value;
               },
               set: function (newVal) {
-                if (newVal !== val) {
-                  val = newVal;
-
-                  if (propStack && propStack.length > 0) {
-                    renderPropToView(propStack.join('.') + '.' + prop, newVal);
-                  }
-                  else {
-                    renderPropToView(prop, newVal);
-                  }
-
+                if (newVal !== value) {
+                  value = newVal;
+                  applyWatchFn(watchFn);
                 }
               }
             })
