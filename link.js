@@ -76,32 +76,7 @@ function link(el, data) {
       node;
     for (var i = 0; i < len; i++) {
       node = childNodes[i];
-      // if (node.nodeType === 1) {
-      //   // element
-      //   scanDOMElement(childNodes[i]);
-      // }
       scanDOMElement(childNodes[i]);
-    }
-  }
-
-  function render(model, propStack) {
-    for (var prop in model) {
-      if (model.hasOwnProperty(prop)) {
-        if (isObject(model[prop])) {
-          propStack = propStack || [];
-          propStack.push(prop);
-          render(model[prop], propStack)
-          propStack.pop();
-        } else {
-          var watch = prop;
-          if (propStack && propStack.length > 0) {
-            watch = propStack.slice(0);
-            watch.push(prop);
-            watch = watch.join('.');
-          }
-          applyWatchFn(watchMap[watch]);
-        }
-      }
     }
   }
 
@@ -205,6 +180,8 @@ function link(el, data) {
               watchMap[watchProp] = watchFn;
             }
 
+            applyWatchFn(watchFn);
+
             Object.defineProperty(model, prop, {
               get: function () {
                 return value;
@@ -225,7 +202,6 @@ function link(el, data) {
   function linkDOMWithModel() {
     scanDOMElement(el);
     watchModel(model);
-    render(model);
   };
 
   linkDOMWithModel();
@@ -238,7 +214,6 @@ function link(el, data) {
       scanDOMElement(el);
     }
     watchModel(model);
-    render(model);
   }
 
 
