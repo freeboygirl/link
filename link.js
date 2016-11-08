@@ -1,8 +1,9 @@
-var model = { name: 'leon', age: 18, address: { city: 'sh', location: { area: 'minhang', postcode: '110' } } };
+var testData = { name: 'leon', age: 18, address: { city: 'sh', location: { area: 'minhang', postcode: '110' } } };
 
 
-function link(el, model) {
-  if (!el || !model) return;
+function link(el, data) {
+  if (!el || !data) return;
+  var model = data;
   var ar = []; // store binding info item
 
   //regex 
@@ -199,13 +200,31 @@ function link(el, model) {
     }
   }
 
-  (function linkDOMWithModel() {
+  function linkDOMWithModel() {
     scanDOMElement(el);
     watchModel(model);
-    render(model); // first time render model to view 
-  })();
+    render(model);
+  };
+
+  linkDOMWithModel();
+
+  // public methods
+  function updateModel(newModel, reScan) {
+    model = newModel;
+    if (reScan === true) {
+      ar = [];
+      scanDOMElement(el);
+    }
+    watchModel(model);
+    render(model);
+  }
+
+
+  return {
+    updateModel: updateModel
+  };
 
 };
 
-link(document.getElementById('demo'), model)
+linker = link(document.getElementById('demo'), testData);
 

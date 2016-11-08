@@ -1,2 +1,2 @@
 # link
-a small mvvm js implemention test
+a small mvvm js implemention.
