@@ -7,24 +7,19 @@
 
 <body>
   <div id='demo'>
-    <!--hello
-    </span>, your age is <span v-bind='age'></span> you city is <span v-bind='address.location.area'></span>
-    <br>my name is {{name}}{{age}}age is
-    <br>-->
-    <label>name:</label> <span v-bind='name' ></span>
-    <input type="text" class="form-control" v-model='name'>
-    <label>age:</label><span v-bind='age' ></span>
-    <input type="text" class="form-control" v-model='age'>
-    <label>area:</label><span v-bind='address.location.area'></span>
-    <input type="text" class="form-control" v-model='address.location.area'>
-    <label>age select:</label><span v-bind='age' ></span>
-    <select v-model='age' class="form-control">
+    <label>name:</label> <span x-bind='name'></span>
+    <input type="text" class="form-control" x-model='name'>
+    <label>age:</label><span x-bind='age'></span>
+    <input type="text" class="form-control" x-model='age'>
+    <label>area:</label><span x-bind='address.location.area'></span>
+    <input type="text" class="form-control" x-model='address.location.area'>
+    <label>age select:</label><span x-bind='age'></span>
+    <select x-model='age' class="form-control">
     <option value="1">1</option>
      <option value="2">2</option>
       <option value="3">3</option>
-  </select>
-    <!--<br> name pick: <input type="radio" name="name" value="leon" lk-change='name'> leon
-  <input type="radio" name="name" value="wgc" v-model='name'> wgc-->
+    </select>
+    <label>name and age </label> {{name}}{{age}}
   </div>
 
   <script src="link.js"></script>

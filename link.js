@@ -4,7 +4,7 @@ function link(el, data) {
   if (!el || !data) throw Error('el and data are required!');
   var model = data,
     bindings = [], // store bindings
-    watchMap = Object.create(null), // stores watch prop & watchfn mapping 
+    watchMap = Object.create(null), // stores watch prop & watchfns mapping 
     //regex 
     interpolationRegex = /\{\{(\w+)\}\}/g;
 
@@ -19,45 +19,48 @@ function link(el, data) {
     return resultArr;
   }
 
-  function execInterpolationExpr(binding) {
+  function evalInterpolationExpr(binding) {
     var len = binding.prop.length,
       prop,
       el = binding.el,
       tpl = binding.tpl;
     while (len--) {
       prop = binding.prop[len];
-      tpl = tpl.replace(new RegExp('{{' + prop + '}}', 'g'), getPropValue(prop));
+      tpl = tpl.replace(new RegExp('{{' + prop + '}}', 'g'), getWatchValue(prop));
     }
 
     return tpl;
   }
 
 
-  function scanDOMElement(el) {
-    var prop;
-    if (el.hasAttribute && el.hasAttribute('v-bind')) {
-      bindings.push({ el: el, prop: el.getAttribute('v-bind'), action: 'bind' });
+  function compile(el) {
+    var prop,
+      binding;
+    if (el.hasAttribute && el.hasAttribute('x-bind')) {
+      // bindings.push({ el: el, prop: el.getAttribute('x-bind'), action: 'bind' });
+      binding = { el: el, prop: el.getAttribute('x-bind'), action: 'bind' };
     }
-    else if (el.hasAttribute && el.hasAttribute('v-model')) {
-      bindings.push({ el: el, prop: el.getAttribute('v-model'), action: 'model' });
-      prop = el.getAttribute('v-model');
+    else if (el.hasAttribute && el.hasAttribute('x-model')) {
+      // bindings.push({ el: el, prop: el.getAttribute('x-model'), action: 'model' });
+      binding = { el: el, prop: el.getAttribute('x-model'), action: 'model' };
+      prop = el.getAttribute('x-model');
       if (el.nodeName === 'INPUT') {
         if (el.type === 'text') {
           el.addEventListener('keyup', function () {
-            setPropValue(prop, el.value || '');
+            setWatchValue(prop, el.value || '');
           }, false);
         }
         else if (el.type === 'radio') {
           //TODO: handler radio
           el.addEventListener('change', function () {
-            setPropValue(prop, el.value || '');
+            setWatchValue(prop, el.value || '');
           }, false);
         }
 
       }
       else if (el.nodeName === 'SELECT') {
         el.addEventListener('change', function () {
-          setPropValue(prop, el.value || '');
+          setWatchValue(prop, el.value || '');
         }, false);
       }
     }
@@ -65,63 +68,85 @@ function link(el, data) {
       // text node , and it may contains several interpolation expr
       prop = getInterpolationExpr(el.textContent)
       if (prop.length > 0) {
-        bindings.push({ el: el, prop: prop, action: 'bind', tpl: el.textContent });
+        // bindings.push({ el: el, prop: prop, action: 'bind', tpl: el.textContent });
+        binding = { el: el, prop: prop, action: 'bind', tpl: el.textContent };
       }
 
     }
+    if (binding) {
+      bindings.push(binding);
+      // check binding prop, if string , simple bind or model, if array it's text interpilation
+      if (typeof binding.prop === 'string') {
+        if (!watchMap[binding.prop]) {
+          watchMap[binding.prop] = [];
+        }
+        watchMap[binding.prop].push(watchRender(binding));
+      }
+      else if (typeof binding.prop === 'object' && binding.prop.length) {
+        // every prop watch need notifying the binding change
+        var len = binding.prop.length;
+        while (len--) {
+          if (!watchMap[binding.prop[len]]) {
+            watchMap[binding.prop[len]] = [];
+          }
+          watchMap[binding.prop[len]].push(watchRender(binding));
+        }
+      }
+    }
+
     var childNodes = el.childNodes,
       len = childNodes.length,
       node;
     for (var i = 0; i < len; i++) {
       node = childNodes[i];
-      scanDOMElement(childNodes[i]);
+      compile(childNodes[i]);
     }
   }
 
-  function getPropValue(prop) {
+  function getWatchValue(watch) {
     var val = model;
-    if (prop) {
-      prop = prop.split('.');
-      var len = prop.length;
+    if (watch) {
+      watch = watch.split('.');
+      var len = watch.length;
       for (var i = 0; i < len; i++) {
-        val = val[prop[i]]
+        val = val[watch[i]]
       }
     }
 
     return val;
   }
 
-  function setPropValue(prop, value) {
+  function setWatchValue(watch, value) {
     var val = model;
-    if (prop) {
-      prop = prop.split('.');
-      var len = prop.length;
+    if (watch) {
+      watch = watch.split('.');
+      var len = watch.length;
       if (len === 1) {
-        model[prop] = value;
+        model[watch] = value;
         return;
       }
       for (var i = 0; i < len; i++) {
-        val = val[prop[i]]
+        val = val[watch[i]]
         if (i === len - 2) {
-          val[prop[len - 1]] = value;
+          val[watch[len - 1]] = value;
           return;
         }
       }
     }
   }
 
-  function propRenderBuilder(binding) {
+  function watchRender(binding) {
     //return ui render fn
     return function () {
       if (binding.action === 'bind' && !(binding.prop instanceof Array)) {
-        binding.el.innerText = getPropValue(binding.prop);
+        binding.el.innerText = getWatchValue(binding.prop);
       }
       else if (binding.action === 'model') {
-        binding.el.value = getPropValue(binding.prop);
+        binding.el.value = getWatchValue(binding.prop);
       }
       else if (binding.prop instanceof Array) {
         // text node for interpolation expr 
-        binding.el.textContent = execInterpolationExpr(binding);
+        binding.el.textContent = evalInterpolationExpr(binding);
       }
     }
   }
@@ -130,20 +155,31 @@ function link(el, data) {
     return obj && typeof obj === 'object';
   }
 
-  function applyWatchFn(watchFn) {
-    var len = watchFn.length;
-    while (len--) {
-      watchFn[len].apply();
+  function notify(watch) {
+    var rendersArray = watchMap[watch],
+      len;
+    if (rendersArray) {
+      len = rendersArray.length;
+
+      while (len--) {
+        rendersArray[len].apply();
+      }
+    }
+  }
+
+  function render() {
+    for (var watch in watchMap) {
+      notify(watch);
     }
   }
 
   function watchModel(model, propStack) {
     //object
+    propStack = propStack || [];
     for (var prop in model) {
       if (model.hasOwnProperty(prop)) {
         var value = model[prop];
         if (isObject(value)) {
-          propStack = propStack || [];
           propStack.push(prop);
           watchModel(value, propStack);
           propStack.pop();
@@ -157,28 +193,7 @@ function link(el, data) {
               propStack = [prop];
             }
 
-            var watchProp = propStack.join('.'),
-              watchFn = [];
-
-            // look up binding and prop map.
-            var c = bindings.length, binding;
-            while (c--) {
-              binding = bindings[c];
-              if (binding.prop === watchProp
-                || (binding.prop instanceof Array && binding.prop.indexOf(prop) > -1)) {
-                watchFn.push(propRenderBuilder(binding));
-              }
-            }
-            binding = null;
-            propStack.length = 0;
-            propStack = null;
-
-            // store a mapping between watch prop and watch fn
-            if (!watchMap[watchProp]) {
-              watchMap[watchProp] = watchFn;
-            }
-
-            applyWatchFn(watchFn);
+            var watch = propStack.join('.');
 
             Object.defineProperty(model, prop, {
               get: function () {
@@ -187,7 +202,7 @@ function link(el, data) {
               set: function (newVal) {
                 if (newVal !== value) {
                   value = newVal;
-                  applyWatchFn(watchFn);
+                  notify(watch);
                 }
               }
             })
@@ -197,21 +212,23 @@ function link(el, data) {
     }
   }
 
-  function linkDOMWithModel() {
-    scanDOMElement(el);
+  function bootstrap() {
+    compile(el);
     watchModel(model);
+    render();
   };
 
-  linkDOMWithModel();
+  bootstrap();
 
   // public methods
   function updateModel(newModel, reScan) {
     model = newModel;
     if (reScan === true) {
       ar = [];
-      scanDOMElement(el);
+      compile(el);
     }
     watchModel(model);
+    render();
   }
 
 
