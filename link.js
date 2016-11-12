@@ -1,5 +1,3 @@
-var testData = { name: 'leon', age: 18, address: { city: 'sh', location: { area: 'minhang', postcode: '110' } } };
-
 
 function link(el, data) {
   'use strict';
@@ -222,6 +220,4 @@ function link(el, data) {
   };
 
 };
-
-linker = link(document.getElementById('demo'), testData);
 
