@@ -206,7 +206,7 @@ function link(el, data) {
                 }
               }
             })
-          })(prop, value, propStack && propStack.slice(0));
+          })(prop, value, propStack.slice(0));
         }
       }
     }
