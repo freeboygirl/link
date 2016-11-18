@@ -2,7 +2,7 @@
 function link(el, data) {
   'use strict';
   if (!el || !data) throw Error('el and data are required!');
-  if(!isObject(data)) throw Error('data must be object');
+  if (!isObject(data)) throw Error('data must be object');
   var model = data,
     bindings = [], // store bindings
     watchMap = Object.create(null), // stores watch prop & watchfns mapping 
@@ -153,7 +153,11 @@ function link(el, data) {
   }
 
   function isObject(obj) {
-    return obj && typeof obj === 'object';
+    return !!obj && typeof obj === 'object'
+  }
+
+  function isArray(obj) {
+    return !!obj && typeof obj === 'object' && typeof obj.length === 'number';
   }
 
   function notify(watch) {
@@ -174,42 +178,92 @@ function link(el, data) {
     }
   }
 
+  // array wrapper for item change notify
+  function WatchedArray(watch, arr) {
+    this.watch = watch;
+    this.arr = arr;
+  }
+
+  WatchedArray.prototype = [];
+
+  WatchedArray.prototype.notify = function () {
+    notify(this.watch, this.arr);
+    console.log(this.watch + ':' + this.arr.toString());
+  }
+
+  WatchedArray.prototype.push = function (item) {
+    this.arr.push(item);
+    this.notify();
+    return this.arr.length;
+  }
+
+  WatchedArray.prototype.pop = function () {
+    var item = this.arr.pop();
+    this.notify();
+    return item;
+  }
+
+  WatchedArray.prototype.unshift = function (item) {
+    this.arr.unshift(item);
+    this.notify();
+    return this.arr.length;
+  }
+
+  WatchedArray.prototype.shift = function () {
+    var item = this.arr.shift();
+    this.notify();
+    return item;
+  }
+
+
+  function getWatchByPropStack(prop, propStack) {
+    if (propStack) {
+      propStack.push(prop);
+    }
+    else {
+      propStack = [prop];
+    }
+
+    return propStack.join('.');
+  }
+
+  function defineObserver(model, prop, value, propStack, isArray) {
+    var watch = getWatchByPropStack(prop, propStack);
+    if (!isArray) {
+      Object.defineProperty(model, prop, {
+        get: function () {
+          return value;
+        },
+        set: function (newVal) {
+          if (newVal !== value) {
+            value = newVal;
+            notify(watch);
+          }
+        }
+      });
+    }
+    else {
+      model[prop] = new WatchedArray(watch, value);
+    }
+  }
+
   function watchModel(model, propStack) {
     //object
     propStack = propStack || [];
-    var keys = Object.keys(model), len = keys.length, prop, value;
+    var keys = Object.keys(model),
+      len = keys.length,
+      prop,
+      value;
     while (len--) {
       prop = keys[len];
       value = model[prop];
-
-      if (isObject(value)) {
+      if (isObject(value) && !isArray(value)) {
         propStack.push(prop);
         watchModel(value, propStack);
         propStack.pop();
       }
       else {
-        (function (prop, value, propStack) {
-          if (propStack) {
-            propStack.push(prop);
-          }
-          else {
-            propStack = [prop];
-          }
-
-          var watch = propStack.join('.');
-
-          Object.defineProperty(model, prop, {
-            get: function () {
-              return value;
-            },
-            set: function (newVal) {
-              if (newVal !== value) {
-                value = newVal;
-                notify(watch);
-              }
-            }
-          })
-        })(prop, value, propStack.slice(0));
+        defineObserver(model, prop, value, propStack.slice(0), isArray(value));
       }
     }
   }
