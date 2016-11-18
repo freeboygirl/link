@@ -2,6 +2,7 @@
 function link(el, data) {
   'use strict';
   if (!el || !data) throw Error('el and data are required!');
+  if(!isObject(data)) throw Error('data must be object');
   var model = data,
     bindings = [], // store bindings
     watchMap = Object.create(null), // stores watch prop & watchfns mapping 
@@ -176,38 +177,39 @@ function link(el, data) {
   function watchModel(model, propStack) {
     //object
     propStack = propStack || [];
-    for (var prop in model) {
-      if (model.hasOwnProperty(prop)) {
-        var value = model[prop];
-        if (isObject(value)) {
-          propStack.push(prop);
-          watchModel(value, propStack);
-          propStack.pop();
-        }
-        else {
-          (function (prop, value, propStack) {
-            if (propStack) {
-              propStack.push(prop);
-            }
-            else {
-              propStack = [prop];
-            }
+    var keys = Object.keys(model), len = keys.length, prop, value;
+    while (len--) {
+      prop = keys[len];
+      value = model[prop];
 
-            var watch = propStack.join('.');
+      if (isObject(value)) {
+        propStack.push(prop);
+        watchModel(value, propStack);
+        propStack.pop();
+      }
+      else {
+        (function (prop, value, propStack) {
+          if (propStack) {
+            propStack.push(prop);
+          }
+          else {
+            propStack = [prop];
+          }
 
-            Object.defineProperty(model, prop, {
-              get: function () {
-                return value;
-              },
-              set: function (newVal) {
-                if (newVal !== value) {
-                  value = newVal;
-                  notify(watch);
-                }
+          var watch = propStack.join('.');
+
+          Object.defineProperty(model, prop, {
+            get: function () {
+              return value;
+            },
+            set: function (newVal) {
+              if (newVal !== value) {
+                value = newVal;
+                notify(watch);
               }
-            })
-          })(prop, value, propStack.slice(0));
-        }
+            }
+          })
+        })(prop, value, propStack.slice(0));
       }
     }
   }
