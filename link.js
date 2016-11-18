@@ -8,7 +8,7 @@ function link(el, data) {
     //regex 
     interpolationRegex = /\{\{(\w+)\}\}/g;
 
-  function getInterpolationExpr(text) {
+  function getInterpolationWatch(text) {
     if (text) {
       var ar, resultArr = [];
       while (ar = interpolationRegex.exec(text)) {
@@ -19,7 +19,7 @@ function link(el, data) {
     return resultArr;
   }
 
-  function evalInterpolationExpr(binding) {
+  function evalInterpolation(binding) {
     var len = binding.prop.length,
       prop,
       el = binding.el,
@@ -66,7 +66,7 @@ function link(el, data) {
     }
     else if (el.nodeType === 3) {
       // text node , and it may contains several interpolation expr
-      prop = getInterpolationExpr(el.textContent)
+      prop = getInterpolationWatch(el.textContent)
       if (prop.length > 0) {
         // bindings.push({ el: el, prop: prop, action: 'bind', tpl: el.textContent });
         binding = { el: el, prop: prop, action: 'bind', tpl: el.textContent };
@@ -146,7 +146,7 @@ function link(el, data) {
       }
       else if (binding.prop instanceof Array) {
         // text node for interpolation expr 
-        binding.el.textContent = evalInterpolationExpr(binding);
+        binding.el.textContent = evalInterpolation(binding);
       }
     }
   }
