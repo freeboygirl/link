@@ -80,7 +80,7 @@ function link(el, data) {
         if (!watchMap[binding.prop]) {
           watchMap[binding.prop] = [];
         }
-        watchMap[binding.prop].push(watchRender(binding));
+        watchMap[binding.prop].push(renderBuilder(binding));
       }
       else if (typeof binding.prop === 'object' && binding.prop.length) {
         // every prop watch need notifying the binding change
@@ -89,7 +89,7 @@ function link(el, data) {
           if (!watchMap[binding.prop[len]]) {
             watchMap[binding.prop[len]] = [];
           }
-          watchMap[binding.prop[len]].push(watchRender(binding));
+          watchMap[binding.prop[len]].push(renderBuilder(binding));
         }
       }
     }
@@ -135,7 +135,7 @@ function link(el, data) {
     }
   }
 
-  function watchRender(binding) {
+  function renderBuilder(binding) {
     //return ui render fn
     return function () {
       if (binding.action === 'bind' && !(binding.prop instanceof Array)) {

@@ -1,2 +1,2 @@
 # link
-a small mvvm js implemention.
+a simple two-way data binding js implemention.
