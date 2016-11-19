@@ -7,7 +7,15 @@ function link(el, data) {
     bindings = [], // store bindings
     watchMap = Object.create(null), // stores watch prop & watchfns mapping 
     //regex 
-    interpolationRegex = /\{\{(\w+)\}\}/g;
+    interpolationRegex = /\{\{(\w+)\}\}/g,
+    directives = ['x-bind', 'x-model'];
+
+  function each(arr, fn) {
+    var len = arr.length, i = -1;
+    while (++i < len) {
+      fn.call(arr, arr[i], i, arr);
+    }
+  }
 
   function getInterpolationWatch(text) {
     if (text) {
@@ -33,75 +41,88 @@ function link(el, data) {
     return tpl;
   }
 
+  function Binding(el, prop, action, tpl) {
+    this.el = el;
+    this.prop = prop; // string, or string array for interpilation expr.
+    this.action = action;
+    this.tpl = tpl;
+  }
 
-  function compile(el) {
-    var prop,
-      binding;
-    if (el.hasAttribute && el.hasAttribute('x-bind')) {
-      // bindings.push({ el: el, prop: el.getAttribute('x-bind'), action: 'bind' });
-      binding = { el: el, prop: el.getAttribute('x-bind'), action: 'bind' };
-    }
-    else if (el.hasAttribute && el.hasAttribute('x-model')) {
-      // bindings.push({ el: el, prop: el.getAttribute('x-model'), action: 'model' });
-      binding = { el: el, prop: el.getAttribute('x-model'), action: 'model' };
-      prop = el.getAttribute('x-model');
-      if (el.nodeName === 'INPUT') {
-        if (el.type === 'text') {
-          el.addEventListener('keyup', function () {
-            setWatchValue(prop, el.value || '');
-          }, false);
-        }
-        else if (el.type === 'radio') {
-          //TODO: handler radio
-          el.addEventListener('change', function () {
-            setWatchValue(prop, el.value || '');
-          }, false);
-        }
+  Binding.get = function (el, prop, action, tpl) {
+    return new Binding(el, prop, action, tpl);
+  }
 
-      }
-      else if (el.nodeName === 'SELECT') {
-        el.addEventListener('change', function () {
-          setWatchValue(prop, el.value || '');
-        }, false);
-      }
-    }
-    else if (el.nodeType === 3) {
+  function getBinding(el) {
+    var prop, binding;
+    if (el.getAttribute) {
+      each(directives, function (directive) {
+        if (prop = el.getAttribute(directive)) {
+          binding = Binding.get(el, prop, directive);
+          bindings.push(binding);
+          addWatchFn(binding);
+          if (directive === 'x-model') {
+            bindModelListener(binding);
+          }
+        }
+      });
+    } else if (el.nodeType === 3) {
       // text node , and it may contains several interpolation expr
       prop = getInterpolationWatch(el.textContent)
       if (prop.length > 0) {
-        // bindings.push({ el: el, prop: prop, action: 'bind', tpl: el.textContent });
-        binding = { el: el, prop: prop, action: 'bind', tpl: el.textContent };
+        binding = Binding.get(el, prop, 'x-bind', el.textContent);
+        bindings.push(binding);
+        addWatchFn(binding);
       }
+    }
+  }
 
-    }
-    if (binding) {
-      bindings.push(binding);
-      // check binding prop, if string , simple bind or model, if array it's text interpilation
-      if (typeof binding.prop === 'string') {
-        if (!watchMap[binding.prop]) {
-          watchMap[binding.prop] = [];
-        }
-        watchMap[binding.prop].push(renderBuilder(binding));
+  function addWatchFn(binding) {
+    // check binding prop, if string , simple bind or model, if array it's text interpilation
+    if (typeof binding.prop === 'string') {
+      if (!watchMap[binding.prop]) {
+        watchMap[binding.prop] = [];
       }
-      else if (typeof binding.prop === 'object' && binding.prop.length) {
-        // every prop watch need notifying the binding change
-        var len = binding.prop.length;
-        while (len--) {
-          if (!watchMap[binding.prop[len]]) {
-            watchMap[binding.prop[len]] = [];
-          }
-          watchMap[binding.prop[len]].push(renderBuilder(binding));
+      watchMap[binding.prop].push(renderBuilder(binding));
+    }
+    else if (typeof binding.prop === 'object' && binding.prop.length) {
+      // every prop watch need notifying the binding change
+      var len = binding.prop.length;
+      while (len--) {
+        if (!watchMap[binding.prop[len]]) {
+          watchMap[binding.prop[len]] = [];
         }
+        watchMap[binding.prop[len]].push(renderBuilder(binding));
       }
     }
+  }
 
-    var childNodes = el.childNodes,
-      len = childNodes.length,
-      node;
-    for (var i = 0; i < len; i++) {
-      node = childNodes[i];
-      compile(childNodes[i]);
+  function bindModelListener(binding) {
+    var el = binding.el, directive = binding.action;
+    if (el.nodeName === 'INPUT') {
+      if (el.type === 'text') {
+        el.addEventListener('keyup', function () {
+          setWatchValue(binding.prop, el.value || '');
+        }, false);
+      }
+      else if (el.type === 'radio') {
+        //TODO: handler radio
+        el.addEventListener('change', function () {
+          setWatchValue(binding.prop, el.value || '');
+        }, false);
+      }
     }
+    else if (el.nodeName === 'SELECT') {
+      el.addEventListener('change', function () {
+        setWatchValue(binding.prop, el.value || '');
+      }, false);
+    }
+  }
+
+  function compile(el) {
+    getBinding(el);
+    each(el.childNodes, function (node) {
+      compile(node)
+    });
   }
 
   function getWatchValue(watch) {
@@ -139,10 +160,10 @@ function link(el, data) {
   function renderBuilder(binding) {
     //return ui render fn
     return function () {
-      if (binding.action === 'bind' && !(binding.prop instanceof Array)) {
+      if (binding.action === 'x-bind' && !(binding.prop instanceof Array)) {
         binding.el.innerText = getWatchValue(binding.prop);
       }
-      else if (binding.action === 'model') {
+      else if (binding.action === 'x-model') {
         binding.el.value = getWatchValue(binding.prop);
       }
       else if (binding.prop instanceof Array) {
