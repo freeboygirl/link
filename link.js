@@ -10,11 +10,56 @@ function link(el, data) {
     interpolationRegex = /\{\{(\w+)\}\}/g,
     directives = ['x-bind', 'x-model'];
 
+  function isObject(obj) {
+    return !!obj && typeof obj === 'object'
+  }
+
+  function isArray(obj) {
+    return !!obj && typeof obj === 'object' && typeof obj.length === 'number';
+  }
+
   function each(arr, fn) {
     var len = arr.length, i = -1;
     while (++i < len) {
       fn.call(arr, arr[i], i, arr);
     }
+  }
+
+  // array wrapper for item change notify
+  function WatchedArray(watch, arr) {
+    this.watch = watch;
+    this.arr = arr;
+  }
+
+  WatchedArray.prototype = [];
+
+  WatchedArray.prototype.notify = function () {
+    notify(this.watch, this.arr);
+    console.log(this.watch + ':' + this.arr.toString());
+  }
+
+  WatchedArray.prototype.push = function (item) {
+    this.arr.push(item);
+    this.notify();
+    return this.arr.length;
+  }
+
+  WatchedArray.prototype.pop = function () {
+    var item = this.arr.pop();
+    this.notify();
+    return item;
+  }
+
+  WatchedArray.prototype.unshift = function (item) {
+    this.arr.unshift(item);
+    this.notify();
+    return this.arr.length;
+  }
+
+  WatchedArray.prototype.shift = function () {
+    var item = this.arr.shift();
+    this.notify();
+    return item;
   }
 
   function getInterpolationWatch(text) {
@@ -29,15 +74,10 @@ function link(el, data) {
   }
 
   function evalInterpolation(binding) {
-    var len = binding.prop.length,
-      prop,
-      el = binding.el,
-      tpl = binding.tpl;
-    while (len--) {
-      prop = binding.prop[len];
+    var tpl = binding.tpl;
+    each(binding.prop, function (prop) {
       tpl = tpl.replace(new RegExp('{{' + prop + '}}', 'g'), getWatchValue(prop));
-    }
-
+    });
     return tpl;
   }
 
@@ -86,13 +126,12 @@ function link(el, data) {
     }
     else if (typeof binding.prop === 'object' && binding.prop.length) {
       // every prop watch need notifying the binding change
-      var len = binding.prop.length;
-      while (len--) {
-        if (!watchMap[binding.prop[len]]) {
-          watchMap[binding.prop[len]] = [];
+      each(binding.prop, function (prop) {
+        if (!watchMap[prop]) {
+          watchMap[prop] = [];
         }
-        watchMap[binding.prop[len]].push(renderBuilder(binding));
-      }
+        watchMap[prop].push(renderBuilder(binding));
+      });
     }
   }
 
@@ -173,23 +212,13 @@ function link(el, data) {
     }
   }
 
-  function isObject(obj) {
-    return !!obj && typeof obj === 'object'
-  }
-
-  function isArray(obj) {
-    return !!obj && typeof obj === 'object' && typeof obj.length === 'number';
-  }
-
   function notify(watch) {
     var rendersArray = watchMap[watch],
       len;
     if (rendersArray) {
-      len = rendersArray.length;
-
-      while (len--) {
-        rendersArray[len].apply();
-      }
+      each(rendersArray, function (render) {
+        render.apply();
+      });
     }
   }
 
@@ -198,44 +227,6 @@ function link(el, data) {
       notify(watch);
     }
   }
-
-  // array wrapper for item change notify
-  function WatchedArray(watch, arr) {
-    this.watch = watch;
-    this.arr = arr;
-  }
-
-  WatchedArray.prototype = [];
-
-  WatchedArray.prototype.notify = function () {
-    notify(this.watch, this.arr);
-    console.log(this.watch + ':' + this.arr.toString());
-  }
-
-  WatchedArray.prototype.push = function (item) {
-    this.arr.push(item);
-    this.notify();
-    return this.arr.length;
-  }
-
-  WatchedArray.prototype.pop = function () {
-    var item = this.arr.pop();
-    this.notify();
-    return item;
-  }
-
-  WatchedArray.prototype.unshift = function (item) {
-    this.arr.unshift(item);
-    this.notify();
-    return this.arr.length;
-  }
-
-  WatchedArray.prototype.shift = function () {
-    var item = this.arr.shift();
-    this.notify();
-    return item;
-  }
-
 
   function getWatchByPropStack(prop, propStack) {
     if (propStack) {
@@ -271,12 +262,10 @@ function link(el, data) {
   function watchModel(model, propStack) {
     //object
     propStack = propStack || [];
-    var keys = Object.keys(model),
-      len = keys.length,
+    var props = Object.keys(model),
       prop,
       value;
-    while (len--) {
-      prop = keys[len];
+    each(props, function (prop) {
       value = model[prop];
       if (isObject(value) && !isArray(value)) {
         propStack.push(prop);
@@ -286,7 +275,7 @@ function link(el, data) {
       else {
         defineObserver(model, prop, value, propStack.slice(0), isArray(value));
       }
-    }
+    });
   }
 
   function bootstrap() {
