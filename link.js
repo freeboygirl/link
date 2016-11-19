@@ -41,15 +41,15 @@ function link(el, data) {
     return tpl;
   }
 
-  function Binding(el, prop, action, tpl) {
+  function Binding(el, prop, directive, tpl) {
     this.el = el;
     this.prop = prop; // string, or string array for interpilation expr.
-    this.action = action;
+    this.directive = directive;
     this.tpl = tpl;
   }
 
-  Binding.get = function (el, prop, action, tpl) {
-    return new Binding(el, prop, action, tpl);
+  Binding.get = function (el, prop, directive, tpl) {
+    return new Binding(el, prop, directive, tpl);
   }
 
   function getBinding(el) {
@@ -97,7 +97,7 @@ function link(el, data) {
   }
 
   function bindModelListener(binding) {
-    var el = binding.el, directive = binding.action;
+    var el = binding.el, directive = binding.directive;
     if (el.nodeName === 'INPUT') {
       if (el.type === 'text') {
         el.addEventListener('keyup', function () {
@@ -160,10 +160,10 @@ function link(el, data) {
   function renderBuilder(binding) {
     //return ui render fn
     return function () {
-      if (binding.action === 'x-bind' && !(binding.prop instanceof Array)) {
+      if (binding.directive === 'x-bind' && !(binding.prop instanceof Array)) {
         binding.el.innerText = getWatchValue(binding.prop);
       }
-      else if (binding.action === 'x-model') {
+      else if (binding.directive === 'x-model') {
         binding.el.value = getWatchValue(binding.prop);
       }
       else if (binding.prop instanceof Array) {
