@@ -38,29 +38,18 @@ function link(el, data) {
     console.log(this.watch + ':' + this.arr.toString());
   }
 
-  WatchedArray.prototype.push = function (item) {
-    this.arr.push(item);
-    this.notify();
-    return this.arr.length;
-  }
-
-  WatchedArray.prototype.pop = function () {
-    var item = this.arr.pop();
-    this.notify();
-    return item;
-  }
-
-  WatchedArray.prototype.unshift = function (item) {
-    this.arr.unshift(item);
-    this.notify();
-    return this.arr.length;
-  }
-
-  WatchedArray.prototype.shift = function () {
-    var item = this.arr.shift();
-    this.notify();
-    return item;
-  }
+  each(['push', 'pop', 'unshift', 'shift'], function (fn) {
+    WatchedArray.prototype[fn] = function (item) {
+      var ret = this.arr[fn].call(this.arr, item);
+      this.notify();
+      if (item) {
+        return this.arr.length;
+      }
+      else {
+        return ret;
+      }
+    }
+  });
 
   function getInterpolationWatch(text) {
     if (text) {
