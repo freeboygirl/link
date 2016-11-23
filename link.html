@@ -22,6 +22,8 @@
     <label>name and age </label> {{name}}{{age}}
     <div x-repeat='loves'>
       love {{$item.name}} {{$item.age}} 
+      <input type="text" class="form-control"  x-model='$item.name'>
+      <input type="text" class="form-control"  x-model='$item.age'>
     </div>
   </div>
 
