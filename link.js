@@ -237,7 +237,6 @@ function link(el, data) {
           });
         }
 
-        // el.style.display = '';
         if (isArray(arr)) {
           each(arr, function (itemData) {
             var cloneEl = binding.originEl.cloneNode(true);
