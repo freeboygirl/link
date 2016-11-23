@@ -82,8 +82,8 @@ function link(el, data) {
     return new Binding(el, prop, directive, tpl);
   }
 
-  function getBinding(el) {
-    var prop, binding, hasParentRepeatDirective = !!el.$$child;
+  function compileBinding(el) {
+    var prop, binding;
     if (el.getAttribute) {
       each(directives, function (directive) {
         if (prop = el.getAttribute(directive)) {
@@ -104,8 +104,6 @@ function link(el, data) {
         addWatchFn(binding);
       }
     }
-
-    return hasParentRepeatDirective;// skip further scan for repeat
   }
 
   function addWatchFn(binding) {
@@ -150,7 +148,7 @@ function link(el, data) {
   }
 
   function compile(el) {
-    getBinding(el);
+    compileBinding(el);
     each(el.childNodes, function (node) {
       compile(node);
     });
