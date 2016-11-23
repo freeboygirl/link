@@ -342,7 +342,7 @@ function link(el, data) {
   function unlink() {
     model = null;
     bindings.length = 0;
-    bindings = [];
+    bindings = null;
     watchMap = null;
     el = null;
   }
