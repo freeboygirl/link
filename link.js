@@ -7,8 +7,8 @@ function link(el, data) {
     bindings = [], // store bindings
     watchMap = Object.create(null), // stores watch prop & watchfns mapping 
     //regex 
-    interpolationRegex = /\{\{(\w+)\}\}/g,
-    directives = ['x-bind', 'x-model'];
+    interpolationRegex = /\{\{(\$?[^\}]+)\}\}/g,
+    directives = ['x-bind', 'x-model', 'x-repeat'];
 
   function isObject(obj) {
     return !!obj && typeof obj === 'object'
@@ -65,7 +65,14 @@ function link(el, data) {
   function evalInterpolation(binding) {
     var tpl = binding.tpl;
     each(binding.prop, function (prop) {
-      tpl = tpl.replace(new RegExp('{{' + prop + '}}', 'g'), getWatchValue(prop));
+      if (prop[0] !== '$') {
+        tpl = tpl.replace(new RegExp('{{' + prop + '}}', 'g'), getWatchValue(prop));
+      }
+      else {
+        // special for array $item link
+        tpl = tpl.replace(new RegExp('{{\\' + prop + '}}', 'g'), getWatchValue(prop));
+      }
+
     });
     return tpl;
   }
@@ -154,16 +161,20 @@ function link(el, data) {
   }
 
   function getWatchValue(watch) {
-    var val = model;
-    if (watch) {
-      watch = watch.split('.');
-      var len = watch.length;
-      for (var i = 0; i < len; i++) {
-        val = val[watch[i]]
+    try {
+      var val = model;
+      if (watch) {
+        watch = watch.split('.');
+        var len = watch.length;
+        for (var i = 0; i < len; i++) {
+          val = val[watch[i]];
+        }
       }
-    }
 
-    return val;
+      return val;
+    } catch (e) {
+
+    }
   }
 
   function setWatchValue(watch, value) {
@@ -197,6 +208,42 @@ function link(el, data) {
       else if (binding.prop instanceof Array) {
         // text node for interpolation expr 
         binding.el.textContent = evalInterpolation(binding);
+      }
+      else if (binding.directive === 'x-repeat') {
+        var warr = getWatchValue(binding.prop),
+          arr = warr && warr.arr,
+          el = binding.el;
+
+        var lastClonedNodes = binding.lastClonedNodes || [],
+          lastLinks = binding.lastLinks || [];
+
+        if (lastClonedNodes.length > 0) {
+          each(lastLinks, function (link) {
+            link.unlink();
+          });
+          each(lastClonedNodes, function (nodeToRemove) {
+            nodeToRemove.remove();
+          });
+        }
+
+        // el.style.display = '';
+        if (isArray(arr)) {
+          var html = [],
+            cloneEl;
+
+          each(arr, function (itemData) {
+            cloneEl = el.cloneNode(true);
+            lastClonedNodes.push(cloneEl);
+            lastLinks.push(link(cloneEl, { $item: itemData }));
+            el.parentNode.insertBefore(cloneEl, el);
+            // html.push(el.cloneNode(true).outerHTML);
+          });
+          // el.remove();
+          // el.style.display = 'none';
+          binding.lastClonedNodes = lastClonedNodes;
+          binding.lastLinks = lastLinks;
+          // el.insertAdjacentHTML('afterend', html.join(''));
+        }
       }
     }
   }
@@ -286,9 +333,17 @@ function link(el, data) {
     render();
   }
 
+  function unlink() {
+    model = null;
+    bindings = [];
+    watchMap = null;
+    el = null;
+  }
+
 
   return {
-    updateModel: updateModel
+    updateModel: updateModel,
+    unlink: unlink
   };
 
 };

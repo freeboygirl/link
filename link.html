@@ -20,6 +20,9 @@
       <option value="3">3</option>
     </select>
     <label>name and age </label> {{name}}{{age}}
+    <div x-repeat='loves'>
+      love {{$item.name}} {{$item.age}} 
+    </div>
   </div>
 
   <script src="link.js"></script>
