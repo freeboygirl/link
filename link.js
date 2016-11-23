@@ -327,7 +327,8 @@ function link(el, data) {
   bootstrap();
 
   // public methods
-  function updateModel(newModel, reScan) {
+  // set a new model to bind
+  function setModel(newModel, reScan) {
     model = newModel;
     if (reScan === true) {
       ar = [];
@@ -337,17 +338,36 @@ function link(el, data) {
     render();
   }
 
+  // clear the linker object inner states
   function unlink() {
     model = null;
+    bindings.length = 0;
     bindings = [];
     watchMap = null;
     el = null;
   }
 
+  // if the model contains array property ,it will be wrapped, this fn get the origin model back
+  function getModel() {
+    var originModel = {};
+    var props = Object.keys(model);
+    each(props, function (prop) {
+      if (model[prop] instanceof WatchedArray) {
+        originModel[prop] = model[prop].arr.slice(0);
+      }
+      else {
+        originModel[prop] = model[prop];
+      }
+    });
+
+    return originModel;
+  }
+
 
   return {
-    updateModel: updateModel,
-    unlink: unlink
+    setModel: setModel,
+    unlink: unlink,
+    getModel: getModel
   };
 
 };
