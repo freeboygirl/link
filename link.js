@@ -78,7 +78,7 @@ function link(el, data) {
     this.tpl = tpl;
   }
 
-  Binding.get = function (el, prop, directive, tpl) {
+  Binding.create = function (el, prop, directive, tpl) {
     return new Binding(el, prop, directive, tpl);
   }
 
@@ -87,7 +87,7 @@ function link(el, data) {
     if (el.getAttribute) {
       each(directives, function (directive) {
         if (prop = el.getAttribute(directive)) {
-          binding = Binding.get(el, prop, directive);
+          binding = Binding.create(el, prop, directive);
           bindings.push(binding);
           addWatchFn(binding);
           if (directive === 'x-model') {
@@ -99,7 +99,7 @@ function link(el, data) {
       // text node , and it may contains several interpolation expr
       prop = getInterpolationWatch(el.textContent)
       if (prop.length > 0) {
-        binding = Binding.get(el, prop, 'x-bind', el.textContent);
+        binding = Binding.create(el, prop, 'x-bind', el.textContent);
         bindings.push(binding);
         addWatchFn(binding);
       }

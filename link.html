@@ -25,6 +25,10 @@
       <input type="text" class="form-control"  x-model='$item.name'>
       <input type="text" class="form-control"  x-model='$item.age'>
     </div>
+
+    <div x-repeat='other.hates'>
+      {{$item}}
+    </div>
   </div>
 
   <script src="link.js"></script>
