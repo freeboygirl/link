@@ -38,16 +38,10 @@ function link(el, data) {
     console.log(this.watch + ':' + this.arr.toString());
   }
 
-  each(['push', 'pop', 'unshift', 'shift'], function (fn) {
-    WatchedArray.prototype[fn] = function (item) {
-      var ret = this.arr[fn].call(this.arr, item);
+  each(['push', 'pop', 'unshift', 'shift', 'reverse', 'sort', 'splice'], function (fn) {
+    WatchedArray.prototype[fn] = function () {
+      var ret = this.arr[fn].apply(this.arr, arguments);
       this.notify();
-      if (item) {
-        return this.arr.length;
-      }
-      else {
-        return ret;
-      }
     }
   });
 
@@ -120,7 +114,7 @@ function link(el, data) {
       if (!watchMap[binding.prop]) {
         watchMap[binding.prop] = [];
       }
-      watchMap[binding.prop].push(renderBuilder(binding));
+      watchMap[binding.prop].push(uiRenderFnBuilder(binding));
     }
     else if (typeof binding.prop === 'object' && binding.prop.length) {
       // every prop watch need notifying the binding change
@@ -128,7 +122,7 @@ function link(el, data) {
         if (!watchMap[prop]) {
           watchMap[prop] = [];
         }
-        watchMap[prop].push(renderBuilder(binding));
+        watchMap[prop].push(uiRenderFnBuilder(binding));
       });
     }
   }
@@ -198,7 +192,7 @@ function link(el, data) {
     }
   }
 
-  function renderBuilder(binding) {
+  function uiRenderFnBuilder(binding) {
     //return ui render fn
     return function () {
       if (binding.directive === 'x-bind' && !(binding.prop instanceof Array)) {
@@ -213,6 +207,7 @@ function link(el, data) {
       }
       else if (binding.directive === 'x-repeat') {
         // repeat can't be nested
+        // repeat item will construct a new linker object
         if (binding.el && binding.el.$$child) return;
         var warr = getWatchValue(binding.prop),
           arr = warr && warr.arr;
