@@ -89,7 +89,7 @@ function link(el, data) {
   }
 
   function getBinding(el) {
-    var prop, binding;
+    var prop, binding, hasParentRepeatDirective = !!el.$$child;
     if (el.getAttribute) {
       each(directives, function (directive) {
         if (prop = el.getAttribute(directive)) {
@@ -110,6 +110,8 @@ function link(el, data) {
         addWatchFn(binding);
       }
     }
+
+    return hasParentRepeatDirective;// skip further scan for repeat
   }
 
   function addWatchFn(binding) {
@@ -156,7 +158,7 @@ function link(el, data) {
   function compile(el) {
     getBinding(el);
     each(el.childNodes, function (node) {
-      compile(node)
+      compile(node);
     });
   }
 
@@ -210,9 +212,19 @@ function link(el, data) {
         binding.el.textContent = evalInterpolation(binding);
       }
       else if (binding.directive === 'x-repeat') {
+        // repeat can't be nested
+        if (binding.el && binding.el.$$child) return;
         var warr = getWatchValue(binding.prop),
-          arr = warr && warr.arr,
-          el = binding.el;
+          arr = warr && warr.arr;
+        el = binding.el;
+
+        if (el) {
+          binding.originEl = binding.originEl || el.cloneNode(true);
+          binding.comment = document.createComment('repeat begin');
+          el.parentNode.insertBefore(binding.comment, el);
+          el.remove();
+          delete binding.el;
+        }
 
         var lastClonedNodes = binding.lastClonedNodes || [],
           lastLinks = binding.lastLinks || [];
@@ -228,21 +240,15 @@ function link(el, data) {
 
         // el.style.display = '';
         if (isArray(arr)) {
-          var html = [],
-            cloneEl;
-
           each(arr, function (itemData) {
-            cloneEl = el.cloneNode(true);
+            var cloneEl = binding.originEl.cloneNode(true);
+            cloneEl.$$child = true;
             lastClonedNodes.push(cloneEl);
             lastLinks.push(link(cloneEl, { $item: itemData }));
-            el.parentNode.insertBefore(cloneEl, el);
-            // html.push(el.cloneNode(true).outerHTML);
+            binding.comment.parentNode.insertBefore(cloneEl, binding.comment);
           });
-          // el.remove();
-          // el.style.display = 'none';
           binding.lastClonedNodes = lastClonedNodes;
           binding.lastLinks = lastLinks;
-          // el.insertAdjacentHTML('afterend', html.join(''));
         }
       }
     }
