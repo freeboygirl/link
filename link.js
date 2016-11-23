@@ -220,7 +220,7 @@ function link(el, data) {
 
         if (el) {
           binding.originEl = binding.originEl || el.cloneNode(true);
-          binding.comment = document.createComment('repeat end for '+binding.prop);
+          binding.comment = document.createComment('repeat end for ' + binding.prop);
           el.parentNode.insertBefore(binding.comment, el);
           el.remove();
           delete binding.el;
@@ -229,10 +229,14 @@ function link(el, data) {
         var lastClonedNodes = binding.lastClonedNodes || [],
           lastLinks = binding.lastLinks || [];
 
-        if (lastClonedNodes.length > 0) {
+        //unlink repeat item 
+        if (lastLinks.length > 0) {
           each(lastLinks, function (link) {
             link.unlink();
           });
+        }
+        // remove repeat item
+        if (lastClonedNodes.length > 0) {
           each(lastClonedNodes, function (nodeToRemove) {
             nodeToRemove.remove();
           });
