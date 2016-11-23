@@ -220,7 +220,7 @@ function link(el, data) {
 
         if (el) {
           binding.originEl = binding.originEl || el.cloneNode(true);
-          binding.comment = document.createComment('repeat begin');
+          binding.comment = document.createComment('repeat end for '+binding.prop);
           el.parentNode.insertBefore(binding.comment, el);
           el.remove();
           delete binding.el;
