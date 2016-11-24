@@ -38,6 +38,10 @@ function link(el, data) {
     console.log(this.watch + ':' + this.arr.toString());
   }
 
+  WatchedArray.prototype.getArray = function () {
+    return this.arr.slice(0);
+  }
+
   each(['push', 'pop', 'unshift', 'shift', 'reverse', 'sort', 'splice'], function (fn) {
     WatchedArray.prototype[fn] = function () {
       var ret = this.arr[fn].apply(this.arr, arguments);
@@ -346,19 +350,29 @@ function link(el, data) {
   }
 
   // if the model contains array property ,it will be wrapped, this fn get the origin model back
-  function getModel() {
-    var originModel = {};
-    var props = Object.keys(model);
+  function unWrapModel(model, dest) {
+    dest = dest || {};
+    var props = Object.keys(model),
+      value;
     each(props, function (prop) {
-      if (model[prop] instanceof WatchedArray) {
-        originModel[prop] = model[prop].arr.slice(0);
+      value = model[prop];
+      if (value instanceof WatchedArray) {
+        dest[prop] = value.getArray();
+      }
+      else if (isObject(value)) {
+        dest[prop] = {};
+        unWrapModel(value, dest[prop]);
       }
       else {
-        originModel[prop] = model[prop];
+        dest[prop] = model[prop];
       }
     });
+  }
 
-    return originModel;
+  function getModel() {
+    var _model = {};
+    unWrapModel(model, _model);
+    return _model;
   }
 
 
