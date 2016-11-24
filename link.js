@@ -81,6 +81,21 @@ function link(el, data) {
     return tpl;
   }
 
+  function evalExpr(binding) {
+    var expr = binding.expr;
+    each(binding.prop, function (prop) {
+      if (prop[0] !== '$') {
+        expr = expr.replace(new RegExp(prop, 'g'), getWatchValue(prop));
+      }
+      else {
+        // special for array $item link
+        expr = expr.replace(new RegExp('\\' + prop, 'g'), getWatchValue(prop));
+      }
+
+    });
+    return $eval(expr);
+  }
+
   function Binding(el, prop, directive, tpl) {
     this.el = el;
     this.prop = prop; // string, or string array for interpilation expr.
@@ -89,6 +104,12 @@ function link(el, data) {
   }
 
   Binding.create = function (el, prop, directive, tpl) {
+    /**
+     * prop could be string and array 
+     * array: interpilation and expr
+     * array+interpilation: tpl 
+     * array+expr: expr
+     *  */
     return new Binding(el, prop, directive, tpl);
   }
 
@@ -115,17 +136,18 @@ function link(el, data) {
           }
           else {
             // expr 
-            if (directive === 'x-show' || directive === 'x-hide') {
-              each(allWatches, function (watch) {
-                if (attrValue.indexOf(watch) > -1) {
-                  foundDirectives.push(directive);
-                  binding = Binding.create(el, watch, directive);
-                  binding.expr = attrValue;
-                  bindings.push(binding);
-                  addWatchFn(binding);
-                }
-              });
-            }
+            var exprWatches = [];
+            each(allWatches, function (watch) {
+              if (attrValue.indexOf(watch) > -1) {
+                exprWatches.push(watch);
+              }
+            });
+
+            foundDirectives.push(directive);
+            binding = Binding.create(el, allWatches, directive);
+            binding.expr = attrValue;
+            bindings.push(binding);
+            addWatchFn(binding);
 
           }
         }
@@ -146,13 +168,8 @@ function link(el, data) {
 
   function addWatchFn(binding) {
     // check binding prop, if string , simple bind or model, if array it's text interpilation
-    if (typeof binding.prop === 'string') {
-      if (!watchMap[binding.prop]) {
-        watchMap[binding.prop] = [];
-      }
-      watchMap[binding.prop].push(uiRenderFnBuilder(binding));
-    }
-    else if (typeof binding.prop === 'object' && binding.prop.length) {
+    // simple watch
+    if (isArray(binding.prop)) {
       // every prop watch need notifying the binding change
       each(binding.prop, function (prop) {
         if (!watchMap[prop]) {
@@ -160,6 +177,12 @@ function link(el, data) {
         }
         watchMap[prop].push(uiRenderFnBuilder(binding));
       });
+    }
+    else {
+      if (!watchMap[binding.prop]) {
+        watchMap[binding.prop] = [];
+      }
+      watchMap[binding.prop].push(uiRenderFnBuilder(binding));
     }
   }
 
@@ -255,34 +278,31 @@ function link(el, data) {
       }
       else if (binding.prop instanceof Array) {
         // text node for interpolation expr 
-        binding.el.textContent = evalInterpolation(binding);
+        if (binding.tpl) {
+          binding.el.textContent = evalInterpolation(binding);
+        } else if (binding.expr) {
+          var exprVal = evalExpr(binding);
+          if (binding.directive === 'x-show') {
+            showHideHanlder(binding, exprVal);
+          }
+        }
+
       }
       else if (binding.directive === 'x-repeat') {
         // repeat can't be nested
         // repeat item will construct a new linker object
-        if (binding.el && binding.el.$$child) {
-          console.log('this is a child repeater');
-          return;
-        }
         repeatHanlder(binding);
-      }
-      else if (binding.directive === 'x-show') {
-        var pvalue = getWatchValue(binding.prop),
-          expr = binding.expr,
-          exprValue;
-
-        exprValue = $eval(binding.prop, expr, pvalue);
-        showHideHanlder(binding, exprValue);
-      }
-      else if (binding.directive === 'x-hide') {
-
       }
     }
   }
 
-  function $eval(p, body, pValue) {
-    var fn = new Function(p, 'return ' + body + ';');
-    return fn.call(null, pValue);
+  function $eval(expr) {
+    var fn = new Function('return ' + expr + ';');
+    try {
+      return fn.call();
+    } catch (ex) {
+      //some invalid expr;
+    }
   }
 
   function showHideHanlder(binding, isShow) {
