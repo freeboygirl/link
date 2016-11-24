@@ -411,7 +411,8 @@ function link(el, data) {
   return {
     setModel: setModel,
     unlink: unlink,
-    getModel: getModel
+    getModel: getModel,
+    $model: model // wrapped model
   };
 
 };
