@@ -55,7 +55,7 @@ function buildScripts(destFileName) {
 };
 
 gulp.task('watch', function () {
-  gulp.watch(srcScriptsFolder + '/**/*.js',
+  gulp.watch([srcScriptsFolder + '/**/*.js', 'demo/**/*'],
     [
       'build:lib',
       'reload'
@@ -64,9 +64,6 @@ gulp.task('watch', function () {
 
 gulp.task('reload', function () {
   gulp.src('src/**/*')
-    .pipe($.connect.reload());
-
-  gulp.src('demo/**/*')
     .pipe($.connect.reload());
 });
 
