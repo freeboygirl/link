@@ -8,6 +8,7 @@ var lazypipe = require('lazypipe');
 var rimraf = require('rimraf');
 var wiredep = require('wiredep').stream;
 var runSequence = require('run-sequence');
+var babel = require('gulp-babel');
 
 var srcScriptsFolder = 'src';
 var distScriptsFolder = 'dist';
@@ -46,6 +47,9 @@ function buildScripts(destFileName) {
       return $.if(isDevMode(), $.sourcemaps.init());
     })
     .pipe($.concat, destFileName)
+    .pipe(babel, {
+      presets: ['es2015']
+    })
     .pipe(function () {
       return $.if(!isDevMode(), $.uglify({ mangle: true }));
     })
@@ -57,7 +61,7 @@ function buildScripts(destFileName) {
 };
 
 gulp.task('watch', function () {
-  gulp.watch([srcScriptsFolder + '/**/*.js', 'demo/**/*'],
+  gulp.watch([srcScriptsFolder + '/**/*.js', 'demo/**/*.html'],
     [
       'build:lib',
       'reload'
