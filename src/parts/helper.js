@@ -17,15 +17,6 @@ function isWatch(attr) {
   return watchRegex.test(attr);
 }
 
-function $eval(expr) {
-  var fn = new Function('return ' + expr + ';');
-  try {
-    return fn.call();
-  } catch (ex) {
-    //some invalid expr;
-  }
-}
-
 // add x-hide style for x-show and x-hide
 function addStyles() {
   if (!document.$$linkStyleLoaded) {

@@ -24,6 +24,15 @@ function evalInterpolation(binding) {
   return tpl;
 }
 
+function $eval(expr) {
+  var fn = new Function('return ' + expr + ';');
+  try {
+    return fn.call();
+  } catch (ex) {
+    //some invalid expr;
+  }
+}
+
 function evalExpr(binding) {
   var expr = binding.expr;
   each(binding.prop, function (prop) {
