@@ -9,7 +9,8 @@
     loves: [{ name: 'mother', age: 50 }, { name: 'fater', age: 60 }],
     other: {
       hates: ['a', 'b', 'c']
-    }
+    },
+    trueAge:18
   };
   linker = link(document.getElementById('demo'), model);
 })();

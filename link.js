@@ -8,7 +8,9 @@ function link(el, data) {
     watchMap = Object.create(null), // stores watch prop & watchfns mapping 
     //regex 
     interpolationRegex = /\{\{(\$?[^\}]+)\}\}/g,
-    directives = ['x-bind', 'x-model', 'x-repeat'];
+    watchRegex = /^\$?\w+(\.?\w+)*$/,
+    directives = ['x-bind', 'x-model', 'x-repeat', 'x-show', 'x-hide'],
+    allWatches = []; // store all model watches , for expr 
 
   function isObject(obj) {
     return !!obj && typeof obj === 'object'
@@ -23,6 +25,10 @@ function link(el, data) {
     while (++i < len) {
       fn.call(arr, arr[i], i, arr);
     }
+  }
+
+  function isWatch(attr) {
+    return watchRegex.test(attr);
   }
 
   // array wrapper for item change notify
@@ -94,25 +100,42 @@ function link(el, data) {
    * returns directives array found in el
    *  */
   function compileBinding(el) {
-    var prop, binding, foundDirectives = [];
+    var attrValue, binding, foundDirectives = [];
     if (el.getAttribute) {
       each(directives, function (directive) {
-        if (prop = el.getAttribute(directive)) {
-          foundDirectives.push(directive);
-          binding = Binding.create(el, prop, directive);
-          bindings.push(binding);
-          addWatchFn(binding);
-          if (directive === 'x-model') {
-            bindModelListener(binding);
+        if (attrValue = el.getAttribute(directive)) {
+          if (isWatch(attrValue)) {
+            foundDirectives.push(directive);
+            binding = Binding.create(el, attrValue, directive);
+            bindings.push(binding);
+            addWatchFn(binding);
+            if (directive === 'x-model') {
+              bindModelListener(binding);
+            }
+          }
+          else {
+            // expr 
+            if (directive === 'x-show' || directive === 'x-hide') {
+              each(allWatches, function (watch) {
+                if (attrValue.indexOf(watch) > -1) {
+                  foundDirectives.push(directive);
+                  binding = Binding.create(el, watch, directive);
+                  binding.expr = attrValue;
+                  bindings.push(binding);
+                  addWatchFn(binding);
+                }
+              });
+            }
+
           }
         }
       });
     } else if (el.nodeType === 3) {
       // text node , and it may contains several interpolation expr
       foundDirectives.push('x-bind');
-      prop = getInterpolationWatch(el.textContent)
-      if (prop.length > 0) {
-        binding = Binding.create(el, prop, 'x-bind', el.textContent);
+      attrValue = getInterpolationWatch(el.textContent)
+      if (attrValue.length > 0) {
+        binding = Binding.create(el, attrValue, 'x-bind', el.textContent);
         bindings.push(binding);
         addWatchFn(binding);
       }
@@ -241,12 +264,44 @@ function link(el, data) {
           console.log('this is a child repeater');
           return;
         }
-        repeatRender(binding);
+        repeatHanlder(binding);
+      }
+      else if (binding.directive === 'x-show') {
+        var pvalue = getWatchValue(binding.prop),
+          expr = binding.expr,
+          exprValue;
+
+        exprValue = $eval(binding.prop, expr, pvalue);
+        showHideHanlder(binding, exprValue);
+      }
+      else if (binding.directive === 'x-hide') {
+
       }
     }
   }
 
-  function repeatRender(binding) {
+  function $eval(p, body, pValue) {
+    var fn = new Function(p, 'return ' + body + ';');
+    return fn.call(null, pValue);
+  }
+
+  function showHideHanlder(binding, isShow) {
+    var el = binding.el;
+    if (isShow) {
+      if (el.className.indexOf('x-hide') > -1) {
+        el.className = el.className.replace(/x-hide/g, '');
+      }
+    }
+    else {
+      if (el.className.indexOf('x-hide') === -1) {
+        el.className = el.className + ' x-hide';
+      }
+    }
+
+  }
+
+
+  function repeatHanlder(binding) {
     var warr = getWatchValue(binding.prop),
       arr = warr && warr.arr,
       el = binding.el;
@@ -312,6 +367,7 @@ function link(el, data) {
 
   function defineObserver(model, prop, value, propStack, isArray) {
     var watch = getWatchByPropStack(prop, propStack);
+    allWatches.push(watch);
     if (!isArray) {
       Object.defineProperty(model, prop, {
         get: function () {
@@ -349,12 +405,26 @@ function link(el, data) {
     });
   }
 
+  // add x-hide style for x-show and x-hide
+  function addStyles() {
+    if (!document.$$linkStyleLoaded) {
+      document.$$linkStyleLoaded = true;
+      var style = document.createElement('style');
+      style.type = 'text/css';
+      style.id = 'linkStyle';
+      style.textContent = '.x-hide{display:none !important;}';
+      document.head.insertAdjacentElement('afterBegin', style);
+    }
+  }
+
   function bootstrap() {
-    compile(el);
+    addStyles();
+
     watchModel(model);
+    compile(el);
     render();
     //todo: remove
-    console.log(bindings);
+    // console.log(bindings);
   };
 
   bootstrap();
