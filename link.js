@@ -84,12 +84,16 @@ function link(el, data) {
   function evalExpr(binding) {
     var expr = binding.expr;
     each(binding.prop, function (prop) {
+      var propValue = getWatchValue(prop);
+      if (typeof propValue === 'string') {
+        propValue = ["'", propValue, "'"].join('');
+      }
       if (prop[0] !== '$') {
-        expr = expr.replace(new RegExp(prop, 'g'), getWatchValue(prop));
+        expr = expr.replace(new RegExp(prop, 'g'), propValue);
       }
       else {
         // special for array $item link
-        expr = expr.replace(new RegExp('\\' + prop, 'g'), getWatchValue(prop));
+        expr = expr.replace(new RegExp('\\' + prop, 'g'), propValue);
       }
 
     });
@@ -144,7 +148,7 @@ function link(el, data) {
             });
 
             foundDirectives.push(directive);
-            binding = Binding.create(el, allWatches, directive);
+            binding = Binding.create(el, exprWatches, directive);
             binding.expr = attrValue;
             bindings.push(binding);
             addWatchFn(binding);

@@ -10,7 +10,7 @@
     <label>name:</label> <span x-bind='name'></span>
     <input type="text" class="form-control" x-model='name'>
     <label>age:</label><span x-bind='age'></span> <label>the true age</label>
-    <span x-bind='trueAge' x-show='age>18'></span>
+    <span x-bind='trueAge' x-show='age>18 && name'></span>
     <input type="text" class="form-control" x-model='age'>
     <label>area:</label><span x-bind='address.location.area'></span>
     <input type="text" class="form-control" x-model='address.location.area'>
