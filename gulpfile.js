@@ -32,7 +32,9 @@ gulp.task('clean:dist', function (cb) {
 gulp.task('build:lib', function () {
   gulp.src(
     [
-      srcScriptsFolder + '/link.js'
+      srcScriptsFolder + '/link.prefix.js',
+      srcScriptsFolder + '/parts/**/*.js',
+      srcScriptsFolder + '/link.suffix.js'
     ])
     .pipe(buildScripts(targetLibName));
 });
