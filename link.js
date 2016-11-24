@@ -152,7 +152,14 @@ function link(el, data) {
   }
 
   function compile(el) {
-    compileBinding(el);
+    if (!el.$$child) {
+      // el with $$child means it's a x-repeat clone , skip compile
+      compileBinding(el);
+    }
+    else {
+       console.log('this is a clone x-repeat, skip compile');
+    }
+
     each(el.childNodes, function (node) {
       compile(node);
     });
@@ -210,7 +217,10 @@ function link(el, data) {
       else if (binding.directive === 'x-repeat') {
         // repeat can't be nested
         // repeat item will construct a new linker object
-        if (binding.el && binding.el.$$child) return;
+        if (binding.el && binding.el.$$child) {
+          console.log('this is a child repeater');
+          return;
+        }
         var warr = getWatchValue(binding.prop),
           arr = warr && warr.arr;
         el = binding.el;
@@ -324,6 +334,8 @@ function link(el, data) {
     compile(el);
     watchModel(model);
     render();
+    //todo: remove
+     console.log(bindings);
   };
 
   bootstrap();
