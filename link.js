@@ -86,11 +86,19 @@ function link(el, data) {
     return new Binding(el, prop, directive, tpl);
   }
 
+  /**
+   * 1. get directives and build binding context info.
+   * 2. when it's x-model , add form ui value change listener for 2 two-way binding.
+   * 3. add watch fn.
+   * 
+   * returns directives array found in el
+   *  */
   function compileBinding(el) {
-    var prop, binding;
+    var prop, binding, foundDirectives = [];
     if (el.getAttribute) {
       each(directives, function (directive) {
         if (prop = el.getAttribute(directive)) {
+          foundDirectives.push(directive);
           binding = Binding.create(el, prop, directive);
           bindings.push(binding);
           addWatchFn(binding);
@@ -101,6 +109,7 @@ function link(el, data) {
       });
     } else if (el.nodeType === 3) {
       // text node , and it may contains several interpolation expr
+      foundDirectives.push('x-bind');
       prop = getInterpolationWatch(el.textContent)
       if (prop.length > 0) {
         binding = Binding.create(el, prop, 'x-bind', el.textContent);
@@ -108,6 +117,8 @@ function link(el, data) {
         addWatchFn(binding);
       }
     }
+
+    return foundDirectives;
   }
 
   function addWatchFn(binding) {
@@ -152,12 +163,21 @@ function link(el, data) {
   }
 
   function compile(el) {
+    /**
+     * 1. case x-repeat origin , compile it but skip childNodes compiling.
+     * 2. case x-repeat clone , skip compiling , but go on compiling its childNodes.
+     * 
+     *  */
+    var foundDirectives;
     if (!el.$$child) {
-      // el with $$child means it's a x-repeat clone , skip compile
-      compileBinding(el);
+      foundDirectives = compileBinding(el);
+      if (foundDirectives.indexOf('x-repeat') > -1) {
+        console.log('this is x-repeat, stop childNodes compile');
+        return;
+      }
     }
     else {
-       console.log('this is a clone x-repeat, skip compile');
+      console.log('this is a clone x-repeat, skip compile');
     }
 
     each(el.childNodes, function (node) {
@@ -335,7 +355,7 @@ function link(el, data) {
     watchModel(model);
     render();
     //todo: remove
-     console.log(bindings);
+    console.log(bindings);
   };
 
   bootstrap();
