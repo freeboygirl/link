@@ -38,14 +38,19 @@ function repeatHanlder(binding) {
     lastLinks = [];
   }
 
+  var docFragment=document.createDocumentFragment();
+
   if (isArray(arr)) {
     each(arr, function (itemData) {
       var cloneEl = binding.originEl.cloneNode(true);
       cloneEl.$$child = true;
       // lastClonedNodes.push(cloneEl);
       lastLinks.push(link(cloneEl, { $item: itemData }));
-      binding.comment.parentNode.insertBefore(cloneEl, binding.comment);
+      // binding.comment.parentNode.insertBefore(cloneEl, binding.comment);
+      docFragment.appendChild(cloneEl);
     });
+
+    binding.comment.parentNode.insertBefore(docFragment,binding.comment);
     binding.lastLinks = lastLinks;
   }
 }
