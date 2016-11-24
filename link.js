@@ -241,46 +241,45 @@ function link(el, data) {
           console.log('this is a child repeater');
           return;
         }
-        var warr = getWatchValue(binding.prop),
-          arr = warr && warr.arr;
-        el = binding.el;
-
-        if (el) {
-          binding.originEl = binding.originEl || el.cloneNode(true);
-          binding.comment = document.createComment('repeat end for ' + binding.prop);
-          el.parentNode.insertBefore(binding.comment, el);
-          el.remove();
-          delete binding.el;
-        }
-
-        var lastClonedNodes = binding.lastClonedNodes || [],
-          lastLinks = binding.lastLinks || [];
-
-        //unlink repeat item 
-        if (lastLinks.length > 0) {
-          each(lastLinks, function (link) {
-            link.unlink();
-          });
-        }
-        // remove repeat item
-        if (lastClonedNodes.length > 0) {
-          each(lastClonedNodes, function (nodeToRemove) {
-            nodeToRemove.remove();
-          });
-        }
-
-        if (isArray(arr)) {
-          each(arr, function (itemData) {
-            var cloneEl = binding.originEl.cloneNode(true);
-            cloneEl.$$child = true;
-            lastClonedNodes.push(cloneEl);
-            lastLinks.push(link(cloneEl, { $item: itemData }));
-            binding.comment.parentNode.insertBefore(cloneEl, binding.comment);
-          });
-          binding.lastClonedNodes = lastClonedNodes;
-          binding.lastLinks = lastLinks;
-        }
+        repeatRender(binding);
       }
+    }
+  }
+
+  function repeatRender(binding) {
+    var warr = getWatchValue(binding.prop),
+      arr = warr && warr.arr,
+      el = binding.el;
+
+    if (el) {
+      binding.originEl = binding.originEl || el.cloneNode(true);
+      binding.comment = document.createComment('repeat end for ' + binding.prop);
+      el.parentNode.insertBefore(binding.comment, el);
+      el.remove();
+      delete binding.el;
+    }
+
+    var lastLinks = binding.lastLinks || [];
+
+    //unlink repeat item 
+    if (lastLinks.length > 0) {
+      each(lastLinks, function (link) {
+        link.unlink();
+      });
+
+      lastLinks.length = 0;
+      lastLinks = [];
+    }
+
+    if (isArray(arr)) {
+      each(arr, function (itemData) {
+        var cloneEl = binding.originEl.cloneNode(true);
+        cloneEl.$$child = true;
+        // lastClonedNodes.push(cloneEl);
+        lastLinks.push(link(cloneEl, { $item: itemData }));
+        binding.comment.parentNode.insertBefore(cloneEl, binding.comment);
+      });
+      binding.lastLinks = lastLinks;
     }
   }
 
@@ -374,11 +373,15 @@ function link(el, data) {
 
   // clear the linker object inner states
   function unlink() {
+    console.log(model.$item + ' unlinking');
     model = null;
-    bindings.length = 0;
     bindings = null;
     watchMap = null;
-    el = null;
+    if (el.$$child) {
+      // clone 
+      el.remove();
+      el = null;
+    }
   }
 
   // if the model contains array property ,it will be wrapped, this fn get the origin model back
