@@ -514,3 +514,5 @@ function link(el, data) {
 
 };
 
+window.link = link;
+
