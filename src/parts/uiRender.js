@@ -13,8 +13,8 @@ function uiRenderFnBuilder(binding) {
         binding.el.textContent = evalInterpolation(binding);
       } else if (binding.expr) {
         var exprVal = evalExpr(binding);
-        if (binding.directive === 'x-show') {
-          showHideHanlder(binding, exprVal);
+        if (binding.directive === 'x-show' || binding.directive === 'x-hide') {
+          showHideHanlder(binding, exprVal, binding.directive);
         }
       }
 

@@ -1,16 +1,29 @@
-function showHideHanlder(binding, isShow) {
+function showHideHanlder(binding, boolValue, directive) {
   var el = binding.el;
-  if (isShow) {
-    if (el.className.indexOf('x-hide') > -1) {
-      el.className = el.className.replace(/x-hide/g, '');
+  if (directive === 'x-show') {
+    if (boolValue) {
+      if (el.className.indexOf('x-hide') > -1) {
+        el.className = el.className.replace(/x-hide/g, '');
+      }
+    }
+    else {
+      if (el.className.indexOf('x-hide') === -1) {
+        el.className = el.className + ' x-hide';
+      }
+    }
+  } else {
+    // x-hide 
+    if (!boolValue) {
+      if (el.className.indexOf('x-hide') > -1) {
+        el.className = el.className.replace(/x-hide/g, '');
+      }
+    }
+    else {
+      if (el.className.indexOf('x-hide') === -1) {
+        el.className = el.className + ' x-hide';
+      }
     }
   }
-  else {
-    if (el.className.indexOf('x-hide') === -1) {
-      el.className = el.className + ' x-hide';
-    }
-  }
-
 }
 
 function repeatHanlder(binding) {
@@ -38,7 +51,7 @@ function repeatHanlder(binding) {
     lastLinks = [];
   }
 
-  var docFragment=document.createDocumentFragment();
+  var docFragment = document.createDocumentFragment();
 
   if (isArray(arr)) {
     each(arr, function (itemData) {
@@ -50,7 +63,7 @@ function repeatHanlder(binding) {
       docFragment.appendChild(cloneEl);
     });
 
-    binding.comment.parentNode.insertBefore(docFragment,binding.comment);
+    binding.comment.parentNode.insertBefore(docFragment, binding.comment);
     binding.lastLinks = lastLinks;
   }
 }

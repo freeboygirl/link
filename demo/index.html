@@ -9,8 +9,13 @@
   <div id='demo'>
     <label>name:</label> <span x-bind='name'></span>
     <input type="text" class="form-control" x-model='name'>
-    <label>age:</label><span x-bind='age'></span> <label>the true age</label>
-    <span x-bind='trueAge' x-show='age>18 && name'></span>
+    <label>age:</label><span x-bind='age'></span>
+    <div x-show='age>=18'>
+      true age: <b x-bind='trueAge'></b> will show when age>18
+    </div>
+    <div x-hide='age>=18'>
+      input age: less than 18 i will show
+    </div>
     <input type="text" class="form-control" x-model='age'>
     <label>area:</label><span x-bind='address.location.area'></span>
     <input type="text" class="form-control" x-model='address.location.area'>
@@ -22,9 +27,9 @@
     </select>
     <label>name and age </label> {{name}}{{age}}
     <div x-repeat='loves'>
-      love {{$item.name}} {{$item.age}} 
-      <input type="text" class="form-control"  x-model='$item.name'>
-      <input type="text" class="form-control"  x-model='$item.age'>
+      love {{$item.name}} {{$item.age}}
+      <input type="text" class="form-control" x-model='$item.name'>
+      <input type="text" class="form-control" x-model='$item.age'>
     </div>
 
     <div x-repeat='other.hates'>
