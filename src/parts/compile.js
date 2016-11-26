@@ -6,7 +6,7 @@ function getLinkContext(el, directive, expr) {
   var linkContext;
 
   if (isWatch(expr)) {
-    //expr is a watch
+    //expr is a simple watch
     linkContext = LinkContext.create(el, expr, directive);
     linkContextCollection.push(linkContext);
     addWatchMap(linkContext);
@@ -14,6 +14,7 @@ function getLinkContext(el, directive, expr) {
       bindModelListener(linkContext);
     }
   } else {
+    //expr is watch expr, need $eval
     var exprWatches = [];
     each(allWatches, function (watch) {
       if (expr.indexOf(watch) > -1) {
