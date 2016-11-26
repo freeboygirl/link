@@ -1,7 +1,7 @@
 function LinkContext(el, prop, directive, expr, tpl) {
   this.el = el;
   this.prop = prop; // string, or string array for interpilation and expr.
-  this.directive = directive;
+  this.directive = directive; // one directive could have multiple watches
   this.expr = expr;
   this.tpl = tpl;
 }
