@@ -8,7 +8,7 @@ function getLinkContext(el, directive, expr) {
   if (isWatch(expr)) {
     //expr is a watch
     linkContext = LinkContext.create(el, expr, directive);
-    linkContexts.push(linkContext);
+    linkContextCollection.push(linkContext);
     addWatchFn(linkContext);
     if (directive === 'x-model') {
       bindModelListener(linkContext);
@@ -22,7 +22,7 @@ function getLinkContext(el, directive, expr) {
     });
 
     linkContext = LinkContext.create(el, exprWatches, directive, expr);
-    linkContexts.push(linkContext);
+    linkContextCollection.push(linkContext);
     addWatchFn(linkContext);
   }
 }
@@ -32,7 +32,7 @@ function getLinkContextsFromInterpolation(el, tpl) {
     linkContext;
   if (props.length > 0) {
     linkContext = LinkContext.create(el, props, 'x-bind', null, tpl);
-    linkContexts.push(linkContext);
+    linkContextCollection.push(linkContext);
     addWatchFn(linkContext);
   }
 }

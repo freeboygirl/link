@@ -3,7 +3,7 @@ function link(el, data) {
   if (!el || !data) throw Error('el and data are required!');
   if (!isObject(data)) throw Error('data must be object');
   var model = data,
-    linkContexts = [], // store linkContext
+    linkContextCollection = [], // store linkContext
     watchMap = Object.create(null), // stores watch prop & watchfns mapping
     //regex
     interpolationRegex = /\{\{(\$?[^\}]+)\}\}/g,
