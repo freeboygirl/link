@@ -1,5 +1,5 @@
-function showHideHanlder(binding, boolValue, directive) {
-  var el = binding.el;
+function showHideHanlder(linkContext, boolValue, directive) {
+  var el = linkContext.el;
   if (directive === 'x-show') {
     if (boolValue) {
       if (el.className.indexOf('x-hide') > -1) {
@@ -26,20 +26,20 @@ function showHideHanlder(binding, boolValue, directive) {
   }
 }
 
-function repeatHanlder(binding) {
-  var warr = getWatchValue(binding.prop),
+function repeatHanlder(linkContext) {
+  var warr = getWatchValue(linkContext.prop),
     arr = warr && warr.arr,
-    el = binding.el;
+    el = linkContext.el;
 
   if (el) {
-    binding.originEl = binding.originEl || el.cloneNode(true);
-    binding.comment = document.createComment('repeat end for ' + binding.prop);
-    el.parentNode.insertBefore(binding.comment, el);
+    linkContext.originEl = linkContext.originEl || el.cloneNode(true);
+    linkContext.comment = document.createComment('repeat end for ' + linkContext.prop);
+    el.parentNode.insertBefore(linkContext.comment, el);
     el.remove();
-    delete binding.el;
+    delete linkContext.el;
   }
 
-  var lastLinks = binding.lastLinks || [];
+  var lastLinks = linkContext.lastLinks || [];
 
   //unlink repeat item
   if (lastLinks.length > 0) {
@@ -55,15 +55,15 @@ function repeatHanlder(binding) {
 
   if (isArray(arr)) {
     each(arr, function (itemData) {
-      var cloneEl = binding.originEl.cloneNode(true);
+      var cloneEl = linkContext.originEl.cloneNode(true);
       cloneEl.$$child = true;
       // lastClonedNodes.push(cloneEl);
       lastLinks.push(link(cloneEl, { $item: itemData }));
-      // binding.comment.parentNode.insertBefore(cloneEl, binding.comment);
+      // linkContext.comment.parentNode.insertBefore(cloneEl, linkContext.comment);
       docFragment.appendChild(cloneEl);
     });
 
-    binding.comment.parentNode.insertBefore(docFragment, binding.comment);
-    binding.lastLinks = lastLinks;
+    linkContext.comment.parentNode.insertBefore(docFragment, linkContext.comment);
+    linkContext.lastLinks = lastLinks;
   }
 }

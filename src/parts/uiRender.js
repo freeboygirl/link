@@ -1,28 +1,28 @@
-function uiRenderFnBuilder(binding) {
+function uiRenderFnBuilder(linkContext) {
   //return ui render fn
   return function () {
-    if (binding.directive === 'x-bind' && !(binding.prop instanceof Array)) {
-      binding.el.innerText = getWatchValue(binding.prop);
+    if (linkContext.directive === 'x-bind' && !(linkContext.prop instanceof Array)) {
+      linkContext.el.innerText = getWatchValue(linkContext.prop);
     }
-    else if (binding.directive === 'x-model') {
-      binding.el.value = getWatchValue(binding.prop);
+    else if (linkContext.directive === 'x-model') {
+      linkContext.el.value = getWatchValue(linkContext.prop);
     }
-    else if (binding.prop instanceof Array) {
+    else if (linkContext.prop instanceof Array) {
       // text node for interpolation expr
-      if (binding.tpl) {
-        binding.el.textContent = evalInterpolation(binding);
-      } else if (binding.expr) {
-        var exprVal = evalExpr(binding);
-        if (binding.directive === 'x-show' || binding.directive === 'x-hide') {
-          showHideHanlder(binding, exprVal, binding.directive);
+      if (linkContext.tpl) {
+        linkContext.el.textContent = evalInterpolation(linkContext);
+      } else if (linkContext.expr) {
+        var exprVal = evalExpr(linkContext);
+        if (linkContext.directive === 'x-show' || linkContext.directive === 'x-hide') {
+          showHideHanlder(linkContext, exprVal, linkContext.directive);
         }
       }
 
     }
-    else if (binding.directive === 'x-repeat') {
+    else if (linkContext.directive === 'x-repeat') {
       // repeat can't be nested
       // repeat item will construct a new linker object
-      repeatHanlder(binding);
+      repeatHanlder(linkContext);
     }
   }
 }

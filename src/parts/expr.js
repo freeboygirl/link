@@ -9,9 +9,9 @@ function getInterpolationWatch(text) {
   return resultArr;
 }
 
-function evalInterpolation(binding) {
-  var tpl = binding.tpl;
-  each(binding.prop, function (prop) {
+function evalInterpolation(linkContext) {
+  var tpl = linkContext.tpl;
+  each(linkContext.prop, function (prop) {
     if (prop[0] !== '$') {
       tpl = tpl.replace(new RegExp('{{' + prop + '}}', 'g'), getWatchValue(prop));
     }
@@ -33,9 +33,9 @@ function $eval(expr) {
   }
 }
 
-function evalExpr(binding) {
-  var expr = binding.expr;
-  each(binding.prop, function (prop) {
+function evalExpr(linkContext) {
+  var expr = linkContext.expr;
+  each(linkContext.prop, function (prop) {
     var propValue = getWatchValue(prop);
     if (typeof propValue === 'string') {
       propValue = ["'", propValue, "'"].join('');

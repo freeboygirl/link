@@ -14,7 +14,7 @@
   function unlink() {
     console.log(model.$item + ' unlinking');
     model = null;
-    bindings = null;
+    linkContexts = null;
     watchMap = null;
     if (el.$$child) {
       // clone
