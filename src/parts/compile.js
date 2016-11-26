@@ -47,18 +47,18 @@ function getBindingsFromInterpolation(el, tpl) {
    * returns directives array found in el
    *  */
 function compileBinding(el) {
-  var expr, binding, foundDirectives = [];
+  var expr, foundDirectives = [];
   if (el.getAttribute) {
     each(directives, function (directive) {
       if (expr = el.getAttribute(directive)) {
         foundDirectives.push(directive);
-        binding = getBinding(el, directive, expr);
+        getBinding(el, directive, expr);
       }
     });
   } else if (el.nodeType === 3) {
     // text node , and it may contains several watches
     foundDirectives.push('x-bind');
-    binding = getBindingsFromInterpolation(el, el.textContent);
+    getBindingsFromInterpolation(el, el.textContent);
   }
 
   return foundDirectives;
