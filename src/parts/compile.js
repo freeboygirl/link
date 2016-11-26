@@ -29,8 +29,8 @@ function compileBinding(el) {
           });
 
           foundDirectives.push(directive);
-          binding = Binding.create(el, exprWatches, directive);
-          binding.expr = attrValue;
+          binding = Binding.create(el, exprWatches, directive, attrValue);
+          // binding.expr = attrValue;
           bindings.push(binding);
           addWatchFn(binding);
 
@@ -40,9 +40,9 @@ function compileBinding(el) {
   } else if (el.nodeType === 3) {
     // text node , and it may contains several interpolation expr
     foundDirectives.push('x-bind');
-    attrValue = getInterpolationWatch(el.textContent)
-    if (attrValue.length > 0) {
-      binding = Binding.create(el, attrValue, 'x-bind', el.textContent);
+    var props = getInterpolationWatch(el.textContent)
+    if (props.length > 0) {
+      binding = Binding.create(el, props, 'x-bind', null, el.textContent);
       bindings.push(binding);
       addWatchFn(binding);
     }
