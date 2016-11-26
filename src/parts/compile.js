@@ -1,3 +1,44 @@
+
+/**
+ * isSimpleWatch[boolean]
+ * expr[string] is directive attribute value in the DOM, it could be a simple watch or watch(es) expr;
+ *  */
+function getBinding(el, directive, expr) {
+  var binding;
+
+  if (isWatch(expr)) {
+    //expr is a watch
+    binding = Binding.create(el, expr, directive);
+    bindings.push(binding);
+    addWatchFn(binding);
+    if (directive === 'x-model') {
+      bindModelListener(binding);
+    }
+  } else {
+    var exprWatches = [];
+    each(allWatches, function (watch) {
+      if (expr.indexOf(watch) > -1) {
+        exprWatches.push(watch);
+      }
+    });
+
+    binding = Binding.create(el, exprWatches, directive, expr);
+    bindings.push(binding);
+    addWatchFn(binding);
+  }
+}
+
+function getBindingsFromInterpolation(el, tpl) {
+  var props = getInterpolationWatch(tpl),
+    binding,
+    bindingArr = [];
+  if (props.length > 0) {
+    binding = Binding.create(el, props, 'x-bind', null, tpl);
+    bindings.push(binding);
+    addWatchFn(binding);
+  }
+}
+
 /**
    * 1. get directives and build binding context info.
    * 2. when it's x-model , add form ui value change listener for 2 two-way binding.
@@ -6,46 +47,18 @@
    * returns directives array found in el
    *  */
 function compileBinding(el) {
-  var attrValue, binding, foundDirectives = [];
+  var expr, binding, foundDirectives = [];
   if (el.getAttribute) {
     each(directives, function (directive) {
-      if (attrValue = el.getAttribute(directive)) {
-        if (isWatch(attrValue)) {
-          foundDirectives.push(directive);
-          binding = Binding.create(el, attrValue, directive);
-          bindings.push(binding);
-          addWatchFn(binding);
-          if (directive === 'x-model') {
-            bindModelListener(binding);
-          }
-        }
-        else {
-          // expr
-          var exprWatches = [];
-          each(allWatches, function (watch) {
-            if (attrValue.indexOf(watch) > -1) {
-              exprWatches.push(watch);
-            }
-          });
-
-          foundDirectives.push(directive);
-          binding = Binding.create(el, exprWatches, directive, attrValue);
-          // binding.expr = attrValue;
-          bindings.push(binding);
-          addWatchFn(binding);
-
-        }
+      if (expr = el.getAttribute(directive)) {
+        foundDirectives.push(directive);
+        binding = getBinding(el, directive, expr);
       }
     });
   } else if (el.nodeType === 3) {
-    // text node , and it may contains several interpolation expr
+    // text node , and it may contains several watches
     foundDirectives.push('x-bind');
-    var props = getInterpolationWatch(el.textContent)
-    if (props.length > 0) {
-      binding = Binding.create(el, props, 'x-bind', null, el.textContent);
-      bindings.push(binding);
-      addWatchFn(binding);
-    }
+    binding = getBindingsFromInterpolation(el, el.textContent);
   }
 
   return foundDirectives;
