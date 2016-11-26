@@ -8,7 +8,7 @@ function uiRenderFnBuilder(binding) {
       binding.el.value = getWatchValue(binding.prop);
     }
     else if (binding.prop instanceof Array) {
-      // text node for interpolation expr 
+      // text node for interpolation expr
       if (binding.tpl) {
         binding.el.textContent = evalInterpolation(binding);
       } else if (binding.expr) {

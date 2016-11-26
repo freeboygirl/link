@@ -7,9 +7,9 @@ function Binding(el, prop, directive, tpl) {
 
 Binding.create = function (el, prop, directive, tpl) {
   /**
-   * prop could be string and array 
+   * prop could be string and array
    * array: interpilation and expr
-   * array+interpilation: tpl 
+   * array+interpilation: tpl
    * array+expr: expr
    *  */
   return new Binding(el, prop, directive, tpl);

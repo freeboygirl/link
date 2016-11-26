@@ -17,7 +17,7 @@
     bindings = null;
     watchMap = null;
     if (el.$$child) {
-      // clone 
+      // clone
       el.remove();
       el = null;
     }

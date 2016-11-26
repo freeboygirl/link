@@ -12,7 +12,7 @@ function showHideHanlder(binding, boolValue, directive) {
       }
     }
   } else {
-    // x-hide 
+    // x-hide
     if (!boolValue) {
       if (el.className.indexOf('x-hide') > -1) {
         el.className = el.className.replace(/x-hide/g, '');
@@ -41,7 +41,7 @@ function repeatHanlder(binding) {
 
   var lastLinks = binding.lastLinks || [];
 
-  //unlink repeat item 
+  //unlink repeat item
   if (lastLinks.length > 0) {
     each(lastLinks, function (link) {
       link.unlink();

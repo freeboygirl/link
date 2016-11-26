@@ -2,7 +2,7 @@
    * 1. get directives and build binding context info.
    * 2. when it's x-model , add form ui value change listener for 2 two-way binding.
    * 3. add watch fn.
-   * 
+   *
    * returns directives array found in el
    *  */
 function compileBinding(el) {
@@ -20,7 +20,7 @@ function compileBinding(el) {
           }
         }
         else {
-          // expr 
+          // expr
           var exprWatches = [];
           each(allWatches, function (watch) {
             if (attrValue.indexOf(watch) > -1) {
@@ -55,7 +55,7 @@ function compile(el) {
   /**
    * 1. case x-repeat origin , compile it but skip childNodes compiling.
    * 2. case x-repeat clone , skip compiling , but go on compiling its childNodes.
-   * 
+   *
    *  */
   var foundDirectives;
   if (!el.$$child) {
