@@ -1,20 +1,18 @@
 
-function addWatchFn(linkContext) {
-  // check linkContext prop, if string , simple bind or model, if array it's text interpilation
-  // simple watch
+function addWatchMap(linkContext) {
   if (isArray(linkContext.prop)) {
-    // every prop watch need notifying the linkContext change
-    each(linkContext.prop, function (prop) {
-      if (!watchMap[prop]) {
-        watchMap[prop] = [];
-      }
-      watchMap[prop].push(uiRenderFnBuilder(linkContext));
+    each(linkContext.prop, function (watch) {
+      addWatchFn(watch, linkContext);
     });
   }
   else {
-    if (!watchMap[linkContext.prop]) {
-      watchMap[linkContext.prop] = [];
-    }
-    watchMap[linkContext.prop].push(uiRenderFnBuilder(linkContext));
+    addWatchFn(linkContext.prop, linkContext);
   }
+}
+
+function addWatchFn(watch, linkContext) {
+  if (!watchMap[watch]) {
+    watchMap[watch] = [];
+  }
+  watchMap[watch].push(uiRenderFnBuilder(linkContext));
 }
