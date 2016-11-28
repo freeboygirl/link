@@ -54,6 +54,24 @@ function compileDOM(el) {
         getLinkContext(el, directive, expr);
       }
     });
+    if (el.hasAttributes()) {
+      //event directive compile 
+      var attrs = el.attributes,
+        event,
+        fn,
+        eventLinkContext;
+      each(attrs, function (attr) {
+        // if(attr.val)
+        if (eventDirectiveRegex.test(attr.name)) {
+          event = eventDirectiveRegex.exec(attr.name)[1];
+          fn = attr.value;
+          eventLinkContext = EventLinkContext.create(el, event, fn);
+          eventLinkContextCollection.push(eventLinkContext);
+          bindEventLinkContext(eventLinkContext);
+        }
+      });
+    }
+
   } else if (el.nodeType === 3) {
     // text node , and it may contains several watches
     foundDirectives.push('x-bind');
