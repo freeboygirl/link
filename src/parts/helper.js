@@ -2,6 +2,10 @@ function isObject(obj) {
   return !!obj && typeof obj === 'object'
 }
 
+function isFunction(func) {
+  return (typeof func === 'function');
+}
+
 function isArray(obj) {
   return !!obj && typeof obj === 'object' && typeof obj.length === 'number';
 }
