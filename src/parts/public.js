@@ -21,6 +21,12 @@ function unlink() {
     el.remove();
     el = null;
   }
+  // remove event 
+  each(eventLinkContextCollection, function (context) {
+    if (context.func) {
+      removeEventListenerHanlder(context.el, context.event, context.func);
+    }
+  });
 }
 
 // if the model contains array property ,it will be wrapped, this fn get the origin model back
