@@ -10,7 +10,17 @@
     other: {
       hates: ['a', 'b', 'c']
     },
-    trueAge:18
+    trueAge: 18
   };
-  linker = link(document.getElementById('demo'), model);
+
+  var methods = {
+    hello: function (el) {
+      console.log('hello ' + this.name, ' you are ' + this.age);
+    },
+    hi: function () {
+      console.log('hi ' + this.name);
+    }
+  };
+
+  linker = link(document.getElementById('demo'), model, methods);
 })();

@@ -1,4 +1,4 @@
 'use strict';
-function link(el, data) {
+function link(el, data, behaviors) {
 
 
