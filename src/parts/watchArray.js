@@ -3,11 +3,11 @@ function WatchedArray(watch, arr) {
   this.arr = arr;
 }
 
-WatchedArray.prototype = [];
+WatchedArray.prototype = Object.create(Array.prototype);
+WatchedArray.prototype.constructor = WatchedArray;
 
 WatchedArray.prototype.notify = function () {
   notify(this.watch, this.arr);
-  console.log(this.watch + ':' + this.arr.toString());
 }
 
 WatchedArray.prototype.getArray = function () {
