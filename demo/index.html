@@ -8,7 +8,7 @@
 <body>
   <div id='demo'>
     <label>name:</label> <span x-bind='name'></span>
-    <input type="text" class="form-control" x-model='name'>
+    <input type="text" class="form-control" x-model='name' x-on-focus='focus' x-on-blur='blur'>
     <label>age:</label><span x-bind='age'></span>
     <div x-show='age>=18'>
       true age: <b x-bind='trueAge'></b> will show when age>18
@@ -28,7 +28,7 @@
     <label>name and age </label> {{name}}{{age}}
     <div x-repeat='loves'>
       love {{$item.name}} {{$item.age}}
-      <input type="text" class="form-control" x-model='$item.name'>
+      <input type="text" class="form-control" x-model='$item.name' x-on-focus='focus' x-on-blur='blur'>
       <input type="text" class="form-control" x-model='$item.age'>
     </div>
 

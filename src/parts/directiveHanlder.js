@@ -58,7 +58,7 @@ function repeatHanlder(linkContext) {
       var cloneEl = linkContext.originEl.cloneNode(true);
       cloneEl.$$child = true;
       // lastClonedNodes.push(cloneEl);
-      lastLinks.push(link(cloneEl, { $item: itemData }));
+      lastLinks.push(link(cloneEl, { $item: itemData },behaviors));
       // linkContext.comment.parentNode.insertBefore(cloneEl, linkContext.comment);
       docFragment.appendChild(cloneEl);
     });

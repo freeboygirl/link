@@ -19,6 +19,12 @@
     },
     hi: function () {
       console.log('hi ' + this.name);
+    },
+    focus:function(el){
+      el.style.background='yellow';
+    },
+    blur:function(el){
+      el.style.background='';
     }
   };
 
