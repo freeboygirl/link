@@ -8,6 +8,7 @@ function setModel(newModel, reScan) {
   }
   watchModel(model);
   render();
+  addBehaviors();
 }
 
 // clear the linker object inner states
@@ -22,11 +23,12 @@ function unlink() {
     el = null;
   }
   // remove event 
-  each(eventLinkContextCollection, function (context) {
-    if (context.func) {
-      removeEventListenerHanlder(context.el, context.event, context.func);
-    }
-  });
+  // each(eventLinkContextCollection, function (context) {
+  //   if (context.func) {
+  //     removeEventListenerHanlder(context.el, context.event, context.func);
+  //   }
+  // });
+  removeBehaviors();
 }
 
 // if the model contains array property ,it will be wrapped, this fn get the origin model back

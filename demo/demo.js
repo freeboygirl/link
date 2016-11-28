@@ -10,7 +10,8 @@
     other: {
       hates: ['a', 'b', 'c']
     },
-    trueAge: 18
+    trueAge: 18,
+    sex:'male'
   };
 
   var methods = {
