@@ -7,7 +7,7 @@ function bindEventLinkContext(eventLinkContext) {
     if (model[fn]) {
       model[fn].apply(model, [el])
     }
-  }
+  };
 
   addEventListenerHanlder(el, event, func);
   eventLinkContext.func = func; // update func ref

@@ -14,7 +14,7 @@ LinkContext.create = function (el, prop, directive, expr, tpl) {
    * array+expr: expr
    *  */
   return new LinkContext(el, prop, directive, expr, tpl);
-}
+};
 
 
 /**
@@ -32,4 +32,4 @@ function EventLinkContext(el, event, fn) {
 
 EventLinkContext.create = function (el, event, fn) {
   return new EventLinkContext(el, event, fn);
-}
+};

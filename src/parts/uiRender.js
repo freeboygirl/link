@@ -3,7 +3,7 @@ function uiRenderFnBuilder(linkContext) {
   return function () {
     var exprVal = evalLinkValue(linkContext);
     renderLink(linkContext, exprVal);
-  }
+  };
 }
 
 function evalLinkValue(linkContext) {
