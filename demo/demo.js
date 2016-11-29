@@ -11,23 +11,23 @@
       hates: ['a', 'b', 'c']
     },
     trueAge: 18,
-    sex:'male',
-    fruit:['apple','banana'],
-    message:''
+    sex: 'male',
+    fruit: ['apple', 'banana'],
+    message: ''
   };
 
   var methods = {
-    hello: function (el) {
+    hello: function () {
       console.log('hello ' + this.name, ' you are ' + this.age);
     },
     hi: function () {
       console.log('hi ' + this.name);
     },
-    focus:function(el){
-      el.style.background='yellow';
+    focus: function (ev, el) {
+      el.style.background = 'yellow';
     },
-    blur:function(el){
-      el.style.background='';
+    blur: function (ev, el) {
+      el.style.background = '';
     }
   };
 
