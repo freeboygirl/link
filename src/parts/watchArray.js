@@ -3,7 +3,7 @@ function WatchedArray(watch, arr) {
   this.arr = arr;
 }
 
-WatchedArray.prototype = Object.create(Array.prototype);
+WatchedArray.prototype = Object.create(null);
 WatchedArray.prototype.constructor = WatchedArray;
 
 WatchedArray.prototype.notify = function () {

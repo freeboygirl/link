@@ -29,7 +29,22 @@ function renderLink(linkContext, exprVal) {
     linkContext.el.textContent = exprVal;
   }
   else if (linkContext.directive === 'x-model') {
-    linkContext.el.value = exprVal;
+    var el = linkContext.el;
+    if (el.type === 'radio') {
+      el.checked = (el.value === exprVal);
+    }
+    else if (el.type === 'checkbox') {
+      if (exprVal instanceof WatchedArray) {
+        el.checked = exprVal.arr.indexOf(el.value) > -1;
+      } else {
+        throw linkError('checkbox should bind with array');
+      }
+
+    }
+    else {
+      linkContext.el.value = exprVal;
+    }
+
   } else if (linkContext.directive === 'x-show' || linkContext.directive === 'x-hide') {
     showHideHanlder(linkContext, exprVal, linkContext.directive);
   }

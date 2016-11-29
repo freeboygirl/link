@@ -10,6 +10,16 @@ function isArray(obj) {
   return !!obj && typeof obj === 'object' && typeof obj.length === 'number';
 }
 
+function ArrayRemove(arr,value) {
+ var len=arr.length;
+ for(var i=0;i<len;i++){
+   if(arr[i]===value){
+      arr.splice(i,1);
+      len--;
+   }
+ }
+}
+
 function each(arr, fn) {
   var len = arr.length, i = -1;
   while (++i < len) {

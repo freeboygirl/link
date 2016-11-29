@@ -39,8 +39,33 @@
     <input type="button" name="" value="hello" x-on-click='hello'>
     <span x-on-click='hi'>click me</span>
 
-    <input type="radio" name="sex" value="male" x-model='sex'> male
-    <input type="radio" name="sex" value="female" x-model='sex'> female
+
+    <form>
+      <div>radio</div>
+      <div>
+        <label>
+        <input type="radio" name="sex" value="male" x-model='sex'> male
+        </label>
+        <label>
+          <input type="radio" name="sex" value="female" x-model='sex'> female
+        </label>
+      </div>
+
+       <div>checkbox</div>
+      <div>
+        <label>
+        <input type="checkbox" name="fruit" value="apple" x-model='fruit'> apple
+        </label>
+        <label>
+          <input type="checkbox" name="fruit" value="orange" x-model='fruit'> orange
+        </label>
+        <label>
+          <input type="checkbox" name="fruit" value="banana" x-model='fruit'> banana
+        </label>
+      </div>
+    </form>
+
+
   </div>
 
   <script src="link.js"></script>

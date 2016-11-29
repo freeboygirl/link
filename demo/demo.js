@@ -11,7 +11,8 @@
       hates: ['a', 'b', 'c']
     },
     trueAge: 18,
-    sex:'male'
+    sex:'male',
+    fruit:['apple','banana']
   };
 
   var methods = {
