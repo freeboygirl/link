@@ -28,7 +28,7 @@ function bindModelListener(linkContext) {
           throw linkError('checkbox should bind with array');
         }
         if (!checked && arr.indexOf(value) > -1) {
-          ArrayRemove(arr, value);
+          arrayRemove(arr, value);
         }
         else {
           arr.push(value);

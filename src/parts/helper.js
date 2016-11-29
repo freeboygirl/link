@@ -10,7 +10,7 @@ function isArray(obj) {
   return !!obj && typeof obj === 'object' && typeof obj.length === 'number';
 }
 
-function ArrayRemove(arr,value) {
+function arrayRemove(arr,value) {
  var len=arr.length;
  for(var i=0;i<len;i++){
    if(arr[i]===value){
