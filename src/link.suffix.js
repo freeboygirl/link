@@ -7,4 +7,4 @@ return {
   $model: model // wrapped model
 };
 
-};
+}
