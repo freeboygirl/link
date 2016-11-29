@@ -11,7 +11,7 @@ function getLinkContext(el, directive, expr) {
     linkContextCollection.push(linkContext);
     addWatchMap(linkContext);
     if (directive === 'x-model') {
-      bindModelListener(linkContext);
+      linkUIListener(linkContext);
     }
   } else {
     //expr is watch expr, need $eval

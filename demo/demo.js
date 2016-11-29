@@ -12,7 +12,8 @@
     },
     trueAge: 18,
     sex:'male',
-    fruit:['apple','banana']
+    fruit:['apple','banana'],
+    message:''
   };
 
   var methods = {

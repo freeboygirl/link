@@ -136,7 +136,7 @@ function link(el, data) {
 						bindings.push(binding);
 						addWatchFn(binding);
 						if (directive === 'x-model') {
-							bindModelListener(binding);
+							linkUIListener(binding);
 						}
 					}
 					else {
@@ -191,7 +191,7 @@ function link(el, data) {
 		}
 	}
 
-	function bindModelListener(binding) {
+	function linkUIListener(binding) {
 		var el = binding.el, directive = binding.directive;
 		if (el.nodeName === 'INPUT') {
 			if (el.type === 'text') {
