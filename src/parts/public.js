@@ -22,12 +22,6 @@ function unlink() {
     el.remove();
     el = null;
   }
-  // remove event 
-  // each(eventLinkContextCollection, function (context) {
-  //   if (context.func) {
-  //     removeEventListenerHanlder(context.el, context.event, context.func);
-  //   }
-  // });
   removeBehaviors();
 }
 

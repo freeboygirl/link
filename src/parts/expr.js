@@ -1,6 +1,6 @@
 function getInterpolationWatch(text) {
+  var ar, resultArr = [];
   if (text) {
-    var ar, resultArr = [];
     while (ar = interpolationRegex.exec(text)) {
       resultArr.push(ar[1]);
     }

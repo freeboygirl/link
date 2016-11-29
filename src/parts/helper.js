@@ -27,7 +27,6 @@ function addStyles() {
     document.$$linkStyleLoaded = true;
     var style = document.createElement('style');
     style.type = 'text/css';
-    style.id = 'linkStyle';
     style.textContent = '.x-hide{display:none !important;}';
     document.head.insertAdjacentElement('afterBegin', style);
   }
