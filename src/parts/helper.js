@@ -20,6 +20,16 @@ function arrayRemove(arr,value) {
  }
 }
 
+function formatString() {
+  if (arguments.length < 2) return arguments[0];
+  var str = arguments[0],
+    args = Array.prototype.slice.call(arguments, 1);
+
+  return str.replace(/\{(\d+)\}/g, function (match, n) {
+    return args[n];
+  });
+}
+
 function each(arr, fn) {
   var len = arr.length, i = -1;
   while (++i < len) {
