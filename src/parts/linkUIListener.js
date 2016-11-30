@@ -1,21 +1,27 @@
 function linkUIListener(linkContext) {
-  var el = linkContext.el, directive = linkContext.directive;
-  if (el.nodeName === 'INPUT') {
-    if (el.type === 'text') {
+  var el = linkContext.el, directive = linkContext.directive,
+    nodeName = el.nodeName, type = el.type;
+  switch (nodeName) {
+    case 'INPUT': {
+      switch (type) {
+        case 'text':
+        case 'email':
+        case 'password':
+        case 'url': {
+          simpleListenHandler(linkContext, 'keyup');
+          break;
+        }
+      }
+      break;
+    }
+    case 'SELECT': {
+      simpleListenHandler(linkContext, 'change');
+      break;
+    }
+    default: {
       simpleListenHandler(linkContext, 'keyup');
+      break;
     }
-    else if (el.type === 'radio') {
-      simpleListenHandler(linkContext, 'click');
-    }
-    else if (el.type === 'checkbox') {
-      checkboxListenHandler(linkContext);
-    }
-  }
-  else if (el.nodeName === 'SELECT') {
-    simpleListenHandler(linkContext, 'change');
-  }
-  else if (el.nodeName === 'TEXTAREA') {
-    simpleListenHandler(linkContext, 'keyup');
   }
 }
 

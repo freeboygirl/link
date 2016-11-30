@@ -12,7 +12,8 @@ var model = {
   trueAge: 18,
   sex: 'male',
   fruit: ['apple', 'banana'],
-  message: ''
+  message: '',
+  password:''
 };
 
 var methods = {
