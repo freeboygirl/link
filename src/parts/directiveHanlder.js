@@ -1,28 +1,11 @@
 function showHideHanlder(linkContext, boolValue, directive) {
   var el = linkContext.el;
-  if (directive === 'x-show') {
-    if (boolValue) {
-      if (el.className.indexOf('x-hide') > -1) {
-        el.className = el.className.replace(/x-hide/g, '');
-      }
-    }
-    else {
-      if (el.className.indexOf('x-hide') === -1) {
-        el.className = el.className + ' x-hide';
-      }
-    }
-  } else {
-    // x-hide
-    if (!boolValue) {
-      if (el.className.indexOf('x-hide') > -1) {
-        el.className = el.className.replace(/x-hide/g, '');
-      }
-    }
-    else {
-      if (el.className.indexOf('x-hide') === -1) {
-        el.className = el.className + ' x-hide';
-      }
-    }
+  if (directive === 'x-show' && boolValue
+    || directive === 'x-hide' && !boolValue) {
+    removeClass(el, 'x-hide');
+  }
+  else {
+    addClass(el, 'x-hide');
   }
 }
 
@@ -57,9 +40,7 @@ function repeatHanlder(linkContext) {
     each(arr, function (itemData) {
       var cloneEl = linkContext.originEl.cloneNode(true);
       cloneEl.$$child = true;
-      // lastClonedNodes.push(cloneEl);
-      lastLinks.push(link(cloneEl, { $item: itemData },behaviors));
-      // linkContext.comment.parentNode.insertBefore(cloneEl, linkContext.comment);
+      lastLinks.push(link(cloneEl, { $item: itemData }, behaviors));
       docFragment.appendChild(cloneEl);
     });
 

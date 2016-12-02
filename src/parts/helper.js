@@ -10,14 +10,26 @@ function isArray(obj) {
   return !!obj && typeof obj === 'object' && typeof obj.length === 'number';
 }
 
-function arrayRemove(arr,value) {
- var len=arr.length;
- for(var i=0;i<len;i++){
-   if(arr[i]===value){
-      arr.splice(i,1);
+function addClass(el, className) {
+  if (el.className.indexOf(className) === -1) {
+    el.className = el.className + className;
+  }
+}
+
+function removeClass(el, className) {
+  if (el.className.indexOf(className) > -1) {
+    el.className = el.className.replace(new RegExp(className, 'g'), '');
+  }
+}
+
+function arrayRemove(arr, value) {
+  var len = arr.length;
+  for (var i = 0; i < len; i++) {
+    if (arr[i] === value) {
+      arr.splice(i, 1);
       len--;
-   }
- }
+    }
+  }
 }
 
 function formatString() {

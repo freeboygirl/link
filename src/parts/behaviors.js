@@ -2,7 +2,7 @@ function addBehaviors() {
   if (isObject(behaviors)) {
     var methods = Object.keys(behaviors);
     each(methods, function (fn) {
-      if (typeof (behaviors[fn]) === 'function') {
+      if (isFunction(behaviors[fn])) {
         model[fn] = behaviors[fn];
       }
     });
@@ -11,7 +11,7 @@ function addBehaviors() {
 
 function removeBehaviors() {
   each(eventLinkContextCollection, function (context) {
-    if (context.func) {
+    if (isFunction(context.func)) {
       removeEventListenerHanlder(context.el, context.event, context.func);
     }
   });
