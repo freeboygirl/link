@@ -5,7 +5,7 @@ function Lexer(text) {
   this.text = text;
   this.index = 0;
   this.len = text.length;
-  this.tokens = [];
+  this.watches = [];
 }
 
 Lexer.prototype = {
@@ -15,11 +15,11 @@ Lexer.prototype = {
     while (this.index < this.len) {
       var ch = this.text[this.index];
       if (watchStartRegex.test(ch)) {
-        this.getWatch(ch);
+        this._getWatch(ch);
       }
       else if (ch === '"' || ch === "'") {
         // string 
-        while (this.peek() !== ch && this.index < this.len) {
+        while (this._peek() !== ch && this.index < this.len) {
           this.index++;
         }
         if (this.index + 1 < this.len) {
@@ -33,27 +33,24 @@ Lexer.prototype = {
       }
     }
 
-    return this.tokens;
+    return this.watches;
   },
 
-  getWatch: function (ch) {
+  _getWatch: function (ch) {
     var watch = [ch],
       start = this.index;
     while (this.index < this.len) {
-      if (validWatchChar.test(this.peek())) {
+      if (validWatchChar.test(this._peek())) {
         watch.push(this.text[++this.index]);
       } else {
         this.index++;
         break;
       }
     }
-    this.tokens.push({
-      index: start,
-      watch: watch.join('')
-    });
+    this.watches.push(watch.join(''));
   },
 
-  peek: function (i) {
+  _peek: function (i) {
     i = i || 1;
     return (this.index + i < this.len) ? this.text[this.index + 1] : false;
   }

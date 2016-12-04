@@ -14,15 +14,11 @@ function getLinkContext(el, directive, expr) {
       linkUIListener(linkContext);
     }
   } else {
-    //expr is watch expr, need $eval
-    var exprWatches = [];
-    each(allWatches, function (watch) {
-      if (expr.indexOf(watch) > -1) {
-        exprWatches.push(watch);
-      }
-    });
+    //expr is watch expr, need parse and $eval
+    var lexer = new Lexer(expr),
+      watches = lexer.lex();
 
-    linkContext = LinkContext.create(el, exprWatches, directive, expr);
+    linkContext = LinkContext.create(el, watches, directive, expr);
     linkContextCollection.push(linkContext);
     addWatchMap(linkContext);
   }
