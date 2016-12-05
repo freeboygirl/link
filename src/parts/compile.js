@@ -19,6 +19,7 @@ function getLinkContext(el, directive, expr) {
       watches = lexer.getWatches();
 
     linkContext = LinkContext.create(el, watches, directive, expr);
+    linkContext.tokens = lexer.tokens;
     linkContextCollection.push(linkContext);
     addWatchMap(linkContext);
   }
@@ -70,8 +71,11 @@ function compileDOM(el) {
 
   } else if (el.nodeType === 3) {
     // text node , and it may contains several watches
-    foundDirectives.push('x-bind');
-    getLinkContextsFromInterpolation(el, el.textContent);
+    // if (interpolationRegex.test(el.textContent)) {
+      foundDirectives.push('x-bind');
+      getLinkContextsFromInterpolation(el, el.textContent);
+    // }
+
   }
 
   return foundDirectives;

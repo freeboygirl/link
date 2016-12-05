@@ -7,14 +7,14 @@
 
 <body>
   <div id='demo'>
-    <label>name:</label> <span x-bind='name'></span>
+    <label>name:</label> <span x-bind='"my name is "+name+",and i am "+age'></span>
     <input type="text" class="form-control" x-model='name' x-on-focus='focus' x-on-blur='blur'>
     <label>age:</label><span x-bind='age'></span>
     <div x-show='age>=18'>
-      true age: <b x-bind='trueAge'></b> will show when age>18
+      age >18
     </div>
     <div x-hide='age>=18'>
-      input age: less than 18 i will show
+     age<18
     </div>
     <input type="text" class="form-control" x-model='age'>
     <label>area:</label><span x-bind='address.location.area'></span>

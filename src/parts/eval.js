@@ -24,30 +24,31 @@ function evalInterpolation(linkContext) {
   return tpl;
 }
 
-function $eval(expr) {
+function $eval(expr, $this) {
   var fn = new Function('return ' + expr + ';');
   try {
-    return fn.call();
+    return fn.call($this);
   } catch (ex) {
     //some invalid expr;
   }
 }
 
-function evalExpr(linkContext) {
-  var expr = linkContext.expr;
-  each(linkContext.prop, function (prop) {
-    var propValue = getWatchValue(prop);
-    if (typeof propValue === 'string') {
-      propValue = ["'", propValue, "'"].join('');
-    }
-    if (prop[0] !== '$') {
-      expr = expr.replace(new RegExp(prop, 'g'), propValue);
-    }
-    else {
-      // special for array $item link
-      expr = expr.replace(new RegExp('\\' + prop, 'g'), propValue);
-    }
-
+function processExpr(expr, tokens) {
+  var indexes = [];
+  var result = [];
+  var p = 0;
+  each(tokens, function (token) {
+    result.push(expr.slice(p, token.index));
+    result.push('this.');
+    result.push(token.watch);
+    p += token.index + token.watch.length;
   });
-  return $eval(expr);
+  result.push(expr.slice(p));
+
+  return result.join('');
+}
+
+function evalExpr(linkContext) {
+  var fnExpr = processExpr(linkContext.expr, linkContext.tokens);
+  return $eval(fnExpr, model);
 }

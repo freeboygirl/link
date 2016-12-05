@@ -6,6 +6,7 @@ function Lexer(text) {
   this.index = 0;
   this.len = text.length;
   this.watches = [];
+  this.tokens = []; // add position info
 }
 
 Lexer.prototype = {
@@ -48,6 +49,7 @@ Lexer.prototype = {
       }
     }
     this.watches.push(watch.join(''));
+    this.tokens.push({ index: start, watch: watch.join('') });
   },
 
   _peek: function (i) {
@@ -55,3 +57,5 @@ Lexer.prototype = {
     return (this.index + i < this.len) ? this.text[this.index + 1] : false;
   }
 };
+
+window.Lexer = Lexer;
