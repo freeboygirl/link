@@ -11,7 +11,7 @@
     <input type="text" class="form-control" x-model='name' x-on-focus='focus' x-on-blur='blur'>
     <label>age:</label><span x-bind='age'></span>
     <div x-show='age>=18'>
-      age >18
+      age >18 ,age/2 is <span x-bind="age/2"></span>
     </div>
     <div x-hide='age>=18'>
      age<18
