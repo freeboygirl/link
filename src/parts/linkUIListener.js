@@ -11,6 +11,14 @@ function linkUIListener(linkContext) {
           simpleListenHandler(linkContext, 'keyup');
           break;
         }
+        case 'radio':{
+          simpleListenHandler(linkContext,'click');
+          break;
+        }
+        case 'checkbox':{
+          checkboxListenHandler(linkContext);
+          break;
+        }
       }
       break;
     }
