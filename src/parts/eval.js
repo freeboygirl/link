@@ -33,10 +33,12 @@ function $eval(expr, $this) {
   }
 }
 
-function processExpr(expr, tokens) {
-  var indexes = [];
-  var result = [];
-  var p = 0;
+function processExpr(linkContext) {
+  var expr = linkContext.expr,
+    tokens = linkContext.tokens,
+    indexes = [],
+    result = [],
+    p = 0;
   each(tokens, function (token) {
     result.push(expr.slice(p, token.index));
     result.push('this.');
@@ -44,11 +46,10 @@ function processExpr(expr, tokens) {
     p += token.index + token.watch.length;
   });
   result.push(expr.slice(p));
-
   return result.join('');
 }
 
 function evalExpr(linkContext) {
-  var fnExpr = processExpr(linkContext.expr, linkContext.tokens);
+  var fnExpr = processExpr(linkContext);
   return $eval(fnExpr, model);
 }
