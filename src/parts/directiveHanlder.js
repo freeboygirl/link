@@ -27,7 +27,7 @@ function repeatHanlder(linkContext) {
   //unlink repeat item
   if (lastLinks.length > 0) {
     each(lastLinks, function (link) {
-      link.unlink();
+      link.$unlink();
     });
 
     lastLinks.length = 0;
