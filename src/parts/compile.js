@@ -16,7 +16,7 @@ function getLinkContext(el, directive, expr) {
   } else {
     //expr is watch expr, need parse and $eval
     var lexer = new Lexer(expr),
-      watches = lexer.lex();
+      watches = lexer.getWatches();
 
     linkContext = LinkContext.create(el, watches, directive, expr);
     linkContextCollection.push(linkContext);

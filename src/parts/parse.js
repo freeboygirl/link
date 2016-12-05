@@ -11,7 +11,7 @@ function Lexer(text) {
 Lexer.prototype = {
   constructor: Lexer,
 
-  lex: function () {
+  getWatches: function () {
     while (this.index < this.len) {
       var ch = this.text[this.index];
       if (watchStartRegex.test(ch)) {
