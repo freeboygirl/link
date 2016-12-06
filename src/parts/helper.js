@@ -51,9 +51,9 @@ function trim(str) {
 }
 
 function parseJson(str) {
-  if ('JSON' in window) {
-    return JSON.parse(str);
-  }
+  // if ('JSON' in window) {
+  //   return JSON.parse(str);
+  // }
 
   return $eval(str);
 }
