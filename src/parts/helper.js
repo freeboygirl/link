@@ -12,7 +12,7 @@ function isArray(obj) {
 
 function addClass(el, className) {
   if (el.className.indexOf(className) === -1) {
-    el.className = el.className + ' ' + className;
+    el.className = trim(el.className) + ' ' + className;
   }
 }
 

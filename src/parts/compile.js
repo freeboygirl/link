@@ -16,8 +16,17 @@ function getLinkContext(el, directive, expr) {
   }
   else if (expr[0] === '{' && expr.slice(-1) === '}') {
     // object ,for x-class , only support 1 classname now 
-    linkContext = LinkContext.create(el, expr, directive);
+    var data = expr.slice(1, -1).split(':'),
+      className = data[0],
+      lexExpr = data[1];
+
+    var lexer = new Lexer(lexExpr),
+      watches = lexer.getWatches();
+
+    linkContext = LinkContext.create(el, watches, directive, lexExpr);
     linkContext.$$forClass = true;
+    linkContext.tokens = lexer.tokens;
+    linkContext.className = className;
     linkContextCollection.push(linkContext);
     addWatchMap(linkContext);
   }

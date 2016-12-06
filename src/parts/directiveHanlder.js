@@ -55,15 +55,12 @@ function repeatHanlder(linkContext) {
 }
 
 function classHandler(linkContext) {
-  var obj = parseJson(linkContext.prop),
-    key = Object.keys(obj)[0],
-    value = obj[key],
-    exprVal = !!getWatchValue(value);
+  var exprVal = !!evalExpr(linkContext);
 
   if (exprVal) {
-    addClass(linkContext.el, key);
+    addClass(linkContext.el, linkContext.className);
   }
   else {
-    removeClass(linkContext.el, key);
+    removeClass(linkContext.el, linkContext.className);
   }
 }
