@@ -1,7 +1,10 @@
 function uiRenderFnBuilder(linkContext) {
   //return ui render fn
   return function () {
-    var exprVal = evalLinkValue(linkContext);
+    var exprVal;
+    if (!linkContext.$$forClass) {
+      exprVal = evalLinkValue(linkContext);
+    }
     renderLink(linkContext, exprVal);
   };
 }
@@ -52,5 +55,9 @@ function renderLink(linkContext, exprVal) {
     // repeat can't be nested
     // repeat item will construct a new linker object
     repeatHanlder(linkContext);
+  }
+  else if (linkContext.$$forClass) {
+    // x-class
+    classHandler(linkContext);
   }
 }

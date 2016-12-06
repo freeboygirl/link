@@ -48,3 +48,17 @@ function repeatHanlder(linkContext) {
     linkContext.lastLinks = lastLinks;
   }
 }
+
+function classHandler(linkContext) {
+  var obj = parseJson(linkContext.prop),
+    key = Object.keys(obj)[0],
+    value = obj[key],
+    exprVal = !!getWatchValue(value);
+
+  if (exprVal) {
+    addClass(linkContext.el, key);
+  }
+  else {
+    removeClass(linkContext.el, key);
+  }
+}

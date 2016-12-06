@@ -42,6 +42,22 @@ function formatString() {
   });
 }
 
+function trim(str) {
+  if(typeof str==='string'){
+    return str.replace(/^\s+|\s+$/g,'');
+  }
+
+  return str;
+}
+
+function parseJson(str) {
+  if('JSON' in window){
+    return JSON.parse(str);
+  }
+
+  return $eval(str);
+}
+
 function each(arr, fn) {
   var len = arr.length, i = -1;
   while (++i < len) {

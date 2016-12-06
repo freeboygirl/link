@@ -13,7 +13,15 @@ function getLinkContext(el, directive, expr) {
     if (directive === 'x-model') {
       linkUIListener(linkContext);
     }
-  } else {
+  }
+  else if (expr[0] === '{' && expr.slice(-1) === '}') {
+    // object ,for x-class , only support 1 classname now 
+    linkContext = LinkContext.create(el, expr, directive);
+    linkContext.$$forClass=true;
+    linkContextCollection.push(linkContext);
+    addWatchMap(linkContext);
+  }
+  else {
     //expr is watch expr, need parse and $eval
     var lexer = new Lexer(expr),
       watches = lexer.getWatches();
@@ -47,6 +55,7 @@ function compileDOM(el) {
   if (el.getAttribute) {
     each(directives, function (directive) {
       if (expr = el.getAttribute(directive)) {
+        expr = trim(expr);
         foundDirectives.push(directive);
         getLinkContext(el, directive, expr);
       }
@@ -72,8 +81,8 @@ function compileDOM(el) {
   } else if (el.nodeType === 3) {
     // text node , and it may contains several watches
     // if (interpolationRegex.test(el.textContent)) {
-      foundDirectives.push('x-bind');
-      getLinkContextsFromInterpolation(el, el.textContent);
+    foundDirectives.push('x-bind');
+    getLinkContextsFromInterpolation(el, el.textContent);
     // }
 
   }
