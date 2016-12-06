@@ -12,7 +12,7 @@ function isArray(obj) {
 
 function addClass(el, className) {
   if (el.className.indexOf(className) === -1) {
-    el.className = el.className + className;
+    el.className = el.className + ' ' + className;
   }
 }
 
@@ -43,15 +43,15 @@ function formatString() {
 }
 
 function trim(str) {
-  if(typeof str==='string'){
-    return str.replace(/^\s+|\s+$/g,'');
+  if (typeof str === 'string') {
+    return str.replace(/^\s+|\s+$/g, '');
   }
 
   return str;
 }
 
 function parseJson(str) {
-  if('JSON' in window){
+  if ('JSON' in window) {
     return JSON.parse(str);
   }
 
