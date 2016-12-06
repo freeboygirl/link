@@ -25,6 +25,7 @@ function watchModel(model, propStack) {
   var props = Object.keys(model),
     prop,
     value;
+  arrayRemove(props,'$parent'); // child vm skip $parent watch  
   each(props, function (prop) {
     value = model[prop];
     if (isObject(value) && !isArray(value)) {

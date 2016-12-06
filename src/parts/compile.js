@@ -17,7 +17,7 @@ function getLinkContext(el, directive, expr) {
   else if (expr[0] === '{' && expr.slice(-1) === '}') {
     // object ,for x-class , only support 1 classname now 
     linkContext = LinkContext.create(el, expr, directive);
-    linkContext.$$forClass=true;
+    linkContext.$$forClass = true;
     linkContextCollection.push(linkContext);
     addWatchMap(linkContext);
   }
@@ -56,8 +56,12 @@ function compileDOM(el) {
     each(directives, function (directive) {
       if (expr = el.getAttribute(directive)) {
         expr = trim(expr);
-        foundDirectives.push(directive);
-        getLinkContext(el, directive, expr);
+        // skip child vm repeat 
+        if (!(directive === 'x-repeat' && el.$$child)) {
+          foundDirectives.push(directive);
+          getLinkContext(el, directive, expr);
+        }
+
       }
     });
     if (el.hasAttributes()) {
@@ -97,16 +101,16 @@ function compile(el) {
    *
    *  */
   var foundDirectives;
-  if (!el.$$child) {
-    foundDirectives = compileDOM(el);
-    if (foundDirectives.indexOf('x-repeat') > -1) {
-      // console.log('this is x-repeat, stop childNodes compile');
-      return;
-    }
+  // if (!el.$$child) {
+  foundDirectives = compileDOM(el);
+  if (foundDirectives.indexOf('x-repeat') > -1) {
+    // console.log('this is x-repeat, stop childNodes compile');
+    return;
   }
-  else {
-    // console.log('this is a clone x-repeat, skip compile');
-  }
+  // }
+  // else {
+  //   // console.log('this is a clone x-repeat, skip compile');
+  // }
 
   each(el.childNodes, function (node) {
     compile(node);

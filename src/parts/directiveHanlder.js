@@ -37,10 +37,10 @@ function repeatHanlder(linkContext) {
   var docFragment = document.createDocumentFragment();
 
   if (isArray(arr)) {
-    each(arr, function (itemData) {
+    each(arr, function (itemData,index) {
       var cloneEl = linkContext.originEl.cloneNode(true);
       cloneEl.$$child = true;
-      lastLinks.push(link(cloneEl, { $item: itemData }, behaviors));
+      lastLinks.push(link(cloneEl, { $item: itemData, $index:index, $parent:model }, behaviors));
       docFragment.appendChild(cloneEl);
     });
 
