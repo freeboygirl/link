@@ -13,7 +13,7 @@ function setModel(newModel, reScan) {
 
 // clear the linker object inner states
 function unlink() {
-  console.log(model.$item + ' unlinking');
+  // console.log(model.$item + ' unlinking');
   model = null;
   linkContextCollection = null;
   watchMap = null;

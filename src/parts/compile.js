@@ -91,12 +91,12 @@ function compile(el) {
   if (!el.$$child) {
     foundDirectives = compileDOM(el);
     if (foundDirectives.indexOf('x-repeat') > -1) {
-      console.log('this is x-repeat, stop childNodes compile');
+      // console.log('this is x-repeat, stop childNodes compile');
       return;
     }
   }
   else {
-    console.log('this is a clone x-repeat, skip compile');
+    // console.log('this is a clone x-repeat, skip compile');
   }
 
   each(el.childNodes, function (node) {
