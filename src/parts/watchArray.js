@@ -23,10 +23,8 @@ each(['push', 'pop', 'unshift', 'shift', 'reverse', 'sort', 'splice'], function 
 
 WatchedArray.prototype.each = function (fn, skips) {
   var slice = Array.prototype.slice,
-    that = this.arr,
-    args;
-  each(this.arr, function () {
-    args = slice.call(arguments, 0);
-    fn.apply(that, args);
+    that = this.arr;
+  each(that, function () {
+    fn.apply(that, arguments);
   }, skips)
 }
