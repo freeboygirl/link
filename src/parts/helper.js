@@ -58,10 +58,15 @@ function parseJson(str) {
   return $eval(str);
 }
 
-function each(arr, fn) {
-  var len = arr.length, i = -1;
+function each(arr, fn, skipArr) {
+  var len = arr.length, i = -1, item;
   while (++i < len) {
-    fn.call(arr, arr[i], i, arr);
+    item = arr[i];
+    if (isArray(skipArr)) {
+      if (skipArr.indexOf(item) !== -1) continue;
+    }
+
+    fn.call(arr, item, i, arr);
   }
 }
 
@@ -78,4 +83,19 @@ function addStyles() {
     style.textContent = '.x-hide{display:none !important;}';
     document.head.insertAdjacentElement('afterBegin', style);
   }
+}
+
+if (!link.$$linkPublicFnSet) {
+  link.$$linkPublicFnSet = true;
+  link.fn = {
+    isObject: isObject,
+    isFunction: isFunction,
+    isArray: isArray,
+    addClass: addClass,
+    removeClass: removeClass,
+    arrayRemove: arrayRemove,
+    formatString: formatString,
+    trim: trim,
+    each: each
+  };
 }
