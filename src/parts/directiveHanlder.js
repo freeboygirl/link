@@ -40,10 +40,10 @@ function repeatHanlder(linkContext) {
     each(arr, function (itemData, index) {
       var cloneEl = linkContext.originEl.cloneNode(true);
       cloneEl.$$child = true;
-      var childModel = Object.create(model);
-      childModel.$item = itemData;
-      childModel.$index = index;
-      childModel.$parent = model;
+      var childModel = Object.create(model, {
+        $item: { value: itemData },
+        $index: { value: index }
+      });
 
       lastLinks.push(link(cloneEl, childModel));
       docFragment.appendChild(cloneEl);

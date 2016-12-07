@@ -16,7 +16,6 @@ function bindEventLinkContext(eventLinkContext) {
 
 function addEventListenerHanlder(el, event, func) {
   if (el.addEventListener) {
-    // console.log('listener added');
     el.addEventListener(event, func, false);
   }
 }
@@ -25,6 +24,5 @@ function addEventListenerHanlder(el, event, func) {
 function removeEventListenerHanlder(el, event, func) {
   if (el.removeEventListener) {
     el.removeEventListener(event, func, false);
-    // console.log('listener removed');
   }
 }
