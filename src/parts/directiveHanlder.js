@@ -40,6 +40,7 @@ function repeatHanlder(linkContext) {
     each(arr, function (itemData, index) {
       var cloneEl = linkContext.originEl.cloneNode(true);
       cloneEl.$$child = true;
+      // child model will inherit all props&fn from parent model.
       var childModel = Object.create(model, {
         $item: { value: itemData, enumerable: true, configurable: true, writable: true },
         $index: { value: index, enumerable: true, configurable: true, writable: true }
