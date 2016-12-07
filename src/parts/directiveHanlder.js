@@ -41,8 +41,8 @@ function repeatHanlder(linkContext) {
       var cloneEl = linkContext.originEl.cloneNode(true);
       cloneEl.$$child = true;
       var childModel = Object.create(model, {
-        $item: { value: itemData },
-        $index: { value: index }
+        $item: { value: itemData, enumerable: true, configurable: true, writable: true },
+        $index: { value: index, enumerable: true, configurable: true, writable: true }
       });
 
       lastLinks.push(link(cloneEl, childModel));
