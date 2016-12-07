@@ -70,7 +70,6 @@ function compileDOM(el) {
           foundDirectives.push(directive);
           getLinkContext(el, directive, expr);
         }
-
       }
     });
     if (el.hasAttributes()) {
@@ -105,21 +104,21 @@ function compileDOM(el) {
 
 function compile(el) {
   /**
-   * 1. case x-repeat origin , compile it but skip childNodes compiling.
-   * 2. case x-repeat clone , skip compiling , but go on compiling its childNodes.
+   * 1. case x-repeat origin ,skip it and its childNodes compiling.(only need add handle x-repeat)
+   * 2. case x-repeat clone , the el is root linker 
    *
    *  */
-  var foundDirectives;
-  // if (!el.$$child) {
-  foundDirectives = compileDOM(el);
-  if (foundDirectives.indexOf('x-repeat') > -1) {
-    // console.log('this is x-repeat, stop childNodes compile');
-    return;
+  if (el.hasAttribute && el.hasAttribute('x-repeat')) {
+    if (!el.$$child) {
+      //origin
+      var linkContext = LinkContext.create(el, el.getAttribute('x-repeat'), 'x-repeat');
+      linkContextCollection.push(linkContext);
+      addWatchMap(linkContext);
+      return;
+    }
   }
-  // }
-  // else {
-  //   // console.log('this is a clone x-repeat, skip compile');
-  // }
+
+  compileDOM(el);
 
   each(el.childNodes, function (node) {
     compile(node);
