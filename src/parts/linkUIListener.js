@@ -47,7 +47,7 @@ function checkboxListenHandler(linkContext) {
       checked = el.checked,
       propValue = getWatchValue(linkContext.prop);
 
-    if (!(propValue instanceof WatchedArray) {
+    if (!(propValue instanceof WatchedArray)) {
       throw linkError('checkbox should bind with array');
     }
 
