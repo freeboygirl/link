@@ -16,6 +16,7 @@ if (!link.$$linkPublicFnSet) {
 }
 
 return {
+  $el:el,
   $setModel: setModel,
   $unlink: unlink,
   $getModel: getModel,

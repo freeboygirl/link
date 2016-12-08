@@ -1,9 +1,13 @@
 function uiRenderFnBuilder(linkContext) {
-  //return ui render fn
-  return function () {
+  //return ui render fn (notify fn )
+  // fn has value when it's watch array change
+  return function (changeInfo) {
     var exprVal;
     if (!linkContext.$$forClass) {
       exprVal = evalLinkValue(linkContext);
+    }
+    if (changeInfo) {
+      linkContext.lastArrayChangeInfo = changeInfo;
     }
     renderLink(linkContext, exprVal);
   };
@@ -51,8 +55,8 @@ function renderLink(linkContext, exprVal) {
   } else if (linkContext.directive === 'x-show' || linkContext.directive === 'x-hide') {
     showHideHanlder(linkContext, exprVal, linkContext.directive);
   }
-  else if(linkContext.directive==='x-disabled'){
-    disabledHanlder(linkContext,exprVal);
+  else if (linkContext.directive === 'x-disabled') {
+    disabledHanlder(linkContext, exprVal);
   }
   else if (linkContext.directive === 'x-repeat') {
     // repeat can't be nested

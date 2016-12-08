@@ -9,10 +9,27 @@ function showHideHanlder(linkContext, boolValue, directive) {
   }
 }
 
+function makeOneClonedLinkerForRepeater(linkContext, itemData, itemIndex) {
+  var cloneEl = linkContext.originEl.cloneNode(true);
+  cloneEl.$$child = true;
+  // child model will inherit all props&fn from parent model.
+  var childModel = Object.create(model, {
+    $item: { value: itemData, enumerable: true, configurable: true, writable: true },
+    $index: { value: itemIndex, enumerable: true, configurable: true, writable: true }
+  });
+
+  var linker = link(cloneEl, childModel);
+  return { el: cloneEl, linker: linker };
+}
+
 function repeatHanlder(linkContext) {
   var warr = getWatchValue(linkContext.prop),
     arr = warr && warr.arr,
     el = linkContext.el;
+
+  var lastArrayChangeInfo = linkContext.lastArrayChangeInfo;
+  var lastDocFragment = linkContext.lastDocFragment || document.createDocumentFragment();
+  var repeaterItem;
 
   if (el) {
     linkContext.originEl = linkContext.originEl || el.cloneNode(true);
@@ -21,38 +38,73 @@ function repeatHanlder(linkContext) {
     el.remove();
     delete linkContext.el;
   }
-
   var lastLinks = linkContext.lastLinks || [];
+  var comment = linkContext.comment;
 
-  //unlink repeat item
-  if (lastLinks.length > 0) {
+  function rebuild() {
     each(lastLinks, function (link) {
       link.$unlink();
     });
 
     lastLinks.length = 0;
     lastLinks = [];
-  }
-
-  var docFragment = document.createDocumentFragment();
-
-  if (isArray(arr)) {
     each(arr, function (itemData, index) {
-      var cloneEl = linkContext.originEl.cloneNode(true);
-      cloneEl.$$child = true;
-      // child model will inherit all props&fn from parent model.
-      var childModel = Object.create(model, {
-        $item: { value: itemData, enumerable: true, configurable: true, writable: true },
-        $index: { value: index, enumerable: true, configurable: true, writable: true }
-      });
-
-      lastLinks.push(link(cloneEl, childModel));
-      docFragment.appendChild(cloneEl);
+      repeaterItem = makeOneClonedLinkerForRepeater(linkContext, itemData, index);
+      lastLinks.push(repeaterItem.linker);
+      lastDocFragment.appendChild(repeaterItem.el);
     });
 
-    linkContext.comment.parentNode.insertBefore(docFragment, linkContext.comment);
-    linkContext.lastLinks = lastLinks;
+    comment.parentNode.insertBefore(lastDocFragment, comment);
   }
+
+  if (lastLinks.length > 0 && lastArrayChangeInfo) {
+    var fn = lastArrayChangeInfo[0],
+      itemData,
+      _linker;
+    switch (fn) {
+      case 'push': {
+        itemData = arr[arr.length - 1];
+        repeaterItem = makeOneClonedLinkerForRepeater(linkContext, itemData, index);
+        lastLinks.push(repeaterItem.linker);
+        comment.parentNode.insertBefore(repeaterItem.el, comment);
+        break;
+      }
+      case 'pop': {
+        _linker = lastLinks.pop();
+        _linker.$unlink();
+        break;
+      }
+      case 'removeOne': {
+        var index = lastArrayChangeInfo[1];
+        _linker = lastLinks.splice(index, 1)[0];
+        _linker.$unlink();
+        break;
+      }
+      case 'unshift': {
+        var firstLinkerEl = lastLinks[0].$el;
+        itemData = arr[0];
+        repeaterItem = makeOneClonedLinkerForRepeater(linkContext, itemData, index);
+        lastLinks.unshift(repeaterItem.linker);
+        firstLinkerEl.parentNode.insertBefore(repeaterItem.el, firstLinkerEl);
+        break;
+      }
+      case 'shift': {
+        _linker = lastLinks.shift();
+        _linker.$unlink();
+        break;
+      }
+      default: {
+        // clear all and rebuild 
+        rebuild();
+      }
+    }
+
+  } else {
+    rebuild();
+  }
+
+  linkContext.lastLinks = lastLinks;
+  linkContext.lastDocFragment = lastDocFragment;
 }
 
 function classHandler(linkContext) {
