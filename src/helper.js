@@ -56,14 +56,6 @@ function trim(str) {
   return str;
 }
 
-function parseJson(str) {
-  // if ('JSON' in window) {
-  //   return JSON.parse(str);
-  // }
-
-  return $eval(str);
-}
-
 function each(arr, fn, skipArr) {
   var len = arr.length, i = -1, item;
   while (++i < len) {
