@@ -50,9 +50,9 @@ function buildScripts(destFileName) {
       return $.if(isDevMode(), $.sourcemaps.init());
     })
     .pipe($.concat, destFileName)
-    .pipe(babel, {
-      presets: ['es2015']
-    })
+    // .pipe(babel, {
+    //   presets: ['es2015']
+    // })
     .pipe(function () {
       return $.if(!isDevMode(), $.uglify({ mangle: true }));
     })
