@@ -11,11 +11,11 @@ function linkUIListener(linkContext) {
           simpleListenHandler(linkContext, 'keyup');
           break;
         }
-        case 'radio':{
-          simpleListenHandler(linkContext,'click');
+        case 'radio': {
+          simpleListenHandler(linkContext, 'click');
           break;
         }
-        case 'checkbox':{
+        case 'checkbox': {
           checkboxListenHandler(linkContext);
           break;
         }
@@ -45,24 +45,18 @@ function checkboxListenHandler(linkContext) {
   el.addEventListener('click', function () {
     var value = el.value,
       checked = el.checked,
-      propValue = getWatchValue(linkContext.prop),
-      arr,
-      watch;
+      propValue = getWatchValue(linkContext.prop);
 
-    if (propValue instanceof WatchedArray) {
-      arr = propValue.arr;
-      watch = propValue.watch;
-    }
-    else {
+    if (!(propValue instanceof WatchedArray) {
       throw linkError('checkbox should bind with array');
     }
-    if (!checked && arr.indexOf(value) > -1) {
-      arrayRemove(arr, value);
+
+    if (!checked && propValue.contain(value)) {
+      propValue.removeOne(value);
     }
     else {
-      arr.push(value);
+      propValue.push(value);
     }
-    // var newPropValue = new WatchedArray(watch, arr);
-    // setWatchValue(linkContext.prop, newPropValue);
+
   }, false);
 }

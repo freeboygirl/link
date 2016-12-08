@@ -6,8 +6,8 @@ function WatchedArray(watch, arr) {
 WatchedArray.prototype = Object.create(null);
 WatchedArray.prototype.constructor = WatchedArray;
 
-WatchedArray.prototype.notify = function () {
-  notify(this.watch, this.arr);
+WatchedArray.prototype.notify = function (fn) {
+  notify(this.watch, fn);
 };
 
 WatchedArray.prototype.getArray = function () {
@@ -17,7 +17,8 @@ WatchedArray.prototype.getArray = function () {
 each(['push', 'pop', 'unshift', 'shift', 'reverse', 'sort', 'splice'], function (fn) {
   WatchedArray.prototype[fn] = function () {
     var ret = this.arr[fn].apply(this.arr, arguments);
-    this.notify();
+    this.notify(fn);
+    return ret;
   };
 });
 
@@ -26,6 +27,17 @@ WatchedArray.prototype.each = function (fn, skips) {
   each(that, function () {
     fn.apply(that, arguments);
   }, skips)
+};
+
+WatchedArray.prototype.contain = function (item) {
+  return this.arr.indexOf(item) > -1;
+};
+
+WatchedArray.prototype.removeOne = function (item) {
+  var index = this.arr.indexOf(item);
+  if (index > -1) {
+    this.splice(index, 1);
+  }
 };
 
 WatchedArray.prototype.set = function (arr) {

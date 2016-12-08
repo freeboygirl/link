@@ -24,7 +24,7 @@ function watchModel(model, propStack) {
   propStack = propStack || [];
   var props = Object.keys(model),
     prop,
-    value; 
+    value;
   each(props, function (prop) {
     value = model[prop];
     if (isObject(value) && !isArray(value)) {
@@ -49,12 +49,13 @@ function getWatchByPropStack(prop, propStack) {
   return propStack.join('.');
 }
 
-function notify(watch) {
+// only array change pass fn 
+function notify(watch, fn) {
   var rendersArray = watchMap[watch],
     len;
   if (rendersArray) {
     each(rendersArray, function (render) {
-      render.apply();
+      render.call(null, fn);
     });
   }
 }
