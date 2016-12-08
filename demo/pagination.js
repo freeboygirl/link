@@ -23,15 +23,7 @@
   function loadMessage(vm) {
     vm.messages.set(msgStore.slice((vm.page - 1) * pageSize, vm.page * pageSize));
   }
-
-  for (var i = 0; i < pageCount; i++) {
-    pageNumbers.push({
-      page: (i + 1),
-      active: false
-    });
-  }
-
-  model.pageNumbers = pageNumbers;
+  model.pageNumbers = [];
   model.pageCount = pageCount;
 
 
@@ -52,12 +44,57 @@
         item.active = false;
       }
     });
+
+    renderPageNumbers(vm);
+  }
+
+  function getPageNumbers(page, pageCount, visiblePageCount) {
+    visiblePageCount = visiblePageCount || 10;
+    var low,
+      high,
+      v;
+
+    pageNumbers = [];
+
+    if (pageCount === 0) {
+      return;
+    }
+    if (page > pageCount) {
+      page = 1;
+    }
+
+    if (pageCount <= visiblePageCount) {
+      low = 1;
+      high = pageCount;
+    } else {
+      v = Math.ceil(visiblePageCount / 2);
+      low = Math.max(page - v, 1);
+      high = Math.min(low + visiblePageCount - 1, pageCount);
+
+      if (pageCount - high < v) {
+        low = high - visiblePageCount + 1;
+      }
+    }
+
+    for (; low <= high; low++) {
+      pageNumbers.push({
+        page: low,
+        active: false
+      });
+    }
+
+    return pageNumbers;;
+  }
+
+  function renderPageNumbers(vm) {
+    var pageNumbers = getPageNumbers(vm.page, vm.pageCount);
+    vm.pageNumbers.set(pageNumbers);
   }
 
 
   var methods = {
     hilightMessage: function () {
-      this.$item.focus=!this.$item.focus;
+      this.$item.focus = !this.$item.focus;
     },
     toggleArrow: function () {
       this.$item.up = !this.$item.up;
@@ -78,6 +115,8 @@
         vm.pageNumbers.each(function (item) {
           item.active = false;
         }, [vm.$item]);
+
+        renderPageNumbers(vm);
       }
 
     }
@@ -85,11 +124,14 @@
 
   var el = document.getElementById('main');
 
-  var timerId='pagination';
+  var timerId = 'pagination';
   console.time(timerId);
 
   var linker = link(el, model, methods);
 
-  loadMessage(linker.$model);
+  var vm = linker.$model;
+
+  loadMessage(vm);
+  renderPageNumbers(vm)
   console.timeEnd(timerId);
 })(link);
