@@ -62,7 +62,7 @@ function checkboxListenHandler(linkContext) {
     else {
       arr.push(value);
     }
-    var newPropValue = new WatchedArray(watch, arr);
-    setWatchValue(linkContext.prop, newPropValue);
+    // var newPropValue = new WatchedArray(watch, arr);
+    // setWatchValue(linkContext.prop, newPropValue);
   }, false);
 }

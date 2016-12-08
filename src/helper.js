@@ -16,6 +16,10 @@ function isArray(obj) {
   return !!obj && typeof obj === 'object' && typeof obj.length === 'number';
 }
 
+function isPrimitive(o) {
+  return ['string', 'number', 'boolean'].indexOf(typeof o) > -1;
+}
+
 function addClass(el, className) {
   if (el.className.indexOf(className) === -1) {
     el.className = trim(el.className) + ' ' + className;
