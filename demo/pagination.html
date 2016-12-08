@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>pagination demo</title>
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="demo.css">
+</head>
+
+<body>
+  <div class="main" id='main'>
+    <div>
+      <table class="table msg-table">
+        <tr x-repeat='messages' x-on-click='focus'>
+          <td class="t1">{{$item.title}}</td>
+          <td class="t2" x-class='{unfold:$item.up}'>{{$item.body}}</td>
+          <td class="t3">{{$item.time}}
+            <i class="arrow" x-class='{up:$item.up}'></i>
+          </td>
+        </tr>
+      </table>
+
+      <div class="ng-pagination">
+        <ul x-show="pageCount>1">
+          <li x-on-click="prev" x-class='{disable:page===1}'>&lt;</li>
+          <li x-repeat="pageNumbers" x-on-click="pageChange" x-class="{active:$item.active}">
+            {{$item.page}}</li>
+          <li x-on-click="next" x-class="{disable:page===pageCount}">&gt;</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+  <script src="link.js"></script>
+  <script src="pagination.js"></script>
+
+  </script>
+</body>
+
+</html>
