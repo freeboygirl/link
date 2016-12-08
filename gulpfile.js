@@ -33,6 +33,8 @@ gulp.task('clean:dist', function (cb) {
 gulp.task('build:lib', function () {
   gulp.src(
     [
+      srcScriptsFolder + '/iiaf.js',
+      srcScriptsFolder + '/helper.js',
       srcScriptsFolder + '/link.prefix.js',
       srcScriptsFolder + '/link.var.js',
       srcScriptsFolder + '/parts/**/*.js',
@@ -58,7 +60,8 @@ function buildScripts(destFileName) {
       return $.if(isDevMode(), $.sourcemaps.write('./'));
     })
     .pipe(gulp.dest, distScriptsFolder)
-    .pipe(gulp.dest, demoScriptsFolder).call();
+    .pipe(gulp.dest, demoScriptsFolder)
+    .pipe(gulp.dest, '../frontend-cmc/app/scripts/tp').call(); // production use case
 };
 
 gulp.task('watch', function () {

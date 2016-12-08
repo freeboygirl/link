@@ -1,3 +1,9 @@
+var interpolationRegex = /\{\{(\$?[^\}]+)\}\}/g,
+  watchRegex = /^\$?\w+(\.?\w+)*$/,
+  eventDirectiveRegex = /^x-on-(\w+)$/, // x-on- with native dom event name to bind event handler 
+  directives = ['x-bind', 'x-model', 'x-repeat', 'x-show', 'x-hide', 'x-class', 'x-disabled'];
+
+
 function isObject(obj) {
   return !!obj && typeof obj === 'object'
 }
@@ -83,19 +89,4 @@ function addStyles() {
     style.textContent = '.x-hide{display:none !important;}';
     document.head.insertAdjacentElement('afterBegin', style);
   }
-}
-
-if (!link.$$linkPublicFnSet) {
-  link.$$linkPublicFnSet = true;
-  link.fn = {
-    isObject: isObject,
-    isFunction: isFunction,
-    isArray: isArray,
-    addClass: addClass,
-    removeClass: removeClass,
-    arrayRemove: arrayRemove,
-    formatString: formatString,
-    trim: trim,
-    each: each
-  };
 }
