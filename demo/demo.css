@@ -55,13 +55,6 @@
    background: yellowgreen;
  }
 
- .table td{
-   border:1px solid #ccc;
- }
- 
- .table >tr:hover {
-   background: #fafafa;
- }
  
  .ng-pagination {
    
