@@ -13,7 +13,7 @@ var model = {
   sex: 'male',
   fruit: ['apple', 'banana'],
   message: '',
-  password:''
+  password: ''
 };
 
 var methods = {
@@ -28,6 +28,17 @@ var methods = {
   },
   blur: function (ev, el) {
     el.style.background = '';
+  },
+  addLove: function () {
+    var vm = this;
+    vm.loves.push({
+      name: '',
+      age: 18
+    });
+  },
+  removeLove:function(){
+    var vm=this;
+    vm.loves.splice(vm.$index,1);
   }
 };
 

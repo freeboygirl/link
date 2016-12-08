@@ -30,7 +30,9 @@
       love {{$item.name}} {{$item.age}}
       <input type="text" class="form-control" x-model='$item.name' x-on-focus='focus' x-on-blur='blur'>
       <input type="text" class="form-control" x-model='$item.age'>
+      <button type="button" x-on-click="removeLove">Remove this</button>
     </div>
+    <button type="button" x-on-click="addLove">Add</button>
 
     <div x-repeat='other.hates'>
       {{$item}}
