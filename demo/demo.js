@@ -38,7 +38,8 @@ var methods = {
   },
   removeLove:function(){
     var vm=this;
-    vm.loves.splice(vm.$index,1);
+    // vm.loves.splice(vm.$index,1);
+    vm.loves.removeOne(vm.$item);
   }
 };
 
