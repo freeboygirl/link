@@ -25,7 +25,7 @@ function evalInterpolation(linkContext) {
 }
 
 function $eval(expr, $this) {
-  var fn = new Function('return ' + expr + ';');
+  var fn = new Function('with(this){return ' + expr + ';}');
   try {
     return fn.call($this);
   } catch (ex) {
@@ -33,23 +33,6 @@ function $eval(expr, $this) {
   }
 }
 
-function processExpr(linkContext) {
-  var expr = linkContext.expr,
-    tokens = linkContext.tokens,
-    indexes = [],
-    result = [],
-    p = 0;
-  each(tokens, function (token) {
-    result.push(expr.slice(p, token.index));
-    result.push('this.');
-    result.push(token.watch);
-    p += token.index + token.watch.length;
-  });
-  result.push(expr.slice(p));
-  return result.join('');
-}
-
 function evalExpr(linkContext) {
-  var fnExpr = processExpr(linkContext);
-  return $eval(fnExpr, model);
+  return $eval(linkContext.expr, model);
 }
