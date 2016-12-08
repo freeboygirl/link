@@ -51,6 +51,10 @@
    border:1px solid #ccc;
  }
 
+ .hilight{
+   background: yellowgreen;
+ }
+
  .table td{
    border:1px solid #ccc;
  }

@@ -56,8 +56,8 @@
 
 
   var methods = {
-    makeAllRead: function () {
-      console.log('all read done')
+    hilightMessage: function () {
+      this.$item.focus=!this.$item.focus;
     },
     toggleArrow: function () {
       this.$item.up = !this.$item.up;

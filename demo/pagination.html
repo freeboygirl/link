@@ -12,11 +12,10 @@
   <div class="main" id='main'>
     <div>
       <table class="table msg-table">
-        <tr x-repeat='messages' x-on-click='focus'>
+        <tr x-repeat='messages' x-on-click='hilightMessage' x-class='{hilight:$item.focus}'>
           <td class="t1">{{$item.title}}</td>
-          <td class="t2" x-class='{unfold:$item.up}'>{{$item.body}}</td>
+          <td class="t2">{{$item.body}}</td>
           <td class="t3">{{$item.time}}
-            <i class="arrow" x-class='{up:$item.up}'></i>
           </td>
         </tr>
       </table>
