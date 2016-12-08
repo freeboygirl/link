@@ -26,4 +26,11 @@ WatchedArray.prototype.each = function (fn, skips) {
   each(that, function () {
     fn.apply(that, arguments);
   }, skips)
-}
+};
+
+WatchedArray.prototype.set = function (arr) {
+  this.arr.length = 0;
+  this.arr = arr;
+  this.notify();
+};
+
