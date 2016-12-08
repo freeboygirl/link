@@ -51,6 +51,9 @@ function renderLink(linkContext, exprVal) {
   } else if (linkContext.directive === 'x-show' || linkContext.directive === 'x-hide') {
     showHideHanlder(linkContext, exprVal, linkContext.directive);
   }
+  else if(linkContext.directive==='x-disabled'){
+    disabledHanlder(linkContext,exprVal);
+  }
   else if (linkContext.directive === 'x-repeat') {
     // repeat can't be nested
     // repeat item will construct a new linker object
