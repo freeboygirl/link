@@ -15,5 +15,5 @@ function addWatchFn(watch, linkContext) {
   if (!watchMap[watch]) {
     watchMap[watch] = [];
   }
-  watchMap[watch].push(uiRenderFnBuilder(linkContext));
+  watchMap[watch].push(notifyFnFactory(linkContext));
 }

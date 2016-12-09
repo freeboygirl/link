@@ -1,4 +1,4 @@
-function uiRenderFnBuilder(linkContext) {
+function notifyFnFactory(linkContext) {
   //return ui render fn (notify fn )
   // fn has value when it's watch array change
   return function (changeInfo) {
