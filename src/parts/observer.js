@@ -9,13 +9,13 @@ function defineObserver(model, prop, value, propStack, isArray) {
       set: function (newVal) {
         if (newVal !== value) {
           value = newVal;
-          notify(watch);
+          notify(watchMap, watch);
         }
       }
     });
   }
   else {
-    model[prop] = new WatchedArray(watch, value);
+    model[prop] = new WatchedArray(watchMap, watch, value);
   }
 }
 
@@ -47,21 +47,4 @@ function getWatchByPropStack(prop, propStack) {
   }
 
   return propStack.join('.');
-}
-
-// only array change pass fn 
-function notify(watch, fn) {
-  var rendersArray = watchMap[watch],
-    len;
-  if (rendersArray) {
-    each(rendersArray, function (render) {
-      render.call(null, fn);
-    });
-  }
-}
-
-function render() {
-  for (var watch in watchMap) {
-    notify(watch);
-  }
 }

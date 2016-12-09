@@ -1,17 +1,3 @@
-function notifyFnFactory(linkContext) {
-  //return ui render fn (notify fn )
-  // fn has value when it's watch array change
-  return function (changeInfo) {
-    var exprVal;
-    if (!linkContext.$$forClass) {
-      exprVal = $eval(linkContext.expr);
-    }
-    if (changeInfo) {
-      linkContext.lastArrayChangeInfo = changeInfo;
-    }
-    renderLink(linkContext, exprVal);
-  };
-}
 
 function renderLink(linkContext, exprVal) {
   if (linkContext.directive === 'x-bind') {

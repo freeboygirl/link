@@ -2,6 +2,6 @@ function bootstrap() {
   addStyles();
   watchModel(model);
   compile(el);
-  render();
+  render(watchMap);
   addBehaviors();
 }
