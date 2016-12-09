@@ -54,6 +54,9 @@ function formatString() {
 
 function trim(str) {
   if (typeof str === 'string') {
+    if (str.trim) {
+      return str.trim();
+    }
     return str.replace(/^\s+|\s+$/g, '');
   }
 
