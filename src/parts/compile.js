@@ -42,13 +42,19 @@ function getLinkContext(el, directive, expr) {
   }
 }
 
-function getLinkContextsFromInterpolation(el, tpl) {
-  var props = getInterpolationWatch(tpl),
-    linkContext;
-  if (props.length > 0) {
-    linkContext = LinkContext.create(el, props, 'x-bind', null, tpl);
-    linkContextCollection.push(linkContext);
-    addWatchMap(linkContext);
+function getLinkContextsFromInterpolation(el, text) {
+  var expr = ['"', text, '"'].join('');
+  expr = expr.replace(/(\{\{)/g, function () { return '"+'; });
+  expr = expr.replace(/(\}\})/g, function () { return '+"'; });
+  var lexer = new Lexer(expr),
+    watches = lexer.getWatches();
+
+  if (watches.length > 0) {
+    each(watches, function (watch) {
+      var linkContext = LinkContext.create(el, watch, 'x-bind', expr);
+      linkContextCollection.push(linkContext);
+      addWatchMap(linkContext);
+    });
   }
 }
 
@@ -86,7 +92,10 @@ function compileDOM(el) {
 
   } else if (el.nodeType === 3) {
     // text node , and it may contains several watches
-    getLinkContextsFromInterpolation(el, el.textContent);
+    var expr = trim(el.textContent);
+    if (expr && /\{\{[^\}]+\}\}/.test(expr)) {
+      getLinkContextsFromInterpolation(el, expr);
+    }
   }
 }
 
