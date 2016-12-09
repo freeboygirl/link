@@ -15,7 +15,8 @@ function makeOneClonedLinkerForRepeater(linkContext, itemData, itemIndex) {
   // child model will inherit all props&fn from parent model.
   var childModel = Object.create(model, {
     $item: { value: itemData, enumerable: true, configurable: true, writable: true },
-    $index: { value: itemIndex, enumerable: true, configurable: true, writable: true }
+    $index: { value: itemIndex, enumerable: true, configurable: true, writable: true },
+    $$child: { value: true }
   });
 
   var linker = link(cloneEl, childModel);

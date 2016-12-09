@@ -36,11 +36,16 @@ var methods = {
       age: 18
     });
   },
-  removeLove:function(){
-    var vm=this;
+  removeLove: function () {
+    var vm = this;
     // vm.loves.splice(vm.$index,1);
     vm.loves.removeOne(vm.$item);
   }
 };
 
+var timerId = 'demo';
+console.time(timerId);
+
 var linker = link(document.getElementById('demo'), model, methods);
+
+console.timeEnd(timerId)
