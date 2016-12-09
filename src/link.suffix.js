@@ -24,8 +24,4 @@ return {
 
 }
 
-if (!('link' in window)) {
-  window.link = link;
-}
-
 })();

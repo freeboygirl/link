@@ -65,4 +65,4 @@ function render(watchMap) {
   }
 }
 
-function link(el, data, behaviors) {
+window.link=function link(el, data, behaviors) {
