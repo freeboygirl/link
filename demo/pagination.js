@@ -36,6 +36,10 @@
       loadMessage(vm);
     }
 
+    renderPageNumbers(vm);
+  }
+
+  function setActivePage(vm, pagesProp) {
     vm[pagesProp].each(function (item) {
       if (item.page === vm.page) {
         item.active = true;
@@ -44,8 +48,6 @@
         item.active = false;
       }
     });
-
-    renderPageNumbers(vm);
   }
 
   function getPageNumbers(page, pageCount, visiblePageCount) {
@@ -89,6 +91,7 @@
   function renderPageNumbers(vm) {
     var pageNumbers = getPageNumbers(vm.page, vm.pageCount);
     vm.pageNumbers.set(pageNumbers);
+    setActivePage(vm, 'pageNumbers');
   }
 
 
@@ -111,10 +114,6 @@
         vm.page = vm.$item.page;
         vm.$item.active = true;
         loadMessage(vm);
-
-        vm.pageNumbers.each(function (item) {
-          item.active = false;
-        }, [vm.$item]);
 
         renderPageNumbers(vm);
       }
