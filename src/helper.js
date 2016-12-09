@@ -86,3 +86,12 @@ function addStyles() {
     document.head.insertAdjacentElement('afterBegin', style);
   }
 }
+
+// poly fill 
+if (!('remove' in Element.prototype)) {
+  Element.prototype.remove = function () {
+    if (this.parentNode) {
+      this.parentNode.removeChild(this);
+    }
+  };
+}
