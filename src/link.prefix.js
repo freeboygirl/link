@@ -15,6 +15,10 @@ WatchedArray.prototype.getArray = function () {
   return this.arr.slice(0);
 };
 
+WatchedArray.prototype.at = function (index) {
+  return index >= 0 && index < this.arr.length && this.arr[index];
+};
+
 each(['push', 'pop', 'unshift', 'shift', 'reverse', 'sort', 'splice'], function (fn) {
   WatchedArray.prototype[fn] = function () {
     var ret = this.arr[fn].apply(this.arr, arguments);
@@ -65,4 +69,4 @@ function render(watchMap) {
   }
 }
 
-window.link=function link(el, data, behaviors) {
+window.link = function link(el, data, behaviors) {
