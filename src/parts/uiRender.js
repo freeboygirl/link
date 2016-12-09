@@ -15,11 +15,7 @@ function uiRenderFnBuilder(linkContext) {
 
 function evalLinkValue(linkContext) {
   var exprVal;
-  if (linkContext.tpl) {
-    // interpolation
-    exprVal = evalInterpolation(linkContext);
-  }
-  else if (linkContext.expr) {
+  if (linkContext.expr) {
     exprVal = $eval(linkContext.expr);
   }
   else {

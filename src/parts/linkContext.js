@@ -1,19 +1,19 @@
-function LinkContext(el, prop, directive, expr, tpl) {
+function LinkContext(el, watches, directive, expr) {
   this.el = el;
-  this.prop = prop; // string, or string array for interpilation and expr.
+  this.prop = watches; // string, or string array of watches
   this.directive = directive; // one directive could have multiple watches
   this.expr = expr;
-  this.tpl = tpl;
+  // this.tpl = tpl;
 }
 
-LinkContext.create = function (el, prop, directive, expr, tpl) {
+LinkContext.create = function (el, watches, directive, expr) {
   /**
-   * prop could be string and array
+   * watches could be string and array
    * array: interpilation and expr
-   * array+interpilation: tpl
    * array+expr: expr
+   * array+interpilation: expr
    *  */
-  return new LinkContext(el, prop, directive, expr, tpl);
+  return new LinkContext(el, watches, directive, expr);
 };
 
 
