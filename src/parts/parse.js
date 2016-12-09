@@ -57,5 +57,3 @@ Lexer.prototype = {
     return (this.index + i < this.len) ? this.text[this.index + 1] : false;
   }
 };
-
-window.Lexer = Lexer;
