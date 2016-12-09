@@ -3,16 +3,8 @@
  * expr[string] is directive attribute value in the DOM, it could be a simple watch or watch(es) expr;
  *  */
 function getLinkContext(el, directive, expr) {
-  var linkContext;
-
   if (isWatch(expr)) {
-    //expr is a simple watch
-    linkContext = LinkContext.create(el, expr, directive);
-    linkContextCollection.push(linkContext);
-    addWatchMap(linkContext);
-    if (directive === 'x-model') {
-      linkUIListener(linkContext);
-    }
+    addLinkContextAndSetWatch(el, expr, directive, expr);
   }
   else if (expr[0] === '{' && expr.slice(-1) === '}') {
     // object ,for x-class , only support 1 classname now 
@@ -23,7 +15,7 @@ function getLinkContext(el, directive, expr) {
     var lexer = new Lexer(lexExpr),
       watches = lexer.getWatches();
 
-    linkContext = LinkContext.create(el, watches, directive, lexExpr);
+    var linkContext = LinkContext.create(el, watches, directive, lexExpr);
     linkContext.$$forClass = true;
     linkContext.className = className;
     linkContextCollection.push(linkContext);
@@ -32,10 +24,7 @@ function getLinkContext(el, directive, expr) {
   else {
     var lexer = new Lexer(expr),
       watches = lexer.getWatches();
-
-    linkContext = LinkContext.create(el, watches, directive, expr);
-    linkContextCollection.push(linkContext);
-    addWatchMap(linkContext);
+    addLinkContextAndSetWatch(el, watches, directive, expr);
   }
 }
 
@@ -48,10 +37,17 @@ function getLinkContextsFromInterpolation(el, text) {
 
   if (watches.length > 0) {
     each(watches, function (watch) {
-      var linkContext = LinkContext.create(el, watch, 'x-bind', expr);
-      linkContextCollection.push(linkContext);
-      addWatchMap(linkContext);
+      addLinkContextAndSetWatch(el, watch, 'x-bind', expr);
     });
+  }
+}
+
+function addLinkContextAndSetWatch(el, watches, directive, expr) {
+  var linkContext = LinkContext.create(el, watches, directive, expr);
+  linkContextCollection.push(linkContext);
+  addWatchMap(linkContext);
+  if (directive === 'x-model') {
+    linkUIListener(linkContext);
   }
 }
 

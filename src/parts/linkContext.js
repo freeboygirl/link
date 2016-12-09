@@ -2,8 +2,7 @@ function LinkContext(el, watches, directive, expr) {
   this.el = el;
   this.prop = watches; // string, or string array of watches
   this.directive = directive; // one directive could have multiple watches
-  this.expr = expr;
-  // this.tpl = tpl;
+  this.expr = expr; // watch or watch expr 
 }
 
 LinkContext.create = function (el, watches, directive, expr) {
