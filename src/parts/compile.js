@@ -99,9 +99,7 @@ function compile(el) {
   if (el.hasAttribute && el.hasAttribute(repeaterDrName)) {
     if (!model.$$child) {
       //origin
-      var linkContext = LinkContext.create(el, el.getAttribute(repeaterDrName), repeaterDrName);
-      linkContextCollection.push(linkContext);
-      addWatchMap(linkContext);
+      getLinkContext(el, repeaterDrName, el.getAttribute(repeaterDrName));
       return;
     }
   }
