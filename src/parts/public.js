@@ -14,15 +14,14 @@ function setModel(newModel, reScan) {
 // clear the linker object inner states
 function unlink() {
   // console.log(model.$item + ' unlinking');
-  model = null;
+  linkContextCollection.length = 0;
   linkContextCollection = null;
   watchMap = null;
-  if (el.$$child) {
-    // clone
-    el.remove();
-    el = null;
-  }
   removeBehaviors();
+  if (model.$$child) {
+    el.remove();
+  }
+  model = null;
 }
 
 // if the model contains array property ,it will be wrapped, this fn get the origin model back
