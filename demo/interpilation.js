@@ -7,13 +7,9 @@ var model = {
   }
 };
 
-var methods = {
-
-};
-
 var timerId = 'interpilation';
 console.time(timerId);
 
-var linker = link(document.getElementById('demo'), model, methods);
+var linker = link(document.getElementById('demo'), model);
 
 console.timeEnd(timerId)
