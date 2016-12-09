@@ -1,17 +1,17 @@
 
-function addWatchMap(linkContext) {
+function addWatchNotify(linkContext) {
   if (isArray(linkContext.prop)) {
     each(linkContext.prop, function (watch) {
-      addWatchFn(watch, linkContext);
+      addNofityHanlder(watch, linkContext);
     });
   }
 
   else {
-    addWatchFn(linkContext.prop, linkContext);
+    addNofityHanlder(linkContext.prop, linkContext);
   }
 }
 
-function addWatchFn(watch, linkContext) {
+function addNofityHanlder(watch, linkContext) {
   if (!watchMap[watch]) {
     watchMap[watch] = [];
   }

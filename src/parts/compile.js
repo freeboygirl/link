@@ -19,7 +19,7 @@ function getLinkContext(el, directive, expr) {
     linkContext.$$forClass = true;
     linkContext.className = className;
     linkContextCollection.push(linkContext);
-    addWatchMap(linkContext);
+    addWatchNotify(linkContext);
   }
   else {
     var lexer = new Lexer(expr),
@@ -41,7 +41,7 @@ function getLinkContextsFromInterpolation(el, text) {
 function addLinkContextAndSetWatch(el, watches, directive, expr) {
   var linkContext = LinkContext.create(el, watches, directive, expr);
   linkContextCollection.push(linkContext);
-  addWatchMap(linkContext);
+  addWatchNotify(linkContext);
   if (directive === 'x-model') {
     linkUIListener(linkContext);
   }
