@@ -31,7 +31,6 @@ function getLinkContext(el, directive, expr) {
     addWatchMap(linkContext);
   }
   else {
-    //expr is watch expr, need parse and $eval
     var lexer = new Lexer(expr),
       watches = lexer.getWatches();
 

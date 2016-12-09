@@ -20,7 +20,7 @@ function evalLinkValue(linkContext) {
     exprVal = evalInterpolation(linkContext);
   }
   else if (linkContext.expr) {
-    exprVal = $eval(linkContext.expr, model);
+    exprVal = $eval(linkContext.expr);
   }
   else {
     // just watch, no expr

@@ -1,14 +1,14 @@
-function $eval(expr, that) {
+function $eval(expr) {
   var fn = new Function('with(this){return ' + expr + ';}');
   try {
-    return fn.call(that);
+    return fn.call(model);
   } catch (ex) {
     throw linkError('invalid expr {0}.', expr);
   }
 }
 
 function getWatchValue(watch) {
-  return $eval(watch, model);
+  return $eval(watch);
 }
 
 function setWatchValue(watch, value) {
@@ -23,5 +23,5 @@ function setWatchValue(watch, value) {
     expr = [watch, '=', "'", value, "'"].join('');
   }
 
-  $eval(expr, model);
+  $eval(expr);
 }
