@@ -24,8 +24,21 @@
         <label>
       <input type="checkbox" value='yes' x-model='remember' x-on-click='remeberClick'> Remember me
     </label>
+
       </div>
-      <button type="button" class="btn btn-default" x-on-click='signin'>Sign in</button>
+      <div>your fav fruit</div>
+      <div>
+        <label>
+        <input type="checkbox" name="fruit" value="apple" x-model='fruit'> apple
+        </label>
+        <label>
+          <input type="checkbox" name="fruit" value="orange" x-model='fruit'> orange
+        </label>
+        <label>
+          <input type="checkbox" name="fruit" value="banana" x-model='fruit'> banana
+        </label>
+      </div>
+      <button type="button" class="btn btn-default" x-on-click='clickme'>click me</button>
       <div>{{greeting}}</div>
     </form>
   </div>
