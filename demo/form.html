@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>pagination demo</title>
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="bootstrap.css">
+  <link rel="stylesheet" href="demo.css">
+</head>
+
+<body>
+  <div class="main" id='demo'>
+    <form class="form-inline">
+      <div class="form-group">
+        <label class="sr-only" for="exampleInputEmail3">Email address</label>
+        <input type="email" x-model='email' class="form-control" id="exampleInputEmail3" placeholder="Email">
+      </div>
+      <div class="form-group">
+        <label class="sr-only" for="exampleInputPassword3">Password</label>
+        <input type="password" x-model='password' class="form-control" id="exampleInputPassword3" placeholder="Password">
+      </div>
+      <div class="checkbox">
+        <label>
+      <input type="checkbox" value='yes' x-model='remember' x-on-click='remeberClick'> Remember me
+    </label>
+      </div>
+      <button type="button" class="btn btn-default" x-on-click='signin'>Sign in</button>
+      <div>{{greeting}}</div>
+    </form>
+  </div>
+  <script src="link.js"></script>
+  <script src="form.js"></script>
+
+  </script>
+</body>
+
+</html>
