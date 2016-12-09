@@ -79,6 +79,16 @@ function isWatch(attr) {
   return watchRegex.test(attr);
 }
 
+function _def_const_prop_(obj, property, value) {
+  Object.defineProperty(obj, property,
+    {
+      value: value,
+      enumerable: false,
+      configurable: false,
+      writable: false
+    });
+}
+
 // add x-hide style for x-show and x-hide
 function addStyles() {
   if (!document.$$linkStyleLoaded) {
