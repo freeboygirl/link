@@ -52,6 +52,13 @@ function getLinkContextsFromInterpolation(el, tpl) {
   }
 }
 
+function getEventLinkContext(el, attrName, fn) {
+  var event = eventDirectiveRegex.exec(attrName)[1],
+    eventLinkContext = EventLinkContext.create(el, event, fn);
+  eventLinkContextCollection.push(eventLinkContext);
+  bindEventLinkContext(eventLinkContext);
+}
+
 /**
    * 1. get directives and build linkContext context info.
    * 2. when it's x-model , add form ui value change listener for 2 two-way linkContext.
@@ -60,8 +67,6 @@ function getLinkContextsFromInterpolation(el, tpl) {
    *  */
 function compileDOM(el) {
   var attrs = el.attributes,
-    event,
-    eventLinkContext,
     attrName,
     attrValue;
   if (el.hasAttributes && el.hasAttributes()) {
@@ -70,10 +75,7 @@ function compileDOM(el) {
       attrValue = trim(attr.value);
       if (eventDirectiveRegex.test(attrName)) {
         // event directive
-        event = eventDirectiveRegex.exec(attrName)[1];
-        eventLinkContext = EventLinkContext.create(el, event, attrValue);
-        eventLinkContextCollection.push(eventLinkContext);
-        bindEventLinkContext(eventLinkContext);
+        getEventLinkContext(el, attrName, attrValue);
       }
       else if (directives.indexOf(attrName) > -1
         && !(attrName === repeaterDrName && model.$$child)) {
