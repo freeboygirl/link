@@ -23,7 +23,7 @@ function makeOneClonedLinkerForRepeater(linkContext, itemData, itemIndex) {
 }
 
 function repeatHanlder(linkContext) {
-  var warr = getWatchValue(linkContext.prop),
+  var warr = $eval(linkContext.prop),
     arr = warr && warr.arr,
     el = linkContext.el;
 

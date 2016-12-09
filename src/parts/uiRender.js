@@ -24,7 +24,7 @@ function evalLinkValue(linkContext) {
   }
   else {
     // just watch, no expr
-    exprVal = getWatchValue(linkContext.prop);
+    exprVal = $eval(linkContext.prop);
   }
 
   return exprVal;

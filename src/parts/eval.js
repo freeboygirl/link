@@ -7,10 +7,6 @@ function $eval(expr) {
   }
 }
 
-function getWatchValue(watch) {
-  return $eval(watch);
-}
-
 function setWatchValue(watch, value) {
   if (value === null) {
     value = 'null';
