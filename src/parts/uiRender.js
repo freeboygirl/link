@@ -4,7 +4,7 @@ function uiRenderFnBuilder(linkContext) {
   return function (changeInfo) {
     var exprVal;
     if (!linkContext.$$forClass) {
-      exprVal = evalLinkValue(linkContext);
+      exprVal = $eval(linkContext.expr);
     }
     if (changeInfo) {
       linkContext.lastArrayChangeInfo = changeInfo;
@@ -12,20 +12,6 @@ function uiRenderFnBuilder(linkContext) {
     renderLink(linkContext, exprVal);
   };
 }
-
-function evalLinkValue(linkContext) {
-  var exprVal;
-  if (linkContext.expr) {
-    exprVal = $eval(linkContext.expr);
-  }
-  else {
-    // just watch, no expr
-    exprVal = $eval(linkContext.prop);
-  }
-
-  return exprVal;
-}
-
 
 function renderLink(linkContext, exprVal) {
   if (linkContext.directive === 'x-bind') {
