@@ -29,17 +29,13 @@ function getLinkContext(el, directive, expr) {
 }
 
 function getLinkContextsFromInterpolation(el, text) {
-  var expr = ['"', text, '"'].join('');
-  expr = expr.replace(/(\{\{)/g, function () { return '"+'; });
-  expr = expr.replace(/(\}\})/g, function () { return '+"'; });
+  var expr = ['"', text, '"'].join('').replace(/(\{\{)/g, '"+').replace(/(\}\})/g, '+"');
   var lexer = new Lexer(expr),
     watches = lexer.getWatches();
 
-  if (watches.length > 0) {
-    each(watches, function (watch) {
-      addLinkContextAndSetWatch(el, watch, 'x-bind', expr);
-    });
-  }
+  each(watches, function (watch) {
+    addLinkContextAndSetWatch(el, watch, 'x-bind', expr);
+  });
 }
 
 function addLinkContextAndSetWatch(el, watches, directive, expr) {
