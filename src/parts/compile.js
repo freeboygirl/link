@@ -66,7 +66,7 @@ function compileDOM(el) {
       if (expr = el.getAttribute(directive)) {
         expr = trim(expr);
         // skip child vm repeat 
-        if (!(directive === 'x-repeat' && el.$$child)) {
+        if (!(directive === repeaterDrName && el.$$child)) {
           foundDirectives.push(directive);
           getLinkContext(el, directive, expr);
         }
@@ -108,10 +108,10 @@ function compile(el) {
    * 2. case x-repeat clone , the el is root linker 
    *
    *  */
-  if (el.hasAttribute && el.hasAttribute('x-repeat')) {
+  if (el.hasAttribute && el.hasAttribute(repeaterDrName)) {
     if (!el.$$child) {
       //origin
-      var linkContext = LinkContext.create(el, el.getAttribute('x-repeat'), 'x-repeat');
+      var linkContext = LinkContext.create(el, el.getAttribute(repeaterDrName), repeaterDrName);
       linkContextCollection.push(linkContext);
       addWatchMap(linkContext);
       return;
