@@ -108,7 +108,7 @@ function repeatHanlder(linkContext) {
 }
 
 function classHandler(linkContext) {
-  var exprVal = !!evalExpr(linkContext);
+  var exprVal = !!$eval(linkContext.expr, model);
 
   if (exprVal) {
     addClass(linkContext.el, linkContext.className);
