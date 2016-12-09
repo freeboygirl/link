@@ -57,49 +57,35 @@ function getLinkContextsFromInterpolation(el, tpl) {
    * 2. when it's x-model , add form ui value change listener for 2 two-way linkContext.
    * 3. add watch fn.
    *
-   * returns directives array found in el
    *  */
 function compileDOM(el) {
-  var expr, foundDirectives = [];
-  if (el.getAttribute) {
-    each(directives, function (directive) {
-      if (expr = el.getAttribute(directive)) {
-        expr = trim(expr);
-        // skip child vm repeat 
-        if (!(directive === repeaterDrName && model.$$child)) {
-          foundDirectives.push(directive);
-          getLinkContext(el, directive, expr);
-        }
+  var attrs = el.attributes,
+    event,
+    eventLinkContext,
+    attrName,
+    attrValue;
+  if (el.hasAttributes && el.hasAttributes()) {
+    each(attrs, function (attr) {
+      attrName = attr.name;
+      attrValue = trim(attr.value);
+      if (eventDirectiveRegex.test(attrName)) {
+        // event directive
+        event = eventDirectiveRegex.exec(attrName)[1];
+        eventLinkContext = EventLinkContext.create(el, event, attrValue);
+        eventLinkContextCollection.push(eventLinkContext);
+        bindEventLinkContext(eventLinkContext);
+      }
+      else if (directives.indexOf(attrName) > -1
+        && !(attrName === repeaterDrName && model.$$child)) {
+        // none event directive
+        getLinkContext(el, attrName, attrValue);
       }
     });
-    if (el.hasAttributes()) {
-      //event directive compile 
-      var attrs = el.attributes,
-        event,
-        fn,
-        eventLinkContext;
-      each(attrs, function (attr) {
-        // if(attr.val)
-        if (eventDirectiveRegex.test(attr.name)) {
-          event = eventDirectiveRegex.exec(attr.name)[1];
-          fn = attr.value;
-          eventLinkContext = EventLinkContext.create(el, event, fn);
-          eventLinkContextCollection.push(eventLinkContext);
-          bindEventLinkContext(eventLinkContext);
-        }
-      });
-    }
 
   } else if (el.nodeType === 3) {
     // text node , and it may contains several watches
-    // if (interpolationRegex.test(el.textContent)) {
-    foundDirectives.push('x-bind');
     getLinkContextsFromInterpolation(el, el.textContent);
-    // }
-
   }
-
-  return foundDirectives;
 }
 
 function compile(el) {
