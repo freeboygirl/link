@@ -109,7 +109,7 @@ function compile(el) {
    *
    *  */
   if (el.hasAttribute && el.hasAttribute(repeaterDrName)) {
-    if (!el.$$child) {
+    if (!model.$$child) {
       //origin
       var linkContext = LinkContext.create(el, el.getAttribute(repeaterDrName), repeaterDrName);
       linkContextCollection.push(linkContext);

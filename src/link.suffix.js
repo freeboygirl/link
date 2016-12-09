@@ -1,5 +1,4 @@
 bootstrap();
-// !el.$$child && console.timeEnd(timeId);
 if (!link.$$linkPublicFnSet) {
   link.$$linkPublicFnSet = true;
   link.helper = {

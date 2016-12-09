@@ -11,7 +11,6 @@ function showHideHanlder(linkContext, boolValue, directive) {
 
 function makeOneClonedLinkerForRepeater(linkContext, itemData, itemIndex) {
   var cloneEl = linkContext.originEl.cloneNode(true);
-  cloneEl.$$child = true;
   // child model will inherit all props&fn from parent model.
   var childModel = Object.create(model, {
     $item: { value: itemData, enumerable: true, configurable: true, writable: true },
