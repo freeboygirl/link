@@ -25,7 +25,6 @@ function getLinkContext(el, directive, expr) {
 
     linkContext = LinkContext.create(el, watches, directive, lexExpr);
     linkContext.$$forClass = true;
-    linkContext.tokens = lexer.tokens;
     linkContext.className = className;
     linkContextCollection.push(linkContext);
     addWatchMap(linkContext);
@@ -35,7 +34,6 @@ function getLinkContext(el, directive, expr) {
       watches = lexer.getWatches();
 
     linkContext = LinkContext.create(el, watches, directive, expr);
-    linkContext.tokens = lexer.tokens;
     linkContextCollection.push(linkContext);
     addWatchMap(linkContext);
   }
