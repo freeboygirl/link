@@ -66,7 +66,7 @@ function compileDOM(el) {
       if (expr = el.getAttribute(directive)) {
         expr = trim(expr);
         // skip child vm repeat 
-        if (!(directive === repeaterDrName && el.$$child)) {
+        if (!(directive === repeaterDrName && model.$$child)) {
           foundDirectives.push(directive);
           getLinkContext(el, directive, expr);
         }
