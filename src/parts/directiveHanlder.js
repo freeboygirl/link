@@ -10,7 +10,7 @@ function showHideHanlder(linkContext, boolValue, directive) {
 }
 
 function makeOneClonedLinkerForRepeater(linkContext, itemData, itemIndex) {
-  var cloneEl = linkContext.originEl.cloneNode(true);
+  var cloneEl = linkContext.elTpl.cloneNode(true);
   // child model will inherit all props&fn from parent model.
   var childModel = Object.create(model, {
     $item: { value: itemData, enumerable: true, configurable: true, writable: true },
@@ -28,11 +28,10 @@ function repeatHanlder(linkContext) {
     el = linkContext.el;
 
   var lastArrayChangeInfo = linkContext.lastArrayChangeInfo;
-  var lastDocFragment = linkContext.lastDocFragment || document.createDocumentFragment();
   var repeaterItem;
 
   if (el) {
-    linkContext.originEl = linkContext.originEl || el.cloneNode(true);
+    linkContext.elTpl = el.cloneNode(true);
     linkContext.comment = document.createComment('repeat end for ' + linkContext.prop);
     el.parentNode.insertBefore(linkContext.comment, el);
     el.remove();
@@ -42,6 +41,7 @@ function repeatHanlder(linkContext) {
   var comment = linkContext.comment;
 
   function rebuild() {
+    var docFragment=document.createDocumentFragment();
     each(lastLinks, function (link) {
       link.$unlink();
     });
@@ -51,10 +51,10 @@ function repeatHanlder(linkContext) {
     each(arr, function (itemData, index) {
       repeaterItem = makeOneClonedLinkerForRepeater(linkContext, itemData, index);
       lastLinks.push(repeaterItem.linker);
-      lastDocFragment.appendChild(repeaterItem.el);
+      docFragment.appendChild(repeaterItem.el);
     });
 
-    comment.parentNode.insertBefore(lastDocFragment, comment);
+    comment.parentNode.insertBefore(docFragment, comment);
   }
 
   if (lastLinks.length > 0 && lastArrayChangeInfo) {
@@ -104,7 +104,6 @@ function repeatHanlder(linkContext) {
   }
 
   linkContext.lastLinks = lastLinks;
-  linkContext.lastDocFragment = lastDocFragment;
 }
 
 function classHandler(linkContext) {
