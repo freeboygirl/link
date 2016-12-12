@@ -1,14 +1,10 @@
 // public methods
 // set a new model to bind
-Link.prototype.setModel = function setModel(newModel, reScan) {
-  model = newModel;
-  if (reScan === true) {
-    ar = [];
-    compile(el);
-  }
-  watchModel(model);
-  render();
-  addBehaviors();
+Link.prototype.setModel = function setModel(newModel) {
+  this.model = newModel;
+  this.watchModel(this.model);
+  this.compile(this.el);
+  this.render();
 };
 
 // clear the linker object inner states
@@ -48,6 +44,6 @@ function unWrapModel(model, dest) {
 
 Link.prototype.getModel = function getModel() {
   var _model = {};
-  unWrapModel(model, _model);
+  unWrapModel(this.model, _model);
   return _model;
 };
