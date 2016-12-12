@@ -108,3 +108,19 @@ if (!('remove' in Element.prototype)) {
     }
   };
 }
+
+function notify(watchMap, watch, arrayChangeInfo) {
+  var renders = watchMap[watch],
+    len;
+  if (renders) {
+    each(renders, function (render) {
+      render.call(null, arrayChangeInfo);
+    });
+  }
+}
+
+function render(watchMap) {
+  for (var watch in watchMap) {
+    notify(watchMap, watch);
+  }
+}
