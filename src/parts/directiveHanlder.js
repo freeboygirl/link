@@ -28,7 +28,7 @@ function repeatHanlder(linkContext) {
     arr = warr && warr.arr,
     el = linkContext.el;
 
-  var lastArrayChangeInfo = linkContext.lastArrayChangeInfo;
+  var lastArrayChangeInfo = linkContext.lastArraychange;
   var repeaterItem;
 
   if (el) {
@@ -72,17 +72,17 @@ function repeatHanlder(linkContext) {
       }
       case 'pop': {
         _linker = lastLinks.pop();
-        _linker.$unlink();
+        _linker.unlink();
         break;
       }
       case 'removeOne': {
         var index = lastArrayChangeInfo[1];
         _linker = lastLinks.splice(index, 1)[0];
-        _linker.$unlink();
+        _linker.unlink();
         break;
       }
       case 'unshift': {
-        var firstLinkerEl = lastLinks[0].$el;
+        var firstLinkerEl = lastLinks[0].el;
         itemData = arr[0];
         repeaterItem = makeOneClonedLinkerForRepeater(linkContext, itemData, index);
         lastLinks.unshift(repeaterItem.linker);
@@ -91,7 +91,7 @@ function repeatHanlder(linkContext) {
       }
       case 'shift': {
         _linker = lastLinks.shift();
-        _linker.$unlink();
+        _linker.unlink();
         break;
       }
       default: {
