@@ -14,15 +14,4 @@ function bindEventLinkContext(linker, eventLinkContext) {
 }
 
 
-function addEventListenerHanlder(el, event, func) {
-  if (el.addEventListener) {
-    el.addEventListener(event, func, false);
-  }
-}
 
-//todo: unlink should call this 
-function removeEventListenerHanlder(el, event, func) {
-  if (el.removeEventListener) {
-    el.removeEventListener(event, func, false);
-  }
-}

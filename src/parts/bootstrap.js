@@ -6,5 +6,5 @@ Link.prototype.bootstrap = function () {
   _def_const_prop_(this.model, '$$watched', true);
   this.compile(this.el);
   this.render();
-  addBehaviors(this);
+  this.addBehaviors();
 }

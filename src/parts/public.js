@@ -9,7 +9,7 @@ Link.prototype.setModel = function setModel(newModel, reScan) {
   watchModel(model);
   render();
   addBehaviors();
-}
+};
 
 // clear the linker object inner states
 Link.prototype.unlink = function unlink() {
@@ -17,12 +17,12 @@ Link.prototype.unlink = function unlink() {
   this.linkContextCollection.length = 0;
   this.linkContextCollection = null;
   this.watchMap = null;
-  removeBehaviors(this.eventLinkContextCollection);
+  this.removeBehaviors();
   if (this.model.$$child) {
     this.el.remove();
   }
   this.model = null;
-}
+};
 
 // if the model contains array property ,it will be wrapped, this fn get the origin model back
 function unWrapModel(model, dest) {
@@ -50,4 +50,4 @@ Link.prototype.getModel = function getModel() {
   var _model = {};
   unWrapModel(model, _model);
   return _model;
-}
+};
