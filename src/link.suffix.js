@@ -1,6 +1,11 @@
 // this.bootstrap();
-if (!Link.$$linkPublicFnSet) {
-  Link.$$linkPublicFnSet = true;
+if (!Link.$$loaded) {
+  Link.$$loaded = true;
+  var style = document.createElement('style');
+  style.type = 'text/css';
+  style.textContent = '.x-hide{display:none !important;}';
+  document.head.insertAdjacentElement('afterBegin', style);
+
   Link.helper = {
     isObject: isObject,
     isFunction: isFunction,
@@ -13,16 +18,6 @@ if (!Link.$$linkPublicFnSet) {
     each: each
   };
 }
-
-// return {
-//   $el:el,
-//   $setModel: setModel,
-//   $unlink: unlink,
-//   $getModel: getModel,
-//   $model: model
-// };
-
-// }
 
 window.Link = Link;
 }

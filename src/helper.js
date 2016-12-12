@@ -89,17 +89,6 @@ function _def_const_prop_(obj, property, value) {
     });
 }
 
-// add x-hide style for x-show and x-hide
-function addStyles() {
-  if (!document.$$linkStyleLoaded) {
-    document.$$linkStyleLoaded = true;
-    var style = document.createElement('style');
-    style.type = 'text/css';
-    style.textContent = '.x-hide{display:none !important;}';
-    document.head.insertAdjacentElement('afterBegin', style);
-  }
-}
-
 // poly fill 
 if (!('remove' in Element.prototype)) {
   Element.prototype.remove = function () {
