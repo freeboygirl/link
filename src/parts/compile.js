@@ -9,7 +9,7 @@ Link.prototype.getLinkContextsFromInterpolation = function getLinkContextsFromIn
   each(watches, function (watch) {
     that.addLinkContextAndSetWatch(el, watch, 'x-bind', expr);
   });
-}
+};
 
 Link.prototype.addLinkContextAndSetWatch = function addLinkContextAndSetWatch(el, watches, directive, expr) {
   var linkContext = LinkContext.create(el, watches, directive, expr, this.model);
@@ -18,14 +18,14 @@ Link.prototype.addLinkContextAndSetWatch = function addLinkContextAndSetWatch(el
   if (directive === 'x-model') {
     linkUIListener(linkContext);
   }
-}
+};
 
 Link.prototype.getEventLinkContext = function getEventLinkContext(el, attrName, fn) {
   var event = eventDirectiveRegex.exec(attrName)[1],
     eventLinkContext = EventLinkContext.create(el, event, fn, this.model);
   this.linkContextCollection.push(eventLinkContext);
   bindEventLinkContext(this, eventLinkContext);
-}
+};
 
 
 Link.prototype.getLinkContext = function getLinkContext(el, directive, expr) {
@@ -52,7 +52,7 @@ Link.prototype.getLinkContext = function getLinkContext(el, directive, expr) {
       watches = lexer.getWatches();
     this.addLinkContextAndSetWatch(el, watches, directive, expr);
   }
-}
+};
 
 /**
    * 1. get directives and build linkContext context info.
@@ -87,7 +87,7 @@ Link.prototype.compileDOM = function compileDOM(el) {
       this.getLinkContextsFromInterpolation(el, expr);
     }
   }
-}
+};
 
 Link.prototype.compile = function compile(el) {
   var that = this;
@@ -109,4 +109,4 @@ Link.prototype.compile = function compile(el) {
   each(el.childNodes, function (node) {
     that.compile(node);
   });
-}
+};
