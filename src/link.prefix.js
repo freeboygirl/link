@@ -1,1 +1,2 @@
-window.link = function link(el, data, behaviors) {
+'use strict';
+(function () {

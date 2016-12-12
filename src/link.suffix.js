@@ -1,7 +1,7 @@
-bootstrap();
-if (!link.$$linkPublicFnSet) {
-  link.$$linkPublicFnSet = true;
-  link.helper = {
+// this.bootstrap();
+if (!Link.$$linkPublicFnSet) {
+  Link.$$linkPublicFnSet = true;
+  Link.helper = {
     isObject: isObject,
     isFunction: isFunction,
     isArray: isArray,
@@ -14,14 +14,16 @@ if (!link.$$linkPublicFnSet) {
   };
 }
 
-return {
-  $el:el,
-  $setModel: setModel,
-  $unlink: unlink,
-  $getModel: getModel,
-  $model: model
-};
+// return {
+//   $el:el,
+//   $setModel: setModel,
+//   $unlink: unlink,
+//   $getModel: getModel,
+//   $model: model
+// };
 
+// }
+
+window.Link = Link;
 }
-
-})();
+)();

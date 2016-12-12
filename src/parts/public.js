@@ -1,6 +1,6 @@
 // public methods
 // set a new model to bind
-function setModel(newModel, reScan) {
+Link.prototype.setModel = function setModel(newModel, reScan) {
   model = newModel;
   if (reScan === true) {
     ar = [];
@@ -12,16 +12,16 @@ function setModel(newModel, reScan) {
 }
 
 // clear the linker object inner states
-function unlink() {
+Link.prototype.unlink = function unlink() {
   // console.log(model.$item + ' unlinking');
-  linkContextCollection.length = 0;
-  linkContextCollection = null;
-  watchMap = null;
-  removeBehaviors();
-  if (model.$$child) {
-    el.remove();
+  this.linkContextCollection.length = 0;
+  this.linkContextCollection = null;
+  this.watchMap = null;
+  removeBehaviors(this.eventLinkContextCollection);
+  if (this.model.$$child) {
+    this.el.remove();
   }
-  model = null;
+  this.model = null;
 }
 
 // if the model contains array property ,it will be wrapped, this fn get the origin model back
@@ -46,7 +46,7 @@ function unWrapModel(model, dest) {
   });
 }
 
-function getModel() {
+Link.prototype.getModel = function getModel() {
   var _model = {};
   unWrapModel(model, _model);
   return _model;

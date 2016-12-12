@@ -1,6 +1,6 @@
-function defineObserver(model, prop, value, propStack, isArray) {
+function defineObserver(linker, model, prop, value, propStack, isArray) {
   var watch = getWatchByPropStack(prop, propStack);
-  allWatches.push(watch);
+  // allWatches.push(watch);
   if (!isArray) {
     Object.defineProperty(model, prop, {
       get: function () {
@@ -9,17 +9,17 @@ function defineObserver(model, prop, value, propStack, isArray) {
       set: function (newVal) {
         if (newVal !== value) {
           value = newVal;
-          notify(watchMap, watch);
+          notify(linker.watchMap, watch);
         }
       }
     });
   }
   else {
-    model[prop] = new WatchedArray(watchMap, watch, value);
+    model[prop] = new WatchedArray(linker.watchMap, watch, value);
   }
 }
 
-function watchModel(model, propStack) {
+function watchModel(linker, model, propStack) {
   //object
   propStack = propStack || [];
   var props = Object.keys(model),
@@ -29,11 +29,11 @@ function watchModel(model, propStack) {
     value = model[prop];
     if (isObject(value) && !isArray(value)) {
       propStack.push(prop);
-      watchModel(value, propStack);
+      watchModel(linker, value, propStack);
       propStack.pop();
     }
     else {
-      defineObserver(model, prop, value, propStack.slice(0), isArray(value));
+      defineObserver(linker, model, prop, value, propStack.slice(0), isArray(value));
     }
   });
 }

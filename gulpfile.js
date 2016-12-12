@@ -33,10 +33,9 @@ gulp.task('clean:dist', function (cb) {
 gulp.task('build:lib', function () {
   gulp.src(
     [
-      srcScriptsFolder + '/iiaf.js',
+      srcScriptsFolder + '/link.prefix.js',
       srcScriptsFolder + '/helper.js',
       srcScriptsFolder + '/watchArray.js',
-      srcScriptsFolder + '/link.prefix.js',
       srcScriptsFolder + '/link.var.js',
       srcScriptsFolder + '/parts/**/*.js',
       srcScriptsFolder + '/link.suffix.js'

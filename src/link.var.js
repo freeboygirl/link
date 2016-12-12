@@ -1,8 +1,10 @@
-if (!el || !data) throw Error('el and data are required!');
-if (!isObject(data)) throw Error('data must be object');
-var model = data,
-  linkContextCollection = [], // store linkContext
-  eventLinkContextCollection = [], // store eventLinkContext
-  watchMap = Object.create(null), // stores watch prop & watchfns mapping
-  allWatches = [], // store all model watches , for expr
-  repeaterDrName='x-repeat';
+// if (!el || !data) throw Error('el and data are required!');
+// if (!isObject(data)) throw Error('data must be object');
+// var repeaterDrName = 'x-repeat';
+// this.model = data;
+// this.el = el;
+// this.behaviors=behaviors;
+// this.linkContextCollection = []; // store linkContext
+// this.eventLinkContextCollection = []; // store eventLinkContext
+// this.watchMap = Object.create(null); // stores watch prop & watchfns mapping
+// // this.allWatches = []; // store all model watches , for expr

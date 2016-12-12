@@ -36,7 +36,7 @@ function linkUIListener(linkContext) {
 function simpleListenHandler(linkContext, event) {
   var el = linkContext.el;
   addEventListenerHanlder(el, event, function () {
-    setWatchValue(linkContext.prop, el.value || '');
+    setWatchValue(linkContext.prop, el.value || '', linkContext.model);
   });
 }
 
@@ -45,7 +45,7 @@ function checkboxListenHandler(linkContext) {
   el.addEventListener('click', function () {
     var value = el.value,
       checked = el.checked,
-      propValue = $eval(linkContext.prop);
+      propValue = $eval(linkContext.prop, linkContext.model);
 
     if (!(propValue instanceof WatchedArray)) {
       throw linkError('checkbox should bind with array');

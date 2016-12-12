@@ -119,8 +119,3 @@ function notify(watchMap, watch, arrayChangeInfo) {
   }
 }
 
-function render(watchMap) {
-  for (var watch in watchMap) {
-    notify(watchMap, watch);
-  }
-}

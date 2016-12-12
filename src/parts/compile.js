@@ -1,10 +1,36 @@
 
-/**
- * expr[string] is directive attribute value in the DOM, it could be a simple watch or watch(es) expr;
- *  */
-function getLinkContext(el, directive, expr) {
+
+Link.prototype.getLinkContextsFromInterpolation = function getLinkContextsFromInterpolation(el, text) {
+  var expr = ['"', text, '"'].join('').replace(/(\{\{)/g, '"+').replace(/(\}\})/g, '+"');
+  var lexer = new Lexer(expr),
+    watches = lexer.getWatches(),
+    that = this;
+
+  each(watches, function (watch) {
+    that.addLinkContextAndSetWatch(el, watch, 'x-bind', expr);
+  });
+}
+
+Link.prototype.addLinkContextAndSetWatch = function addLinkContextAndSetWatch(el, watches, directive, expr) {
+  var linkContext = LinkContext.create(el, watches, directive, expr, this.model);
+  this.linkContextCollection.push(linkContext);
+  this.addWatchNotify(linkContext);
+  if (directive === 'x-model') {
+    linkUIListener(linkContext);
+  }
+}
+
+Link.prototype.getEventLinkContext = function getEventLinkContext(el, attrName, fn) {
+  var event = eventDirectiveRegex.exec(attrName)[1],
+    eventLinkContext = EventLinkContext.create(el, event, fn, this.model);
+  this.linkContextCollection.push(eventLinkContext);
+  bindEventLinkContext(this, eventLinkContext);
+}
+
+
+Link.prototype.getLinkContext = function getLinkContext(el, directive, expr) {
   if (isWatch(expr)) {
-    addLinkContextAndSetWatch(el, expr, directive, expr);
+    this.addLinkContextAndSetWatch(el, expr, directive, expr);
   }
   else if (expr[0] === '{' && expr.slice(-1) === '}') {
     // object ,for x-class , only support 1 classname now 
@@ -15,43 +41,17 @@ function getLinkContext(el, directive, expr) {
     var lexer = new Lexer(lexExpr),
       watches = lexer.getWatches();
 
-    var linkContext = LinkContext.create(el, watches, directive, lexExpr);
+    var linkContext = LinkContext.create(el, watches, directive, lexExpr, this.model);
     linkContext.$$forClass = true;
     linkContext.className = className;
-    linkContextCollection.push(linkContext);
-    addWatchNotify(linkContext);
+    this.linkContextCollection.push(linkContext);
+    this.addWatchNotify(linkContext);
   }
   else {
     var lexer = new Lexer(expr),
       watches = lexer.getWatches();
-    addLinkContextAndSetWatch(el, watches, directive, expr);
+    this.addLinkContextAndSetWatch(el, watches, directive, expr);
   }
-}
-
-function getLinkContextsFromInterpolation(el, text) {
-  var expr = ['"', text, '"'].join('').replace(/(\{\{)/g, '"+').replace(/(\}\})/g, '+"');
-  var lexer = new Lexer(expr),
-    watches = lexer.getWatches();
-
-  each(watches, function (watch) {
-    addLinkContextAndSetWatch(el, watch, 'x-bind', expr);
-  });
-}
-
-function addLinkContextAndSetWatch(el, watches, directive, expr) {
-  var linkContext = LinkContext.create(el, watches, directive, expr);
-  linkContextCollection.push(linkContext);
-  addWatchNotify(linkContext);
-  if (directive === 'x-model') {
-    linkUIListener(linkContext);
-  }
-}
-
-function getEventLinkContext(el, attrName, fn) {
-  var event = eventDirectiveRegex.exec(attrName)[1],
-    eventLinkContext = EventLinkContext.create(el, event, fn);
-  eventLinkContextCollection.push(eventLinkContext);
-  bindEventLinkContext(eventLinkContext);
 }
 
 /**
@@ -60,22 +60,23 @@ function getEventLinkContext(el, attrName, fn) {
    * 3. add watch fn.
    *
    *  */
-function compileDOM(el) {
+Link.prototype.compileDOM = function compileDOM(el) {
   var attrs = el.attributes,
     attrName,
-    attrValue;
+    attrValue,
+    that = this;
   if (el.hasAttributes && el.hasAttributes()) {
     each(attrs, function (attr) {
       attrName = attr.name;
       attrValue = trim(attr.value);
       if (eventDirectiveRegex.test(attrName)) {
         // event directive
-        getEventLinkContext(el, attrName, attrValue);
+        that.getEventLinkContext(el, attrName, attrValue);
       }
       else if (directives.indexOf(attrName) > -1
-        && !(attrName === repeaterDrName && model.$$child)) {
+        && !(attrName === 'x-repeat' && that.model.$$child)) {
         // none event directive
-        getLinkContext(el, attrName, attrValue);
+        that.getLinkContext(el, attrName, attrValue);
       }
     });
 
@@ -83,28 +84,29 @@ function compileDOM(el) {
     // text node , and it may contains several watches
     var expr = trim(el.textContent);
     if (expr && /\{\{[^\}]+\}\}/.test(expr)) {
-      getLinkContextsFromInterpolation(el, expr);
+      this.getLinkContextsFromInterpolation(el, expr);
     }
   }
 }
 
-function compile(el) {
+Link.prototype.compile = function compile(el) {
+  var that = this;
   /**
    * 1. case x-repeat origin ,skip it and its childNodes compiling.(only need add handle x-repeat)
    * 2. case x-repeat clone , the el is root linker 
    *
    *  */
-  if (el.hasAttribute && el.hasAttribute(repeaterDrName)) {
-    if (!model.$$child) {
+  if (el.hasAttribute && el.hasAttribute('x-repeat')) {
+    if (!this.model.$$child) {
       //origin
-      getLinkContext(el, repeaterDrName, el.getAttribute(repeaterDrName));
+      this.getLinkContext(el, 'x-repeat', el.getAttribute('x-repeat'));
       return;
     }
   }
 
-  compileDOM(el);
+  this.compileDOM(el);
 
   each(el.childNodes, function (node) {
-    compile(node);
+    that.compile(node);
   });
 }

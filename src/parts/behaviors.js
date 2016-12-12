@@ -1,15 +1,15 @@
-function addBehaviors() {
-  if (isObject(behaviors)) {
-    var methods = Object.keys(behaviors);
+function addBehaviors(linker) {
+  if (isObject(linker.behaviors)) {
+    var methods = Object.keys(linker.behaviors);
     each(methods, function (fn) {
-      if (isFunction(behaviors[fn])) {
-        model[fn] = behaviors[fn];
+      if (isFunction(linker.behaviors[fn])) {
+        linker.model[fn] = linker.behaviors[fn];
       }
     });
   }
 }
 
-function removeBehaviors() {
+function removeBehaviors(eventLinkContextCollection) {
   each(eventLinkContextCollection, function (context) {
     if (isFunction(context.func)) {
       removeEventListenerHanlder(context.el, context.event, context.func);

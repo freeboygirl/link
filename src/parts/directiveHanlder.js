@@ -10,7 +10,8 @@ function showHideHanlder(linkContext, boolValue, directive) {
 }
 
 function makeOneClonedLinkerForRepeater(linkContext, itemData, itemIndex) {
-  var cloneEl = linkContext.elTpl.cloneNode(true);
+  var cloneEl = linkContext.elTpl.cloneNode(true),
+    model = linkContext.model;
   // child model will inherit all props&fn from parent model.
   var childModel = Object.create(model, {
     $item: { value: itemData, enumerable: true, configurable: true, writable: true },
@@ -18,12 +19,12 @@ function makeOneClonedLinkerForRepeater(linkContext, itemData, itemIndex) {
     $$child: { value: true }
   });
 
-  var linker = link(cloneEl, childModel);
+  var linker = new Link(cloneEl, childModel);
   return { el: cloneEl, linker: linker };
 }
 
 function repeatHanlder(linkContext) {
-  var warr = $eval(linkContext.prop),
+  var warr = $eval(linkContext.prop, linkContext.model),
     arr = warr && warr.arr,
     el = linkContext.el;
 
@@ -41,9 +42,9 @@ function repeatHanlder(linkContext) {
   var comment = linkContext.comment;
 
   function rebuild() {
-    var docFragment=document.createDocumentFragment();
+    var docFragment = document.createDocumentFragment();
     each(lastLinks, function (link) {
-      link.$unlink();
+      link.unlink();
     });
 
     lastLinks.length = 0;
@@ -107,7 +108,7 @@ function repeatHanlder(linkContext) {
 }
 
 function classHandler(linkContext) {
-  var exprVal = !!$eval(linkContext.expr);
+  var exprVal = !!$eval(linkContext.expr, linkContext.model);
 
   if (exprVal) {
     addClass(linkContext.el, linkContext.className);

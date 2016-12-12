@@ -1,11 +1,11 @@
-function bindEventLinkContext(eventLinkContext) {
+function bindEventLinkContext(linker, eventLinkContext) {
   var el = eventLinkContext.el,
     event = eventLinkContext.event,
     fn = eventLinkContext.fn;
 
   var func = function (ev) {
-    if (model[fn]) {
-      model[fn].apply(model, [ev, el]);
+    if (linker.model[fn]) {
+      linker.model[fn].apply(linker.model, [ev, el]);
     }
   };
 

@@ -1,21 +1,22 @@
 
-function addWatchNotify(linkContext) {
+Link.prototype.addWatchNotify = function addWatchNotify(linkContext) {
+  var that = this;
   if (isArray(linkContext.prop)) {
     each(linkContext.prop, function (watch) {
-      addNofityHanlder(watch, linkContext);
+      that.addNofityHanlder(watch, linkContext);
     });
   }
 
   else {
-    addNofityHanlder(linkContext.prop, linkContext);
+    that.addNofityHanlder(linkContext.prop, linkContext);
   }
 }
 
-function addNofityHanlder(watch, linkContext) {
-  if (!watchMap[watch]) {
-    watchMap[watch] = [];
+Link.prototype.addNofityHanlder = function addNofityHanlder(watch, linkContext) {
+  if (!this.watchMap[watch]) {
+    this.watchMap[watch] = [];
   }
-  watchMap[watch].push(notifyFnFactory(linkContext));
+  this.watchMap[watch].push(notifyFnFactory(linkContext));
 }
 
 function notifyFnFactory(linkContext) {
@@ -24,11 +25,17 @@ function notifyFnFactory(linkContext) {
   return function (change) {
     var exprVal;
     if (!linkContext.$$forClass) {
-      exprVal = $eval(linkContext.expr);
+      exprVal = $eval(linkContext.expr, linkContext.model);
     }
     if (change) {
       linkContext.lastArraychange = change;
     }
     renderLink(linkContext, exprVal);
   };
+}
+
+Link.prototype.render = function render() {
+  for (var watch in this.watchMap) {
+    notify(this.watchMap, watch);
+  }
 }

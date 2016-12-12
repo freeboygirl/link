@@ -1,4 +1,4 @@
-(function (link) {
+(function () {
   var model = {
     messages: [
 
@@ -126,11 +126,11 @@
   var timerId = 'pagination';
   console.time(timerId);
 
-  var linker = link(el, model, methods);
+  var linker = new Link(el, model, methods);
 
-  var vm = linker.$model;
+  var vm = linker.model;
 
   loadMessage(vm);
   renderPageNumbers(vm)
   console.timeEnd(timerId);
-})(link);
+})();
