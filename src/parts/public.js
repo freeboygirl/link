@@ -14,6 +14,8 @@ Link.prototype.unlink = function unlink() {
   this.linkContextCollection = null;
   this.watchMap = null;
   this.removeBehaviors();
+  this.eventLinkContextCollection.length = 0;
+  this.eventLinkContextCollection = null;
   if (this.model.$$child) {
     this.el.remove();
   }
