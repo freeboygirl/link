@@ -1,6 +1,6 @@
-function defineObserver(linker, model, prop, value, propStack, isArray) {
-  var watch = getWatchByPropStack(prop, propStack);
-  // allWatches.push(watch);
+Link.prototype.defineObserver = function defineObserver(model, prop, value, propStack, isArray) {
+  var watch = getWatchByPropStack(prop, propStack),
+    that = this;
   if (!isArray) {
     Object.defineProperty(model, prop, {
       get: function () {
@@ -9,34 +9,35 @@ function defineObserver(linker, model, prop, value, propStack, isArray) {
       set: function (newVal) {
         if (newVal !== value) {
           value = newVal;
-          notify(linker.watchMap, watch);
+          notify(that.watchMap, watch);
         }
       }
     });
   }
   else {
-    model[prop] = new WatchedArray(linker.watchMap, watch, value);
+    model[prop] = new WatchedArray(that.watchMap, watch, value);
   }
-}
+};
 
-function watchModel(linker, model, propStack) {
+Link.prototype.watchModel = function watchModel(model, propStack) {
   //object
   propStack = propStack || [];
   var props = Object.keys(model),
     prop,
-    value;
+    value,
+    that = this;
   each(props, function (prop) {
     value = model[prop];
     if (isObject(value) && !isArray(value)) {
       propStack.push(prop);
-      watchModel(linker, value, propStack);
+      that.watchModel(value, propStack);
       propStack.pop();
     }
     else {
-      defineObserver(linker, model, prop, value, propStack.slice(0), isArray(value));
+      that.defineObserver(model, prop, value, propStack.slice(0), isArray(value));
     }
   });
-}
+};
 
 function getWatchByPropStack(prop, propStack) {
   if (propStack) {
