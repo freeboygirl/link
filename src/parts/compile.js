@@ -22,7 +22,7 @@ Link.prototype.addLinkContextAndSetWatch = function addLinkContextAndSetWatch(el
 
 Link.prototype.getEventLinkContext = function getEventLinkContext(el, attrName, fn) {
   var event = eventDirectiveRegex.exec(attrName)[1],
-    eventLinkContext = EventLinkContext.create(el, event, fn, this.model);
+    eventLinkContext = EventLinkContext.create(el, event, fn);
   this.eventLinkContextCollection.push(eventLinkContext);
   this.bindEventLinkContext(eventLinkContext);
 };
