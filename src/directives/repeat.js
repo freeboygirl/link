@@ -1,14 +1,3 @@
-function showHideHanlder(linkContext, boolValue, directive) {
-  var el = linkContext.el;
-  if (directive === 'x-show' && boolValue
-    || directive === 'x-hide' && !boolValue) {
-    removeClass(el, 'x-hide');
-  }
-  else {
-    addClass(el, 'x-hide');
-  }
-}
-
 function makeOneClonedLinkerForRepeater(linkContext, itemData, itemIndex) {
   var cloneEl = linkContext.elTpl.cloneNode(true),
     model = linkContext.model;
@@ -105,24 +94,4 @@ function repeatHanlder(linkContext) {
   }
 
   linkContext.lastLinks = lastLinks;
-}
-
-function classHandler(linkContext) {
-  var exprVal = !!$eval(linkContext.expr, linkContext.model);
-
-  if (exprVal) {
-    addClass(linkContext.el, linkContext.className);
-  }
-  else {
-    removeClass(linkContext.el, linkContext.className);
-  }
-}
-
-function disabledHanlder(linkContext, exprVal) {
-  if (exprVal) {
-    linkContext.el.setAttribute("disabled", "disabled");
-  }
-  else {
-    linkContext.el.removeAttribute("disabled");
-  }
 }
