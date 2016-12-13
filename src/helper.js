@@ -3,7 +3,6 @@ var interpolationRegex = /\{\{(\$?[^\}]+)\}\}/g,
   eventDirectiveRegex = /^x-on-(\w+)$/, // x-on- with native dom event name to bind event handler 
   directives = ['x-bind', 'x-model', 'x-repeat', 'x-show', 'x-hide', 'x-class', 'x-disabled'];
 
-
 function isObject(obj) {
   return !!obj && typeof obj === 'object'
 }
@@ -119,4 +118,5 @@ function removeEventListenerHanlder(el, event, func) {
     el.removeEventListener(event, func, false);
   }
 }
+
 
