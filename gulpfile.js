@@ -37,6 +37,7 @@ gulp.task('build:lib', function () {
       srcScriptsFolder + '/helper.js',
       srcScriptsFolder + '/watchArray.js',
       srcScriptsFolder + '/directives/**/*.js',
+      srcScriptsFolder + '/modelReact/**/*.js',
       srcScriptsFolder + '/parts/**/*.js',
       srcScriptsFolder + '/link.suffix.js'
     ])

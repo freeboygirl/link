@@ -16,7 +16,7 @@ Link.prototype.addLinkContextAndSetWatch = function addLinkContextAndSetWatch(el
   this.linkContextCollection.push(linkContext);
   this.addWatchNotify(linkContext);
   if (directive === 'x-model') {
-    linkUIListener(linkContext);
+    modelReactDispatch(linkContext);
   }
 };
 
