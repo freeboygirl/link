@@ -38,6 +38,7 @@ gulp.task('build:lib', function () {
       srcScriptsFolder + '/watchArray.js',
       srcScriptsFolder + '/directives/**/*.js',
       srcScriptsFolder + '/modelReact/**/*.js',
+      srcScriptsFolder + '/filters/**/*.js',
       srcScriptsFolder + '/parts/**/*.js',
       srcScriptsFolder + '/link.suffix.js'
     ])
@@ -62,7 +63,8 @@ function buildScripts(destFileName) {
     })
     .pipe(gulp.dest, distScriptsFolder)
     .pipe(gulp.dest, demoScriptsFolder)
-    .pipe(gulp.dest, '../frontend-cmc/app/scripts/tp').call(); // production use case
+    .pipe(gulp.dest, '../frontend-cmc/app/scripts/tp')// production use case
+    .pipe(gulp.dest, '../frontend-cmc/link').call(); // admin use case
 };
 
 gulp.task('watch', function () {

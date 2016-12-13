@@ -11,8 +11,12 @@ Link.prototype.getLinkContextsFromInterpolation = function getLinkContextsFromIn
   });
 };
 
-Link.prototype.addLinkContextAndSetWatch = function addLinkContextAndSetWatch(el, watches, directive, expr) {
-  var linkContext = LinkContext.create(el, watches, directive, expr, this.model);
+Link.prototype.addLinkContextAndSetWatch = function addLinkContextAndSetWatch(el, watches, directive, expr, filter) {
+  var linkContext = LinkContext.create(el, watches, directive, expr, this);
+  if (filter) {
+    linkContext.filter = filter[1];
+    linkContext.expr = expr.slice(0, filter[0]);
+  }
   this.linkContextCollection.push(linkContext);
   this.addWatchNotify(linkContext);
   if (directive === 'x-model') {
@@ -41,7 +45,7 @@ Link.prototype.getLinkContext = function getLinkContext(el, directive, expr) {
     var lexer = new Lexer(lexExpr),
       watches = lexer.getWatches();
 
-    var linkContext = LinkContext.create(el, watches, directive, lexExpr, this.model);
+    var linkContext = LinkContext.create(el, watches, directive, lexExpr, this);
     // linkContext.$$forClass = true;
     linkContext.className = className;
     this.linkContextCollection.push(linkContext);
@@ -50,7 +54,10 @@ Link.prototype.getLinkContext = function getLinkContext(el, directive, expr) {
   else {
     var lexer = new Lexer(expr),
       watches = lexer.getWatches();
-    this.addLinkContextAndSetWatch(el, watches, directive, expr);
+    if (lexer.filter)
+      this.addLinkContextAndSetWatch(el, watches, directive, expr, [lexer.filterIndex, lexer.filter]);
+    else
+      this.addLinkContextAndSetWatch(el, watches, directive, expr);
   }
 };
 

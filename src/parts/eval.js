@@ -8,7 +8,17 @@ function $eval(expr, $this) {
 }
 
 function evalLinkContext(linkContext) {
-  return $eval(linkContext.expr, linkContext.model);
+  var val = $eval(linkContext.expr, linkContext.linker.model);
+
+  if (linkContext.filter) {
+    var filters = linkContext.linker.filters,
+      filter = linkContext.filter;
+    if (filters[filter]) {
+      val = filters[filter].call(val, val);
+    }
+  }
+
+  return val;
 }
 
 function setWatchValue(watch, value, model) {

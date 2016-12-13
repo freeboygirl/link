@@ -6,6 +6,8 @@ function Lexer(text) {
   this.index = 0;
   this.len = text.length;
   this.watches = [];
+  this.filter = null;
+  this.filterIndex = -1;
   // this.tokens = []; // add position info
 }
 
@@ -29,6 +31,18 @@ Lexer.prototype = {
           throw new Error('unclosed string in expr');
         }
       }
+      else if (ch === '|') {
+        if (this._peek() !== '|') {
+          //filter sign
+          this.filter = trim(this.text.slice(this.index + 1));
+          this.filterIndex = this.index;
+          break; // following chars don't need going on.
+        }
+        else {
+          // || 
+          this.index += 2;
+        }
+      }
       else {
         this.index++;
       }
@@ -36,7 +50,6 @@ Lexer.prototype = {
 
     return this.watches;
   },
-
   _getWatch: function (ch) {
     var watch = [ch],
       start = this.index;

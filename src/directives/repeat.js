@@ -1,6 +1,6 @@
 function makeOneClonedLinkerForRepeater(linkContext, itemData, itemIndex) {
   var cloneEl = linkContext.elTpl.cloneNode(true),
-    model = linkContext.model;
+    model = linkContext.linker.model;
   // child model will inherit all props&fn from parent model.
   var childModel = Object.create(model, {
     $item: { value: itemData, enumerable: true, configurable: true, writable: true },
