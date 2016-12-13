@@ -45,7 +45,7 @@ function checkboxListenHandler(linkContext) {
   el.addEventListener('click', function () {
     var value = el.value,
       checked = el.checked,
-      propValue = $eval(linkContext.prop, linkContext.model);
+      propValue = evalLinkContext(linkContext);
 
     if (!(propValue instanceof WatchedArray)) {
       throw linkError('checkbox should bind with array');
