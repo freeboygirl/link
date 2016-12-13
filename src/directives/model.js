@@ -1,6 +1,6 @@
 function modelHanlder(linkContext) {
   var el = linkContext.el,
-    exprVal = $eval(linkContext.expr, linkContext.model);
+    exprVal = evalLinkContext(linkContext);
   if (el.type === 'radio') {
     el.checked = (el.value === exprVal);
   }

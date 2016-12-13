@@ -1,5 +1,5 @@
 function classHandler(linkContext) {
-  var exprVal = !!$eval(linkContext.expr, linkContext.model);
+  var exprVal = !!evalLinkContext(linkContext);
 
   if (exprVal) {
     addClass(linkContext.el, linkContext.className);

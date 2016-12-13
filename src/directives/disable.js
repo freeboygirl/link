@@ -1,5 +1,5 @@
 function disabledHanlder(linkContext) {
-  if (!!$eval(linkContext.expr, linkContext.model)) {
+  if (!!evalLinkContext(linkContext)) {
     linkContext.el.setAttribute("disabled", "disabled");
   }
   else {

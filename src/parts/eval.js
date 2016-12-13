@@ -7,6 +7,10 @@ function $eval(expr, $this) {
   }
 }
 
+function evalLinkContext(linkContext) {
+  return $eval(linkContext.expr, linkContext.model);
+}
+
 function setWatchValue(watch, value, model) {
   if (value === null) {
     value = 'null';
