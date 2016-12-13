@@ -1,3 +1,4 @@
 Link.prototype.filters = {
-  upper: String.prototype.toUpperCase
+  upper: String.prototype.toUpperCase,
+  money:moneyFilter
 };
