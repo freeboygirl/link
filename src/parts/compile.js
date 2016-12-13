@@ -42,7 +42,7 @@ Link.prototype.getLinkContext = function getLinkContext(el, directive, expr) {
       watches = lexer.getWatches();
 
     var linkContext = LinkContext.create(el, watches, directive, lexExpr, this.model);
-    linkContext.$$forClass = true;
+    // linkContext.$$forClass = true;
     linkContext.className = className;
     this.linkContextCollection.push(linkContext);
     this.addWatchNotify(linkContext);
