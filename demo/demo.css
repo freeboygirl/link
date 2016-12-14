@@ -48,17 +48,14 @@
  .table {
    border-collapse: collapse;
    width: 100%;
-   border:1px solid #ccc;
+   border: 1px solid #ccc;
  }
-
- .hilight{
+ 
+ .hilight {
    background: yellowgreen;
  }
-
  
- .ng-pagination {
-   
- }
+ .ng-pagination {}
  
  .ng-pagination>ul {
    display: inline-block;
@@ -93,4 +90,8 @@
  .ng-pagination>ul>li.active {
    background: #ccc;
    color: #fff;
+ }
+ 
+ div {
+   margin: 10px auto;
  }
