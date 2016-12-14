@@ -1,4 +1,4 @@
-function linkError(linker) {
-  var error = formatString.apply(linker, arguments);
+function linkError() {
+  var error = formatString.apply(null, arguments);
   return new Error(error);
 }

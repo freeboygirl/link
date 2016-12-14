@@ -5,6 +5,10 @@ Link.prototype.getLinkContextsFromInterpolation = function getLinkContextsFromIn
   var lexer = new Lexer(expr),
     watches = lexer.getWatches(),
     that = this;
+  if (lexer.filterIndex > -1) {
+    throw linkError('{0} does not support filter for {1} , please use {2} instead',
+      'link', 'interpolation expression', 'x-bind');
+  }
 
   each(watches, function (watch) {
     that.addLinkContextAndSetWatch(el, watch, 'x-bind', expr);
@@ -14,8 +18,7 @@ Link.prototype.getLinkContextsFromInterpolation = function getLinkContextsFromIn
 Link.prototype.addLinkContextAndSetWatch = function addLinkContextAndSetWatch(el, watches, directive, expr, filter) {
   var linkContext = LinkContext.create(el, watches, directive, expr, this);
   if (filter) {
-    linkContext.filter = filter[1];
-    linkContext.expr = expr.slice(0, filter[0]);
+    linkContext.filter = filter;
   }
   this.linkContextCollection.push(linkContext);
   this.addWatchNotify(linkContext);
@@ -54,8 +57,10 @@ Link.prototype.getLinkContext = function getLinkContext(el, directive, expr) {
   else {
     var lexer = new Lexer(expr),
       watches = lexer.getWatches();
-    if (lexer.filter)
-      this.addLinkContextAndSetWatch(el, watches, directive, expr, [lexer.filterIndex, lexer.filter]);
+    if (lexer.filter) {
+      expr = expr.slice(0, lexer.filterIndex);
+      this.addLinkContextAndSetWatch(el, watches, directive, expr, lexer.filter);
+    }
     else
       this.addLinkContextAndSetWatch(el, watches, directive, expr);
   }

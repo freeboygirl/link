@@ -8,6 +8,7 @@ function Lexer(text) {
   this.watches = [];
   this.filter = null;
   this.filterIndex = -1;
+  this.filterEndIndex = -1;
   // this.tokens = []; // add position info
 }
 
@@ -34,8 +35,9 @@ Lexer.prototype = {
       else if (ch === '|') {
         if (this._peek() !== '|') {
           //filter sign
-          this.filter = trim(this.text.slice(this.index + 1));
-          this.filterIndex = this.index;
+          // this.filter = trim(this.text.slice(this.index + 1));
+          this.filterIndex = this.index++;
+          this._getFilter();
           break; // following chars don't need going on.
         }
         else {
@@ -49,6 +51,21 @@ Lexer.prototype = {
     }
 
     return this.watches;
+  },
+  _getFilter: function () {
+    // last index is | 
+    var filter = [this.text[this.index]];
+    while (this.index < this.len) {
+      if (validWatchChar.test(this._peek())) {
+        filter.push(this.text[++this.index]);
+      }
+      else {
+        this.index++;
+        break;
+      }
+    }
+    this.filterEndIndex = this.index;
+    this.filter = trim(filter.join(''));
   },
   _getWatch: function (ch) {
     var watch = [ch],
