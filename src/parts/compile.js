@@ -34,25 +34,44 @@ Link.prototype.getEventLinkContext = function getEventLinkContext(el, attrName, 
   this.bindEventLinkContext(eventLinkContext);
 };
 
+Link.prototype.getClassLinkContext = function getClassLinkContext(el, directive, expr) {
+  var kvPairs = expr.slice(1, -1).split(','),
+    className,
+    subExpr,
+    spliter,
+    lexer,
+    watch,
+    linkContext;
+
+  var that = this;
+
+  each(kvPairs, function (kv) {
+    spliter = kv.split(':');
+    className = spliter[0].replace(/[\'\"]/g, ''),
+      subExpr = spliter[1];
+
+    if (isWatch(subExpr)) {
+      linkContext = LinkContext.create(el, subExpr, directive, subExpr, that);
+    }
+    else {
+      lexer = new Lexer(subExpr);
+      watch = lexer.getWatches();
+      linkContext = LinkContext.create(el, subExpr, directive, subExpr, that);
+    }
+    linkContext.className = className;
+    that.linkContextCollection.push(linkContext);
+    that.addWatchNotify(linkContext);
+  });
+};
+
 
 Link.prototype.getLinkContext = function getLinkContext(el, directive, expr) {
   if (isWatch(expr)) {
+    //simple watch
     this.addLinkContextAndSetWatch(el, expr, directive, expr);
   }
-  else if (expr[0] === '{' && expr.slice(-1) === '}') {
-    // object ,for x-class , only support 1 classname now 
-    var data = expr.slice(1, -1).split(':'),
-      className = data[0],
-      lexExpr = data[1];
-
-    var lexer = new Lexer(lexExpr),
-      watches = lexer.getWatches();
-
-    var linkContext = LinkContext.create(el, watches, directive, lexExpr, this);
-    // linkContext.$$forClass = true;
-    linkContext.className = className;
-    this.linkContextCollection.push(linkContext);
-    this.addWatchNotify(linkContext);
+  else if (isLikeJson(expr)) {
+    this.getClassLinkContext(el, directive, expr);
   }
   else {
     var lexer = new Lexer(expr),

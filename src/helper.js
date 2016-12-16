@@ -19,6 +19,14 @@ function isPrimitive(o) {
   return ['string', 'number', 'boolean'].indexOf(typeof o) > -1;
 }
 
+function isString(str) {
+  return typeof str === 'string';
+}
+
+function isLikeJson(str) {
+  return isString(str) && str[0] === '{' && str.slice(-1) === '}';
+}
+
 function addClass(el, className) {
   if (el.className.indexOf(className) === -1) {
     el.className = trim(el.className) + ' ' + className;
@@ -76,6 +84,14 @@ function each(arr, fn, skipArr) {
 
 function isWatch(attr) {
   return watchRegex.test(attr);
+}
+
+function isJsonAlike(str) {
+  if (isString(str)) {
+    return str.charAt(0) === '{' && str.slice(-1) === '}';
+  }
+
+  return false;
 }
 
 function _def_const_prop_(obj, property, value) {
