@@ -56,7 +56,10 @@ Link.prototype.getClassLinkContext = function getClassLinkContext(el, directive,
     else {
       lexer = new Lexer(subExpr);
       watch = lexer.getWatches();
-      linkContext = LinkContext.create(el, subExpr, directive, subExpr, that);
+
+      each(watch, function (w) {
+        linkContext = LinkContext.create(el, w, directive, subExpr, that);
+      });
     }
     linkContext.className = className;
     that.linkContextCollection.push(linkContext);
