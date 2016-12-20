@@ -108,7 +108,7 @@ Link.prototype.compileDOM = function compileDOM(el) {
         that.getEventLinkContext(el, attrName, attrValue);
       }
       else if (directives.indexOf(attrName) > -1
-        && !(attrName === 'x-repeat' && that.model.$$child)) {
+        && !(attrName === REPEATER && that.model.$$child)) {
         // none event directive
         that.getLinkContext(el, attrName, attrValue);
       }
@@ -130,10 +130,10 @@ Link.prototype.compile = function compile(el) {
    * 2. case x-repeat clone , the el is root linker 
    *
    *  */
-  if (el.hasAttribute && el.hasAttribute('x-repeat')) {
+  if (el.hasAttribute && el.hasAttribute(REPEATER)) {
     if (!this.model.$$child) {
       //origin
-      this.getLinkContext(el, 'x-repeat', el.getAttribute('x-repeat'));
+      this.getLinkContext(el, REPEATER, el.getAttribute(REPEATER));
       return;
     }
   }
