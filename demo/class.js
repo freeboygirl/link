@@ -1,6 +1,7 @@
 var model = {
   success: true,
-  danger: true
+  danger: true,
+  name:''
 };
 
 var methods = {

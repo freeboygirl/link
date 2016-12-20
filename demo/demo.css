@@ -54,6 +54,11 @@
  .hilight {
    background: yellowgreen;
  }
+
+ .hilight-text{
+   color:red;
+   font-weight: bold;
+ }
  
  .ng-pagination {}
  
