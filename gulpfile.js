@@ -63,8 +63,7 @@ function buildScripts(destFileName) {
     })
     .pipe(gulp.dest, distScriptsFolder)
     .pipe(gulp.dest, demoScriptsFolder)
-    .pipe(gulp.dest, '../frontend-cmc/app/scripts/tp')// production use case
-    .pipe(gulp.dest, '../frontend-cmc/link').call(); // admin use case
+    .pipe(gulp.dest, '../frontend-cmc/link').call();
 };
 
 gulp.task('watch', function () {
