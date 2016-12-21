@@ -1,6 +1,7 @@
 var model = {
   name: 'LeonWang',
-  money:'1234567.89'
+  money:'1234567.89',
+  phone:'15901634301'
 };
 
 var timerId = 'demo';

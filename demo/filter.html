@@ -16,10 +16,12 @@
     <div>
       <input type="text" class="form-control" x-model='money'>
     </div>
-    <div>my name is {{name}}, i have  <span x-bind='money | money'></span></div>
+    <div>my name is {{name}}, i have <span x-bind='money | money'></span></div>
     <div>my name is <span x-bind='name | uppercase'></span> (upper case)</div>
     <div>my name is <span x-bind='name | lowercase'></span> (lower case)</div>
     <div>my name is <span x-bind='name | firstLetterLowerCase'></span> (firstLetterLowerCase)</div>
+
+    <div>my phone is <span x-bind='phone | phone'></span></div>
 
 
   </div>
