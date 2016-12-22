@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>pagination demo</title>
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="bootstrap.css">
+  <link rel="stylesheet" href="demo.css">
+</head>
+
+<body>
+  <div class="main" id='demo'>
+    <button x-on-click='hello'>hello</button>
+    <button x-on-click='hello()'>hello1</button>
+    <input type="text" x-model='age' class="form-control">
+    <button x-on-click='hi("leon",age)'>hi</button>
+    <button x-on-click='hi("leon",30)'>hi2</button>
+    <button x-on-click='age++'>expr</button>
+
+  </div>
+  <script src="link.js"></script>
+  <script src="events.js"></script>
+
+</body>
+
+</html>

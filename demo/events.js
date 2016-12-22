@@ -1,0 +1,21 @@
+var model = {
+  age: 18
+};
+
+var timerId = 'demo';
+console.time(timerId);
+
+var methods = {
+  hello: function () {
+    alert('hello');
+  },
+  hi: function (name, age) {
+    alert('hi ' + name + ' you are ' + age + ' years old');
+  }
+};
+
+
+var linker = link(model, methods);
+
+
+console.timeEnd(timerId)
