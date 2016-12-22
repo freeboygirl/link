@@ -22,14 +22,15 @@ LinkContext.create = function (el, watches, directive, expr, linker) {
  * fn: string , function name, function will invoke using $model context, use this to refer wrapper $model
  * fn(el) execute
  *  */
-function EventLinkContext(el, event, fn) {
+function EventLinkContext(el, event, fn, args) {
   // event directive format: x-on-event
   this.el = el;
   this.event = event;
-  this.fn = fn; // 
+  this.fn = fn; // fn name in behaviors 
+  this.args = args; // arguments pass by event directive
   this.func = null; // actual function to execute 
 }
 
-EventLinkContext.create = function (el, event, fn) {
-  return new EventLinkContext(el, event, fn);
+EventLinkContext.create = function (el, event, fn, args) {
+  return new EventLinkContext(el, event, fn, args);
 };

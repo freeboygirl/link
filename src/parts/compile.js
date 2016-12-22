@@ -27,9 +27,34 @@ Link.prototype.addLinkContextAndSetWatch = function addLinkContextAndSetWatch(el
   }
 };
 
+var fnRegex = /^[a-zA-Z$_]\w*$/,
+  fnCallRegex = /^[a-zA-Z$_]\w*\(\s*\)$/,
+  fnCallParamsRegex = /^[a-zA-Z$_]\w*\(([^\)]+)\)$/;
+
 Link.prototype.getEventLinkContext = function getEventLinkContext(el, attrName, fn) {
-  var event = eventDirectiveRegex.exec(attrName)[1],
+  var eventLinkContext;
+  var event = eventDirectiveRegex.exec(attrName)[1];
+  //todo， fn could be fnc name , fnc(), fnc(args..)
+  if (fnRegex.test(fn)) {
+    // fn
     eventLinkContext = EventLinkContext.create(el, event, fn);
+  }
+  else if (fnCallRegex.test(fn)) {
+    // fn()
+    var leftBracketIndex = fn.indexOf('(');
+    eventLinkContext = EventLinkContext.create(el, event, fn.slice(0, leftBracketIndex));
+  }
+  else if (fnCallParamsRegex.test(fn)) {
+    // fn(a,b,c)
+    var args = fn.match(fnCallParamsRegex)[1].split(',');
+    var leftBracketIndex = fn.indexOf('(');
+    eventLinkContext = EventLinkContext.create(el, event, fn.slice(0, leftBracketIndex), args);
+  }
+  else {
+    // expr
+    eventLinkContext = EventLinkContext.create(el, event, null, fn);
+  }
+
   this.eventLinkContextCollection.push(eventLinkContext);
   this.bindEventLinkContext(eventLinkContext);
 };
