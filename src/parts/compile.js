@@ -34,7 +34,7 @@ var fnRegex = /^[a-zA-Z$_]\w*$/,
 Link.prototype.getEventLinkContext = function getEventLinkContext(el, attrName, fn) {
   var eventLinkContext;
   var event = eventDirectiveRegex.exec(attrName)[1];
-  //todo， fn could be fnc name , fnc(), fnc(args..)
+  //done: fn could be fnc name , fnc(), fnc(args..)
   if (fnRegex.test(fn)) {
     // fn
     eventLinkContext = EventLinkContext.create(el, event, fn);
