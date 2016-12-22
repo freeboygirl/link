@@ -23,11 +23,8 @@ Link.prototype.bindEventLinkContext = function bindEventLinkContext(eventLinkCon
           arg = trim(arg);
           if (arg.charAt(0) === "'" || arg.charAt(0) === '"') {
             evaledArgs.push(arg.replace(quoteRegx, ''));
-          } else if (isPrimitive(arg)) {
+          } else {
             evaledArgs.push($eval(arg, that.model));
-          }
-          else {
-            evaledArgs.push(arg);
           }
         });
         unshift.apply(eargs, evaledArgs);
