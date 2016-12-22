@@ -1,6 +1,4 @@
 function Link(el, data, behaviors) {
-  if (!el || !data) throw Error('el and data are required!');
-  if (!isObject(data)) throw Error('data must be object');
   this.model = data;
   this.el = el;
   this.behaviors = behaviors;
