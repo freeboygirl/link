@@ -1,17 +1,17 @@
 var model = {
   email: '',
   password: '',
-  remember: [],
+  remember: true,
   greeting: '',
   fruit: []
 };
 
 var methods = {
   remeberClick: function () {
-    this.greeting = 'you chooosed  ' + (this.remember.at(0) === 'yes' ? 'remember' : 'forget it');
+    this.greeting = 'you chooosed  ' + (this.remember ? 'remember' : 'forget it');
   },
   clickme: function () {
-    this.greeting = 'hello ' + this.email + ', your password is' + this.password + ', and you chooosed  ' + (this.remember.at(0) === 'yes' ? 'remember' : 'forget it') +
+    this.greeting = 'hello ' + this.email + ', your password is' + this.password + ', and you chooosed  ' + (this.remember ? 'remember' : 'forget it') +
       'your fav fruit is ' + this.fruit.getArray().join(',');
   }
 };

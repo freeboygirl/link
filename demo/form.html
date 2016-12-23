@@ -11,7 +11,7 @@
 
 <body>
   <div class="main" id='demo'>
-    <form class="form-inline">
+    <form class="form">
       <div class="form-group">
         <label class="sr-only" for="exampleInputEmail3">Email address</label>
         <input type="email" x-model='email' class="form-control" id="exampleInputEmail3" placeholder="Email">
@@ -22,7 +22,9 @@
       </div>
       <div class="checkbox">
         <label>
-      <input type="checkbox" value='yes' x-model='remember' x-on-click='remeberClick'> Remember me
+      <input type="checkbox" x-model='remember' x-on-click='remeberClick'>Remember me
+      <div x-bind="remember?'checked':''"></div>
+      <div>{{remember?'checked':''}}</div>
     </label>
 
       </div>
