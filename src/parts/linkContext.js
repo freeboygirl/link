@@ -28,7 +28,6 @@ function EventLinkContext(el, event, fn, args) {
   this.event = event;
   this.fn = fn; // fn name in behaviors 
   this.args = args; // arguments pass by event directive
-  this.func = null; // actual function to execute 
 }
 
 EventLinkContext.create = function (el, event, fn, args) {
