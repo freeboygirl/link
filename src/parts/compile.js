@@ -55,7 +55,6 @@ Link.prototype.getEventLinkContext = function getEventLinkContext(el, attrName, 
     eventLinkContext = EventLinkContext.create(el, event, null, fn);
   }
 
-  this.eventLinkContextCollection.push(eventLinkContext);
   this.bindEventLinkContext(eventLinkContext);
 };
 

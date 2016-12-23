@@ -124,14 +124,19 @@ function notify(watchMap, watch, arrayChangeInfo) {
   }
 }
 
-function addEventListenerHanlder(el, event, func) {
-  if (el.addEventListener) {
+function addEventListenerHanlder(el, event, func, store) {
+  if (el.addEventListener && isFunction(func)) {
     el.addEventListener(event, func, false);
+    store.push({
+      el: el,
+      event: event,
+      handler: func
+    });
   }
 }
 
 function removeEventListenerHanlder(el, event, func) {
-  if (el.removeEventListener) {
+  if (el.removeEventListener && isFunction(func)) {
     el.removeEventListener(event, func, false);
   }
 }

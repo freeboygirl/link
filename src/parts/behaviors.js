@@ -9,11 +9,3 @@ Link.prototype.addBehaviors = function addBehaviors() {
     });
   }
 };
-
-Link.prototype.removeBehaviors = function removeBehaviors() {
-  each(this.eventLinkContextCollection, function (context) {
-    if (isFunction(context.func)) {
-      removeEventListenerHanlder(context.el, context.event, context.func);
-    }
-  });
-};

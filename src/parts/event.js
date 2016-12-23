@@ -34,8 +34,8 @@ Link.prototype.bindEventLinkContext = function bindcontext(context) {
     }
   };
 
-  addEventListenerHanlder(context.el, context.event, func);
-  context.func = func; // update func ref
+  context.func = func; // update func 
+  addEventListenerHanlder(context.el, context.event, func, this.eventStore);
 };
 
 

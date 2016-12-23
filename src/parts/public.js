@@ -1,5 +1,4 @@
-// public methods
-// set a new model to bind
+
 Link.prototype.setModel = function setModel(newModel) {
   this.model = newModel;
   this.watchModel(this.model);
@@ -7,15 +6,14 @@ Link.prototype.setModel = function setModel(newModel) {
   this.render();
 };
 
-// clear the linker object inner states
 Link.prototype.unlink = function unlink() {
-  // console.log(model.$item + ' unlinking');
-  this.linkContextCollection.length = 0;
   this.linkContextCollection = null;
   this.watchMap = null;
-  this.removeBehaviors();
-  this.eventLinkContextCollection.length = 0;
-  this.eventLinkContextCollection = null;
+  // clean event binding 
+  each(this.eventStore, function (event) {
+    removeEventListenerHanlder(event.el, event.event, event.handler);
+  });
+  this.eventStore = null;
   if (this.model.$$child) {
     this.el.remove();
   }
