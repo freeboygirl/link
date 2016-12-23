@@ -7,10 +7,11 @@ function modelHanlder(linkContext) {
   else if (el.type === 'checkbox') {
     if (exprVal instanceof WatchedArray) {
       el.checked = exprVal.arr.indexOf(el.value) > -1;
+    } else if (isBoolean(exprVal)) {
+      el.checked = exprVal;
     } else {
-      throw linkError('checkbox should bind with array');
+      throw linkError('checkbox should bind with array and boolean value');
     }
-
   }
   else {
     linkContext.el.value = exprVal;

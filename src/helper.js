@@ -17,11 +17,19 @@ function isArray(obj) {
 }
 
 function isPrimitive(o) {
-  return ['string', 'number', 'boolean'].indexOf(typeof o) > -1;
+  return ['string', 'number', 'boolean', 'null', 'undefined'].indexOf(typeof o) > -1;
 }
 
 function isString(str) {
   return typeof str === 'string';
+}
+
+function isBoolean(v) {
+  return typeof v === 'boolean';
+}
+
+function isNumber(v) {
+  return typeof v === 'number';
 }
 
 function isLikeJson(str) {

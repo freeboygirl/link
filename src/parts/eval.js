@@ -10,7 +10,7 @@ function $eval(expr, $this) {
 function evalLinkContext(linkContext) {
   var val = $eval(linkContext.expr, linkContext.linker.model);
 
-  if (linkContext.filter && linkContext.directive==='x-bind') {
+  if (linkContext.filter && linkContext.directive === 'x-bind') {
     var filters = linkContext.linker.filters,
       filter = linkContext.filter;
     if (filters[filter]) {
@@ -29,8 +29,14 @@ function setWatchValue(watch, value, model) {
     value = 'undefined';
   }
   var expr = '';
-  if (isPrimitive(value)) {
+  if (isString(value)) {
     expr = [watch, '=', "'", value, "'"].join('');
+  }
+  else if (isPrimitive(value)) {
+    expr = [watch, '=', value].join('');
+  }
+  else {
+    throw linkError('value should be a primitive type for setWatchValue');
   }
 
   $eval(expr, model);

@@ -6,15 +6,20 @@ function checkboxReact(linkContext) {
       checked = el.checked,
       propValue = evalLinkContext(linkContext);
 
-    if (!(propValue instanceof WatchedArray)) {
-      throw linkError('checkbox should bind with array');
+    if (!(isBoolean(propValue) || propValue instanceof WatchedArray)) {
+      throw linkError('checkbox should bind with array or boolean value');
     }
 
-    if (!checked && propValue.contain(value)) {
-      propValue.removeOne(value);
+    if (propValue instanceof WatchedArray) {
+      if (!checked && propValue.contain(value)) {
+        propValue.removeOne(value);
+      }
+      else {
+        propValue.push(value);
+      }
     }
     else {
-      propValue.push(value);
+      setWatchValue(linkContext.prop, checked, linkContext.linker.model);
     }
   }
   addEventListenerHanlder(el, 'click', checkboxHanlder, linkContext.linker.eventStore);
