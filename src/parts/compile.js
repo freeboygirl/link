@@ -1,7 +1,7 @@
 
 
 Link.prototype.getLinkContextsFromInterpolation = function getLinkContextsFromInterpolation(el, text) {
-  var expr = ['"', text, '"'].join('').replace(/(\{\{)/g, '"+').replace(/(\}\})/g, '+"');
+  var expr = ['"', text, '"'].join('').replace(/(\{\{)/g, '"+(').replace(/(\}\})/g, ')+"');
   var lexer = new Lexer(expr),
     watches = lexer.getWatches(),
     that = this;
