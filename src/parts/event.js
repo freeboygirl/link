@@ -1,20 +1,20 @@
-Link.prototype.bindEventLinkContext = function bindEventLinkContext(eventLinkContext) {
-  var el = eventLinkContext.el,
-    event = eventLinkContext.event,
-    fn = eventLinkContext.fn,
-    args = eventLinkContext.args, // when fn is null, args is expr to eval.
-    that = this;
-
+Link.prototype.bindEventLinkContext = function bindcontext(context) {
   var unshift = Array.prototype.unshift,
-    quoteRegx = /[\'\"]/g;
+    quoteRegx = /[\'\"]/g,
+    context = context,
+    linker = this;
 
   var func = function (ev) {
+    var el = context.el,
+      fn = context.fn,
+      args = context.args; // when fn is null, args is expr to eval.
+
     if (fn === null) {
       // expr 
-      $eval(args, that.model);
-    } else if (that.model[fn]) {
+      $eval(args, linker.model);
+    } else if (linker.model[fn]) {
       if (!isArray(args)) {
-        that.model[fn].apply(that.model, [ev, el]);
+        linker.model[fn].apply(linker.model, [ev, el]);
       }
       else {
         var eargs = [ev, el];
@@ -24,18 +24,18 @@ Link.prototype.bindEventLinkContext = function bindEventLinkContext(eventLinkCon
           if (arg.charAt(0) === "'" || arg.charAt(0) === '"') {
             evaledArgs.push(arg.replace(quoteRegx, ''));
           } else {
-            evaledArgs.push($eval(arg, that.model));
+            evaledArgs.push($eval(arg, linker.model));
           }
         });
         unshift.apply(eargs, evaledArgs);
-        that.model[fn].apply(that.model, eargs);
+        linker.model[fn].apply(linker.model, eargs);
       }
 
     }
   };
 
-  addEventListenerHanlder(el, event, func);
-  eventLinkContext.func = func; // update func ref
+  addEventListenerHanlder(context.el, context.event, func);
+  context.func = func; // update func ref
 };
 
 
