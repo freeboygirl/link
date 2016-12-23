@@ -22,9 +22,7 @@
       </div>
       <div class="checkbox">
         <label>
-      <input type="checkbox" x-model='remember' x-on-click='remeberClick'>Remember me
-      <div x-bind="remember?'checked':''"></div>
-      <div>{{remember?'checked':''}}</div>
+      <input type="checkbox" x-model='remember'>Remember me {{remember?"yes":"no"}}
     </label>
 
       </div>

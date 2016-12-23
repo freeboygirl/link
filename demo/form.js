@@ -7,9 +7,6 @@ var model = {
 };
 
 var methods = {
-  remeberClick: function () {
-    this.greeting = 'you chooosed  ' + (this.remember ? 'remember' : 'forget it');
-  },
   clickme: function () {
     this.greeting = 'hello ' + this.email + ', your password is' + this.password + ', and you chooosed  ' + (this.remember ? 'remember' : 'forget it') +
       'your fav fruit is ' + this.fruit.getArray().join(',');
