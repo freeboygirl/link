@@ -1,7 +1,7 @@
 var interpolationRegex = /\{\{(\$?[^\}]+)\}\}/g,
   watchRegex = /^\$?\w+(\.?\w+)*$/,
   eventDirectiveRegex = /^x-on-(\w+)$/, // x-on- with native dom event name to bind event handler 
-  directives = ['x-bind', 'x-model', 'x-repeat', 'x-show', 'x-hide', 'x-class', 'x-disabled'];
+  directives = ['x-bind', 'x-model', 'x-repeat', 'x-show', 'x-hide', 'x-class', 'x-disabled', 'x-view', 'x-href'];
 
 var REPEATER = 'x-repeat';
 function isObject(obj) {
@@ -89,6 +89,20 @@ function each(arr, fn, skipArr) {
 
     fn.call(arr, item, i, arr);
   }
+}
+
+function filter(arr, predicate, multiple) {
+  var len = arr.length, i = -1, result = multiple ? [] : null;
+  while (++i < len) {
+    if (predicate.call(arr, arr[i], i, arr) === true) {
+      if (!multiple) {
+        return arr[i];
+      }
+      result.push(arr[i]);
+    }
+  }
+
+  return result.length > 0 ? result : null;
 }
 
 function isWatch(attr) {
