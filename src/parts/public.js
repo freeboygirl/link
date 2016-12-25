@@ -17,6 +17,7 @@ Link.prototype.unlink = function unlink() {
   if (this.model.$$child) {
     this.el.remove();
   }
+  delete this.model.$$watched;
   this.model = null;
 };
 

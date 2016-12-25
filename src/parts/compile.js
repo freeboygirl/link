@@ -171,6 +171,15 @@ Link.prototype.compile = function compile(el) {
     }
   }
 
+  if (el.hasAttribute && el.hasAttribute('x-view')) {
+    if (!this.routeEl) {
+      this.routeEl = el;
+    }
+    else {
+      throw linkError('a link context can only have one x-view');
+    }
+  }
+
   this.compileDOM(el);
 
   each(el.childNodes, function (node) {

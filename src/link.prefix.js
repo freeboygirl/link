@@ -34,6 +34,8 @@
     each: each
   };
 
+  link.route = route;
+
   link.filter = function (name, fn) {
     if (!Link.prototype.filters[name] && isFunction(fn)) {
       Link.prototype.filters[name] = fn;
