@@ -102,7 +102,7 @@ function filter(arr, predicate, multiple) {
     }
   }
 
-  return result.length > 0 ? result : null;
+  return result && result.length > 0 ? result : null;
 }
 
 function isWatch(attr) {
@@ -122,8 +122,8 @@ function _def_const_prop_(obj, property, value) {
     {
       value: value,
       enumerable: false,
-      configurable: false,
-      writable: false
+      configurable: true,
+      writable: true
     });
 }
 
