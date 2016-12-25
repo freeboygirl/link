@@ -40,6 +40,7 @@ gulp.task('build:lib', function () {
       srcScriptsFolder + '/modelReact/**/*.js',
       srcScriptsFolder + '/filters/**/*.js',
       srcScriptsFolder + '/parts/**/*.js',
+      srcScriptsFolder + '/router/**/*.js',
       srcScriptsFolder + '/link.suffix.js'
     ])
     .pipe(buildScripts(targetLibName));
