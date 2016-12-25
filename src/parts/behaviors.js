@@ -4,10 +4,12 @@ Link.prototype.addBehaviors = function addBehaviors() {
     var methods = Object.keys(this.behaviors);
     each(methods, function (fn) {
       if (isFunction(that.behaviors[fn])) {
-        if (fn in that.model) {
+        if ((fn in that.model) && !isFunction(that.model[fn])) {
           throw linkError('{0} is defined in the data model,please change the function/method name of "{0}"', fn)
         }
-        that.model[fn] = that.behaviors[fn];
+        if (!that.model[fn]) {
+          that.model[fn] = that.behaviors[fn];
+        }
       }
     });
   }
