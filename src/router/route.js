@@ -87,8 +87,8 @@ function route(linker, config, defaultPath) {
 
 function linkRoute(linker, cf, tpl) {
   linker.routeEl.innerHTML = tpl;
-  if (cf.linkder) {
-    cf.linkder.unlink(); // destroy link
+  if (cf.lastLinker) {
+    cf.lastLinker.unlink(); // destroy link
   }
-  cf.linkder = link(linker.routeEl, cf.model, cf.actions);
+  cf.lastLinker = link(linker.routeEl, cf.model, cf.actions);
 }
