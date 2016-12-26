@@ -27,10 +27,6 @@ Link.prototype.addLinkContextAndSetWatch = function addLinkContextAndSetWatch(el
   }
 };
 
-var fnRegex = /^[a-zA-Z$_]\w*$/,
-  fnCallRegex = /^[a-zA-Z$_]\w*\(\s*\)$/,
-  fnCallParamsRegex = /^[a-zA-Z$_]\w*\(([^\)]+)\)$/;
-
 Link.prototype.getEventLinkContext = function getEventLinkContext(el, attrName, fn) {
   var eventLinkContext;
   var event = eventDirectiveRegex.exec(attrName)[1];
@@ -171,7 +167,7 @@ Link.prototype.compile = function compile(el) {
     }
   }
 
-  if (el.hasAttribute && el.hasAttribute('x-view')) {
+  if (el.hasAttribute && el.hasAttribute(VIEW)) {
     if (!this.routeEl) {
       this.routeEl = el;
       return;

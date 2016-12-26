@@ -1,9 +1,3 @@
-var interpolationRegex = /\{\{(\$?[^\}]+)\}\}/g,
-  watchRegex = /^\$?\w+(\.?\w+)*$/,
-  eventDirectiveRegex = /^x-on-(\w+)$/, // x-on- with native dom event name to bind event handler 
-  directives = ['x-bind', 'x-model', 'x-repeat', 'x-show', 'x-hide', 'x-class', 'x-disabled', 'x-view', 'x-href'];
-
-var REPEATER = 'x-repeat';
 function isObject(obj) {
   return !!obj && typeof obj === 'object'
 }

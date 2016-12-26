@@ -34,6 +34,7 @@ gulp.task('build:lib', function () {
   gulp.src(
     [
       srcScriptsFolder + '/link.prefix.js',
+      srcScriptsFolder + '/var.js',
       srcScriptsFolder + '/helper.js',
       srcScriptsFolder + '/watchArray.js',
       srcScriptsFolder + '/directives/**/*.js',
