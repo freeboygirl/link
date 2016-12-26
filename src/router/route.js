@@ -89,7 +89,6 @@ function route(linker, config, defaultPath) {
   }
 }
 
-//todo: add prelink and postlink hooks
 function linkRoute(linker, cf, tpl) {
   linker.routeEl.innerHTML = tpl;
   if (cf.lastLinker) {
