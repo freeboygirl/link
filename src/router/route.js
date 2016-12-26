@@ -103,6 +103,7 @@ function linkRoute(linker, cf, tpl) {
       cf.lastLinker = link(linker.routeEl, cf.model, cf.actions);
     });
   } else {
+    if (preLinkReturn === false) return;// skip link
     cf.lastLinker = link(linker.routeEl, cf.model, cf.actions);
   }
   if (isFunction(cf.postLink)) {
