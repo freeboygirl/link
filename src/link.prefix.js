@@ -31,7 +31,8 @@
     arrayRemove: arrayRemove,
     formatString: formatString,
     trim: trim,
-    each: each
+    each: each,
+    hash:hash
   };
 
   link.route = route;
