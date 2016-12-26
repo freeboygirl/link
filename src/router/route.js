@@ -99,14 +99,16 @@ function linkRoute(linker, cf, tpl) {
     preLinkReturn = cf.preLink.call(cf, tpl, linker);
   }
   if (preLinkReturn && isFunction(preLinkReturn.then)) {
-    preLinkReturn.then(function () {
-      cf.lastLinker = link(linker.routeEl, cf.model, cf.actions);
-    });
+    preLinkReturn.then(traceLink);
   } else {
     if (preLinkReturn === false) return;// skip link
-    cf.lastLinker = link(linker.routeEl, cf.model, cf.actions);
+    traceLink();
   }
-  if (isFunction(cf.postLink)) {
-    cf.postLink.call(cf, tpl, linker);
+
+  function traceLink() {
+    cf.lastLinker = link(linker.routeEl, cf.model, cf.actions);
+    if (isFunction(cf.postLink)) {
+      cf.postLink.call(cf, cf.lastLinker);
+    }
   }
 }
