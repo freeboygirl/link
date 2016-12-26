@@ -1,6 +1,4 @@
 // get watches in an expr.
-var watchStartRegex = /[a-zA-Z$_]/,
-  validWatchChar = /[a-zA-Z0-9$\.]/;
 function Lexer(text) {
   this.text = text;
   this.index = 0;

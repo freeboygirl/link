@@ -1,5 +1,3 @@
-var unshift = Array.prototype.unshift,
-  quoteRegx = /[\'\"]/g;
 Link.prototype.bindEventLinkContext = function bindcontext(context) {
   var context = context,
     linker = this;
