@@ -168,6 +168,8 @@ Link.prototype.compile = function compile(el) {
   if (el.hasAttribute && el.hasAttribute(VIEW)) {
     if (!this.routeEl) {
       this.routeEl = el;
+      //remove VIEW directive to prevent from view template re-compiling this;
+      el.removeAttribute(VIEW);
       return;
     }
     else {
