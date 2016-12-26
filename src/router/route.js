@@ -96,7 +96,7 @@ function linkRoute(linker, cf, tpl) {
     cf.lastLinker.unlink(); // destroy link
   }
   if (isFunction(cf.preLink)) {
-    preLinkReturn = cf.preLink.call(cf, tpl, linker);
+    preLinkReturn = cf.preLink.call(cf, linker);
   }
   if (preLinkReturn && isFunction(preLinkReturn.then)) {
     preLinkReturn.then(traceLink);

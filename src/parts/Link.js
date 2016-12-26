@@ -1,4 +1,4 @@
-function Link(el, data, behaviors) {
+function Link(el, data, behaviors, routeConfig) {
   this.model = data;
   this.el = el;
   this.behaviors = behaviors;
@@ -7,4 +7,8 @@ function Link(el, data, behaviors) {
   this.watchMap = Object.create(null); // stores watch and watchfn map
   this.routeEl = null;
   this.bootstrap();
+
+  if (this.routeEl && routeConfig) {
+    route(this, routeConfig.routes, routeConfig.defaultPath);
+  }
 };
