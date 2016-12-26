@@ -82,23 +82,30 @@ function route(linker, config, defaultPath) {
         loadTemplate(cf.templateUrl, function (tpl) {
           linkRoute(linker, cf, tpl);
         });
-      }else{
-        linkRoute(linker,cf,'');
+      } else {
+        linkRoute(linker, cf, '');
       }
     }
   }
 }
 
 function linkRoute(linker, cf, tpl) {
+  var preLinkReturn;
   linker.routeEl.innerHTML = tpl;
   if (cf.lastLinker) {
     cf.lastLinker.unlink(); // destroy link
   }
-  if(isFunction(cf.preLink)){
-    cf.preLink.call(cf,tpl,linker);
+  if (isFunction(cf.preLink)) {
+    preLinkReturn = cf.preLink.call(cf, tpl, linker);
   }
-  cf.lastLinker = link(linker.routeEl, cf.model, cf.actions);
-  if(isFunction(cf.postLink)){
-    cf.postLink.call(cf,tpl,linker);
+  if (preLinkReturn && isFunction(preLinkReturn.then)) {
+    preLinkReturn.then(function () {
+      cf.lastLinker = link(linker.routeEl, cf.model, cf.actions);
+    });
+  } else {
+    cf.lastLinker = link(linker.routeEl, cf.model, cf.actions);
+  }
+  if (isFunction(cf.postLink)) {
+    cf.postLink.call(cf, tpl, linker);
   }
 }

@@ -24,6 +24,10 @@ link.route(linker, [
         alert('hello ' + this.name + ', you are ' + this.age);
       }
     },
+    preLink:function(){
+      this.model.name='leon',
+      this.model.gender='male';
+    },
     templateUrl: 'views/tpl1.html'
   },
   {
