@@ -29,6 +29,12 @@ link.route(linker, [
   {
     path: '/index',
     templateUrl: 'views/tpl2.html'
+  },
+   {
+    path: '/pre',
+    preLink:function(){
+      location.href='index.html';
+    }
   }
 ], '/index');
 
