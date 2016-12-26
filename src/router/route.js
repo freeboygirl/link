@@ -54,6 +54,8 @@ function loadTemplate(url, cb) {
     actions:{},
     template: '',
     templateUrl: '',
+    preLink:fn,
+    postLink:fn
   }];
 */
 function route(linker, config, defaultPath) {
@@ -80,6 +82,8 @@ function route(linker, config, defaultPath) {
         loadTemplate(cf.templateUrl, function (tpl) {
           linkRoute(linker, cf, tpl);
         });
+      }else{
+        linkRoute(linker,cf,'');
       }
     }
   }
@@ -91,5 +95,11 @@ function linkRoute(linker, cf, tpl) {
   if (cf.lastLinker) {
     cf.lastLinker.unlink(); // destroy link
   }
+  if(isFunction(cf.preLink)){
+    cf.preLink.call(cf,tpl,linker);
+  }
   cf.lastLinker = link(linker.routeEl, cf.model, cf.actions);
+  if(isFunction(cf.postLink)){
+    cf.postLink.call(cf,tpl,linker);
+  }
 }
