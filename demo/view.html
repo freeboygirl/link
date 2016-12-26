@@ -7,6 +7,11 @@
   <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" href="bootstrap.css">
   <link rel="stylesheet" href="demo.css">
+  <style>
+    a{
+      margin-right: 20px;
+    }
+  </style>
 </head>
 
 <body>
@@ -14,6 +19,9 @@
     <form class="form">
      <input type="text" x-model='test' class="form-control">
     </form>
+    <div>
+      <a href='#/index'>index</a><a href='#/home'>home</a><a href='#/notexist'>not exist</a>
+    </div>
     <div x-view></div>
   </div>
   <script src="link.js"></script>
