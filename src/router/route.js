@@ -48,7 +48,7 @@ function loadTemplate(url, cb) {
 }
 
 /**
-  var config = [{
+  var routes = [{
     path: '',
     model: {},
     actions:{},
@@ -58,7 +58,7 @@ function loadTemplate(url, cb) {
     postLink:fn
   }];
 */
-function route(linker, config, defaultPath) {
+function configRoutes(linker, routes, defaultPath) {
   addEventListenerHanlder(window, 'hashchange', renderRouter, linker.eventStore);
   var hs = hash();
   if (hs) {
@@ -68,35 +68,35 @@ function route(linker, config, defaultPath) {
     replaceHash(defaultPath);
   }
   function renderRouter() {
-    var cf = filter(config, function (c) { return c.path === hash() });
-    if (!cf) {
+    var route = filter(routes, function (r) { return r.path === hash() });
+    if (!route) {
       replaceHash(defaultPath);
       return;
     }
-    if (!cf.model || !isObject(cf.model)) {
-      cf.model = {};
+    if (!route.model || !isObject(route.model)) {
+      route.model = {};
     }
-    var template = trim(cf.template);
+    var template = trim(route.template);
     if (!template) {
-      if (cf.templateUrl) {
-        loadTemplate(cf.templateUrl, function (tpl) {
-          linkRoute(linker, cf, tpl);
+      if (route.templateUrl) {
+        loadTemplate(route.templateUrl, function (tpl) {
+          linkRoute(linker, route, tpl);
         });
       } else {
-        linkRoute(linker, cf, '');
+        linkRoute(linker, route, '');
       }
     }
   }
 }
 
-function linkRoute(linker, cf, tpl) {
+function linkRoute(linker, route, tpl) {
   var preLinkReturn;
   linker.routeEl.innerHTML = tpl;
-  if (cf.lastLinker) {
-    cf.lastLinker.unlink(); // destroy link
+  if (route.lastLinker) {
+    route.lastLinker.unlink(); // destroy link
   }
-  if (isFunction(cf.preLink)) {
-    preLinkReturn = cf.preLink.call(cf, linker);
+  if (isFunction(route.preLink)) {
+    preLinkReturn = route.preLink.call(route, linker);
   }
   if (preLinkReturn && isFunction(preLinkReturn.then)) {
     preLinkReturn.then(traceLink);
@@ -106,9 +106,9 @@ function linkRoute(linker, cf, tpl) {
   }
 
   function traceLink() {
-    cf.lastLinker = link(linker.routeEl, cf.model, cf.actions);
-    if (isFunction(cf.postLink)) {
-      cf.postLink.call(cf, cf.lastLinker);
+    route.lastLinker = link(linker.routeEl, route.model, route.actions);
+    if (isFunction(route.postLink)) {
+      route.postLink.call(route, route.lastLinker);
     }
   }
 }

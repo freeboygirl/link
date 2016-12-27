@@ -9,6 +9,6 @@ function Link(el, data, behaviors, routeConfig) {
   this.bootstrap();
 
   if (this.routeEl && routeConfig) {
-    route(this, routeConfig.routes, routeConfig.defaultPath);
+    configRoutes(this, routeConfig.routes, routeConfig.defaultPath);
   }
 };
