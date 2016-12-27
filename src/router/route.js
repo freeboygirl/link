@@ -91,7 +91,9 @@ function configRoutes(linker, routes, defaultPath) {
 
 function linkRoute(linker, route, tpl) {
   var preLinkReturn;
-  linker.routeEl.innerHTML = tpl;
+  if (linker.routeEl) {
+    linker.routeEl.innerHTML = tpl;
+  }
   if (route.lastLinker) {
     route.lastLinker.unlink(); // destroy link
   }
