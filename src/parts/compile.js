@@ -53,16 +53,15 @@ Link.prototype.getEventLinkContext = function getEventLinkContext(el, attrName, 
 };
 
 Link.prototype.getClassLinkContext = function getClassLinkContext(el, directive, expr) {
-  var kvPairs = expr.slice(1, -1).split(','),
+  var
+    kvPairs = expr.slice(1, -1).split(','),
     className,
     subExpr,
     spliter,
     lexer,
     watch,
-    linkContext;
-
-  var that = this;
-  var callInTheEndOfExprRegex = /^[a-zA-Z$_]\w*(\.[a-zA-Z$_0-9]+)*\([a-zA-Z$_0-9,]*\)/;
+    linkContext,
+    that = this;
 
   each(kvPairs, function (kv) {
     spliter = kv.split(':');
@@ -77,15 +76,7 @@ Link.prototype.getClassLinkContext = function getClassLinkContext(el, directive,
       watch = lexer.getWatches();
 
       each(watch, function (w) {
-        // w can contains function call in the end, e.g.  a.b.c(x,y)
-        if (!callInTheEndOfExprRegex.test(w)) {
-          linkContext = LinkContext.create(el, w, directive, subExpr, that);
-        }
-        else {
-          w = w.split('.').slice(0, -1).join('.');
-          linkContext = LinkContext.create(el, w, directive, subExpr, that);
-        }
-
+        linkContext = LinkContext.create(el, w, directive, subExpr, that);
       });
     }
     linkContext.className = className;
