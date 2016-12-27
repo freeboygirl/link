@@ -173,7 +173,7 @@ Link.prototype.compile = function compile(el) {
       return;
     }
     else {
-      throw linkError('a link context can only have one x-view');
+      throw linkError('a link context can only have on more than one x-view');
     }
   }
 
