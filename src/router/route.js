@@ -110,7 +110,14 @@ function linkRoute(linker, route, tpl) {
   }
 
   function traceLink() {
-    route.lastLinker = link(linker.routeEl, route.model, route.actions);
+    var config = {
+      model: route.model,
+      methods: route.actions,
+    };
+    if (linker.routeEl) {
+      config.el = linker.routeEl;
+    }
+    route.lastLinker = link(config);
     if (isFunction(route.postLink)) {
       route.postLink.call(route, route.lastLinker);
     }
