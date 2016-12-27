@@ -21,7 +21,6 @@ function repeatHanlder(linkContext) {
     lastLinks = linkContext.lastLinks || [];
 
   if (!linkContext.$$elRemovedFromDOM) {
-    linkContext.$$elRemovedFromDOM = true;
     comment = linkContext.comment = document.createComment('repeat end for ' + linkContext.prop);
     el.parentNode.insertBefore(linkContext.comment, el);
     el.remove();
