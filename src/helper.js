@@ -130,6 +130,27 @@ if (!('remove' in Element.prototype)) {
   };
 }
 
+// poly fill if ie 
+function extend(target, varArgs) {
+  if (isFunction(Object.assign)) {
+    return Object.assign.apply(Object, arguments);
+  }
+  else {
+    var to = Object(target);
+    for (var index = 1; index < arguments.length; index++) {
+      var nextSource = arguments[index];
+      if (nextSource != null) { // Skip over if undefined or null
+        for (var nextKey in nextSource) {
+          if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+            to[nextKey] = nextSource[nextKey];
+          }
+        }
+      }
+    }
+    return to;
+  }
+}
+
 function notify(watchMap, watch, arrayChangeInfo) {
   var renders = watchMap[watch],
     len;
