@@ -39,11 +39,15 @@ var routeConfig = {
       preLink: function () {
         location.href = 'index.html';
       }
+    },
+    {
+      path: '/tpl',
+      template: '<h1>hello,world</h1>'
     }
   ]
 }
 
-var linker = link(model,null,routeConfig);
+var linker = link(model, null, routeConfig);
 
 
 console.timeEnd(timerId)
