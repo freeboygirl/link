@@ -97,7 +97,6 @@ Link.prototype.getClassLinkContext = function getClassLinkContext(el, directive,
 
 Link.prototype.getLinkContext = function getLinkContext(el, directive, expr) {
   if (isWatch(expr)) {
-    //simple watch
     this.addLinkContextAndSetWatch(el, expr, directive, expr);
   }
   else if (isLikeJson(expr)) {
@@ -134,15 +133,13 @@ Link.prototype.compileDOM = function compileDOM(el) {
         // event directive
         that.getEventLinkContext(el, attrName, attrValue);
       }
-      else if (directives.indexOf(attrName) > -1
-        && !(attrName === REPEATER && that.model.$$child)) {
-        // none event directive
+      else if (directives.indexOf(attrName) > -1) {
+        // ! event directive
         that.getLinkContext(el, attrName, attrValue);
       }
     });
 
   } else if (el.nodeType === 3) {
-    // text node , and it may contains several watches
     var expr = trim(el.textContent);
     if (expr && /\{\{[^\}]+\}\}/.test(expr)) {
       this.getLinkContextsFromInterpolation(el, expr);
@@ -152,17 +149,11 @@ Link.prototype.compileDOM = function compileDOM(el) {
 
 Link.prototype.compile = function compile(el) {
   var that = this;
-  /**
-   * 1. case x-repeat origin ,skip it and its childNodes compiling.(only need add handle x-repeat)
-   * 2. case x-repeat clone , the el is root linker 
-   *
-   *  */
   if (el.hasAttribute && el.hasAttribute(REPEATER)) {
-    if (!this.model.$$child) {
-      //origin
-      this.getLinkContext(el, REPEATER, el.getAttribute(REPEATER));
-      return;
-    }
+    var expr = el.getAttribute(REPEATER);
+    el.removeAttribute(REPEATER);
+    this.getLinkContext(el, REPEATER, expr);
+    return;
   }
 
   if (el.hasAttribute && el.hasAttribute(VIEW)) {
