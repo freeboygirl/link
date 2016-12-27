@@ -11,7 +11,7 @@ console.time(timerId);
 link.filter('firstLetterLowerCase',function(str){
   return str[0].toLowerCase()+str.slice(1);
 });
-var linker = link(document.getElementById('demo'), model);
+var linker = link({model:model});
 
 
 

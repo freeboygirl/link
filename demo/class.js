@@ -1,8 +1,8 @@
 var model = {
   success: true,
   danger: true,
-  name:'',
-  style:''
+  name: '',
+  style: ''
 };
 
 var methods = {
@@ -14,6 +14,6 @@ var methods = {
 var timerId = 'demo';
 console.time(timerId);
 
-var linker = link(document.getElementById('demo'), model, methods);
+var linker = link({ model: model, methods: methods });
 
 console.timeEnd(timerId)

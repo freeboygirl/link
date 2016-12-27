@@ -16,6 +16,6 @@ var methods = {
 var timerId = 'demo';
 console.time(timerId);
 
-var linker = link(document.getElementById('demo'), model, methods);
+var linker = link({ model: model, methods: methods });
 
 console.timeEnd(timerId)

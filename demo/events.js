@@ -15,7 +15,7 @@ var methods = {
 };
 
 
-var linker = link(model, methods);
+var linker = link({ model: model, methods: methods });
 
 
 console.timeEnd(timerId)

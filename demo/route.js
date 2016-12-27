@@ -47,7 +47,7 @@ var routeConfig = {
   ]
 }
 
-var linker = link(model, null, routeConfig);
+var linker = link({ model: model, routes: routeConfig });
 
 
 console.timeEnd(timerId)

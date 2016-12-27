@@ -126,7 +126,7 @@
   var timerId = 'pagination';
   console.time(timerId);
 
-  var linker = link(el, model, methods);
+  var linker = link({ el: el, model: model, methods: methods });
 
   var vm = linker.model;
 

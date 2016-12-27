@@ -10,6 +10,6 @@ var model = {
 var timerId = 'interpilation';
 console.time(timerId);
 
-var linker = link(document.getElementById('demo'), model);
+var linker = link({model:model});
 
 console.timeEnd(timerId)
