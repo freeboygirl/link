@@ -85,6 +85,8 @@ function configRoutes(linker, routes, defaultPath) {
       } else {
         linkRoute(linker, route, '');
       }
+    } else {
+      linkRoute(linker, route, template);
     }
   }
 }
