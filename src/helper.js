@@ -141,7 +141,7 @@ function extend(target, varArgs) {
       var nextSource = arguments[index];
       if (nextSource != null) { // Skip over if undefined or null
         for (var nextKey in nextSource) {
-          if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+          if (hasOwnProperty.call(nextSource, nextKey)) {
             to[nextKey] = nextSource[nextKey];
           }
         }
