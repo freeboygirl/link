@@ -1,12 +1,11 @@
 function makeOneClonedLinkerForRepeater(linkContext, itemData, itemIndex) {
-  var cloneEl = linkContext.elTpl.cloneNode(true),
-    model = linkContext.linker.model;
-  // child model will inherit all props&fn from parent model.
-  var childModel = Object.create(model, {
-    $item: { value: itemData, enumerable: true, configurable: true, writable: true },
-    $index: { value: itemIndex, enumerable: true, configurable: true, writable: true },
-    $$child: { value: true }
-  });
+  var cloneEl = linkContext.el.cloneNode(true),
+    model = linkContext.linker.model,
+    childModel = Object.create(model, {
+      $item: { value: itemData, enumerable: true, configurable: true, writable: true },
+      $index: { value: itemIndex, enumerable: true, configurable: true, writable: true },
+      $$child: { value: true }
+    });
 
   var linker = new Link(cloneEl, childModel);
   return { el: cloneEl, linker: linker };
@@ -15,20 +14,19 @@ function makeOneClonedLinkerForRepeater(linkContext, itemData, itemIndex) {
 function repeatHanlder(linkContext) {
   var warr = evalLinkContext(linkContext),
     arr = warr && warr.arr,
-    el = linkContext.el;
+    el = linkContext.el,
+    comment = linkContext.comment,
+    lastArrayChangeInfo = linkContext.lastArraychange,
+    repeaterItem,
+    lastLinks = linkContext.lastLinks || [];
 
-  var lastArrayChangeInfo = linkContext.lastArraychange;
-  var repeaterItem;
-
-  if (el) {
-    linkContext.elTpl = el.cloneNode(true);
-    linkContext.comment = document.createComment('repeat end for ' + linkContext.prop);
+  if (!linkContext.$$elRemovedFromDOM) {
+    linkContext.$$elRemovedFromDOM = true;
+    comment = linkContext.comment = document.createComment('repeat end for ' + linkContext.prop);
     el.parentNode.insertBefore(linkContext.comment, el);
     el.remove();
-    delete linkContext.el;
+    linkContext.$$elRemovedFromDOM = true;
   }
-  var lastLinks = linkContext.lastLinks || [];
-  var comment = linkContext.comment;
 
   function rebuild() {
     var docFragment = document.createDocumentFragment();
