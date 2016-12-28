@@ -1,18 +1,18 @@
 function makeOneClonedLinkerForRepeater(linkContext, itemData, itemIndex) {
   var cloneEl = linkContext.el.cloneNode(true),
     model = linkContext.linker.model,
-    childModel = Object.create(model, {
-      $item: { value: itemData, enumerable: true, configurable: true, writable: true },
-      $index: { value: itemIndex, enumerable: true, configurable: true, writable: true },
-      $$child: { value: true }
-    });
-
-  var linker = new Link(cloneEl, childModel);
-  return { el: cloneEl, linker: linker };
+    expr = linkContext.expr,
+    v = expr.split(/\s+/)[0];
+  var props = {
+    $index: { value: itemIndex, enumerable: true, configurable: true, writable: true },
+    $$child: { value: true }
+  };
+  props[v] = { value: itemData, enumerable: true, configurable: true, writable: true };
+  return { el: cloneEl, linker: new Link(cloneEl, Object.create(model, props)) };
 }
 
 function repeatHanlder(linkContext) {
-  var warr = evalLinkContext(linkContext),
+  var warr = $eval(linkContext.prop, linkContext.linker.model),
     arr = warr && warr.arr,
     el = linkContext.el,
     comment = linkContext.comment,

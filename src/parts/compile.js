@@ -141,16 +141,20 @@ Link.prototype.compileDOM = function compileDOM(el) {
 Link.prototype.compile = function compile(el) {
   var that = this;
   if (el.hasAttribute && el.hasAttribute(REPEATER)) {
-    var expr = el.getAttribute(REPEATER);
+    var expr = trim(el.getAttribute(REPEATER)), // var in watch
+      w = expr.split(/\s+/);
+    if (w.length === 3) {
+      this.addLinkContextAndSetWatch(el, w[2], REPEATER, expr);
+    } else {
+      throw linkError('repeat only support exr like: var in array.')
+    }
     el.removeAttribute(REPEATER);
-    this.getLinkContext(el, REPEATER, expr);
     return;
   }
 
   if (el.hasAttribute && el.hasAttribute(VIEW)) {
     if (!this.routeEl) {
       this.routeEl = el;
-      //remove VIEW directive to prevent from view template re-compiling this;
       el.removeAttribute(VIEW);
       return;
     }
