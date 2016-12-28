@@ -2,97 +2,36 @@
 
 <head>
   <title>link demo</title>
-  <link rel="stylesheet" href="demo.css"></link>
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="bootstrap.css">
+  <link rel="stylesheet" href="demo.css">
 </head>
 
 <body>
-  <div id='demo'>
-    <div>upper name: <span x-bind='name | uppercase'></span></div>
-    <div> money age: <span x-bind='age | money'></span></div>
-    <input type="button" value='sometime disabled' x-disabled='!name || !age' />
-    <label>name:</label> <span x-bind='"my name is "+name+",and i am "+age'></span>
+  <div>
+    <button class="btn btn-info" x-on-click='go("repeat.html")'>show repeat demo</button>
+  </div>
+  <div>
+    <button class="btn btn-info" x-on-click='go("class.html")'>show class demo</button>
+  </div>
+  <div>
+    <button class="btn btn-info" x-on-click='go("filter.html")'>show filter demo</button>
+  </div>
+  <div>
+    <button class="btn btn-info" x-on-click='go("form.html")'>show form demo</button>
+  </div>
+  <div>
+    <button class="btn btn-info" x-on-click='go("interpilation.html")'>show bind demo</button>
+  </div>
+  <div>
+    <button class="btn btn-info" x-on-click='go("pagination.html")'>show pagination demo</button>
+  </div>
+  <div>
+    <button class="btn btn-info" x-on-click='go("route.html")'>show route demo</button>
+  </div>
 
-    <input type="text" class="form-control" x-model='name' x-on-focus='focus' x-on-blur='blur'>
-    <label>age:</label><span x-bind='age'></span>
-    <div x-show='age>=18'>
-      age >18 ,age/2 is <span x-bind="age/2"></span>
-    </div>
-    <div x-hide='age>=18'>
-      age
-      <18 </div>
-        <input type="text" class="form-control" x-model='age'>
-        <label>area:</label><span x-bind='address.location.area'></span>
-        <input type="text" class="form-control" x-model='address.location.area'>
-        <label>age select:</label>
-        <select x-model='age' class="form-control">
-    <option value="1">1</option>
-     <option value="2">2</option>
-      <option value="3">3</option>
-    </select>
-        <label>name and age: </label> {{ ' my name is '+name}} and {{ "i am "+ age/2}}
-        <div x-repeat='loves'>
-          love {{$item.name}} {{$item.age}}
-          <input type="text" class="form-control" x-model='$item.name' x-on-focus='focus' x-on-blur='blur'>
-          <input type="text" class="form-control" x-model='$item.age'>
-          <button type="button" x-on-click="removeLove">Remove this</button>
-        </div>
-        <button type="button" x-on-click="addLove">Add</button>
-
-        <div x-repeat='other.hates'>
-          {{$item}}
-        </div>
-
-        <input type="button" name="" value="hello" x-on-click='hello'>
-        <span x-on-click='hi'>click me</span>
-
-
-        <form>
-          <div>radio</div>
-          <div>
-            <label>
-        <input type="radio" name="sex" value="male" x-model='sex'> male
-        </label>
-            <label>
-          <input type="radio" name="sex" value="female" x-model='sex'> female
-        </label>
-          </div>
-
-          <div>checkbox</div>
-          <div>
-            <label>
-        <input type="checkbox" name="fruit" value="apple" x-model='fruit'> apple
-        </label>
-            <label>
-          <input type="checkbox" name="fruit" value="orange" x-model='fruit'> orange
-        </label>
-            <label>
-          <input type="checkbox" name="fruit" value="banana" x-model='fruit'> banana
-        </label>
-          </div>
-
-          <div>
-            textarea
-            <textarea x-model="message" class="form-control" placeholder="test textarea"></textarea>
-            <div>{{message}}</div>
-          </div>
-
-          <div>
-            password: <input type="password" class="form-control" x-model='password'>
-          </div>
-          <div>
-            your password is: {{password}}
-          </div>
-
-          <div x-class='{my-class:name==="wgc"}'>wgc
-            <div>
-
-        </form>
-
-
-        </div>
-
-        <script src="link.js"></script>
-        <script src="demo.js"></script>
+  <script src="link.js"></script>
+  <script src="demo.js"></script>
 </body>
 
 </html>

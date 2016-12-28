@@ -3,13 +3,14 @@ var model = {
   password: '',
   remember: true,
   greeting: '',
-  fruit: []
+  fruit: [],
+  sex:'男'
 };
 
 var methods = {
   clickme: function () {
     this.greeting = 'hello ' + this.email + ', your password is' + this.password + ', and you chooosed  ' + (this.remember ? 'remember' : 'forget it') +
-      'your fav fruit is ' + this.fruit.getArray().join(',');
+      ', 你爱这些水果: ' + this.fruit.getArray().join(',');
   }
 };
 

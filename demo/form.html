@@ -11,7 +11,7 @@
 
 <body>
   <div class="main" id='demo'>
-    <form class="form">
+    <form class="form-inline">
       <div class="form-group">
         <label class="sr-only" for="exampleInputEmail3">Email address</label>
         <input type="email" x-model='email' class="form-control" id="exampleInputEmail3" placeholder="Email">
@@ -22,20 +22,28 @@
       </div>
       <div class="checkbox">
         <label>
-      <input type="checkbox" x-model='remember'>Remember me {{remember?"yes":"no"}}
-    </label>
-
+      <input type="checkbox"  x-model='remember'>Remember me {{remember?"记住":"忘记"}}
+      </label>
       </div>
-      <div>your fav fruit</div>
       <div>
         <label>
-        <input type="checkbox" name="fruit" value="apple" x-model='fruit'> apple
+        <input type="radio"  name="sex" value="男" x-model='sex'> 男
         </label>
         <label>
-          <input type="checkbox" name="fruit" value="orange" x-model='fruit'> orange
+          <input type="radio"  name="sex" value="女" x-model='sex'> 女
+        </label>
+      </div>
+      <div>你的性别是: {{sex}}</div>
+      <div>爱吃什么水果?</div>
+      <div>
+        <label>
+        <input type="checkbox"  name="fruit" value="apple" x-model='fruit'> apple
         </label>
         <label>
-          <input type="checkbox" name="fruit" value="banana" x-model='fruit'> banana
+          <input type="checkbox"  name="fruit" value="orange" x-model='fruit'> orange
+        </label>
+        <label>
+          <input type="checkbox"  name="fruit" value="banana" x-model='fruit'> banana
         </label>
       </div>
       <button type="button" class="btn btn-default" x-on-click='clickme'>click me</button>

@@ -11,6 +11,9 @@
 
 <body>
   <div class="main" id='demo'>
+    <h3>
+      目前link原生支持 uppercase, lowercase, money, phone 4个filter , 也可以自定义filter ,
+    </h3>
     <input type="text" class="form-control" x-model='name'>
 
     <div>
@@ -19,11 +22,10 @@
     <div>my name is {{name}}, i have <span x-bind='money | money'></span></div>
     <div>my name is <span x-bind='name | uppercase'></span> (upper case)</div>
     <div>my name is <span x-bind='name | lowercase'></span> (lower case)</div>
-    <div>my name is <span x-bind='name | firstLetterLowerCase'></span> (firstLetterLowerCase)</div>
-
     <div>my phone is <span x-bind='phone | phone'></span></div>
-
-
+    <br>
+    <h4> 自定义filter</h4>
+    <div>my name is <span x-bind='name | firstLetterLowerCase'></span> (firstLetterLowerCase)</div>
   </div>
   <script src="link.js"></script>
   <script src="filter.js"></script>

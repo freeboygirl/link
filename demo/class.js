@@ -8,6 +8,9 @@ var model = {
 var methods = {
   successHanlder: function () {
     this.success = !this.success;
+  },
+  hilight: function () {
+    this.style = 'hilight';
   }
 };
 
