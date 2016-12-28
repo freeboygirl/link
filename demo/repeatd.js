@@ -14,7 +14,7 @@ var methods = {
   },
   removeLove: function () {
     var vm = this;
-    vm.myloves.removeOne(vm.$item);
+    vm.myloves.removeOne(vm.love);
   }
 };
 

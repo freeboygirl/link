@@ -11,16 +11,16 @@
 
 <body>
   <div class="main" id='demo'>
-    <div x-repeat='myloves'>
-      i love {{$item.name}} and he/she is {{$item.age}}
-      <input type="text" class="form-control" x-model='$item.name' x-on-focus='focus' x-on-blur='blur'>
-      <input type="text" class="form-control" x-model='$item.age'>
+    <div x-repeat=' love in myloves'>
+      i love {{love.name}} and he/she is {{love.age}}
+      <input type="text" class="form-control" x-model='love.name' x-on-focus='focus' x-on-blur='blur'>
+      <input type="text" class="form-control" x-model='love.age'>
       <button type="button" class="btn btn-danger" x-on-click="removeLove">Remove</button>
     </div>
     <div> <button type="button" class="btn btn-primary" x-on-click="addLove()">Add one more love</button></div>
   </div>
   <script src="link.js"></script>
-  <script src="repeat.js"></script>
+  <script src="repeatd.js"></script>
 
   </script>
 </body>

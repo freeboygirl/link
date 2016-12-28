@@ -13,7 +13,7 @@
   <div class="main" id='main'>
     <div>
       <table class="table">
-        <tr x-repeat='messages' x-on-click='hilightMessage' x-class='{hilight:$item.focus}'>
+        <tr x-repeat='$item in   messages ' x-on-click='hilightMessage' x-class='{hilight:$item.focus}'>
           <td class="t1">{{$item.title}}</td>
           <td class="t2">{{$item.body}}</td>
           <td class="t3">{{$item.time}}
@@ -24,7 +24,7 @@
       <div class="ng-pagination">
         <ul x-show="pageCount>1">
           <li x-on-click="prev" x-class='{disable:page===1}'>&lt;</li>
-          <li x-repeat="pageNumbers" x-on-click="pageChange" x-class="{active:$item.active}">
+          <li x-repeat="$item in pageNumbers" x-on-click="pageChange" x-class="{active:$item.active}">
             {{$item.page}}</li>
           <li x-on-click="next" x-class="{disable:page===pageCount}">&gt;</li>
         </ul>
