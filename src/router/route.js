@@ -48,14 +48,15 @@ function loadTemplate(url, cb) {
 }
 
 /**
-  var routes = [{
-    path: '',
-    model: {},
-    actions:{},
-    template: '',
-    templateUrl: '',
-    preLink:fn,
-    postLink:fn
+  var routes = {
+    'path':{
+       model: {},
+       methods:{},
+       template: '',
+       templateUrl: '',
+       preLink:fn,
+       postLink:fn
+    }
   }];
 */
 function configRoutes(linker, routes, defaultPath) {
@@ -68,7 +69,7 @@ function configRoutes(linker, routes, defaultPath) {
     replaceHash(defaultPath);
   }
   function renderRouter() {
-    var route = filter(routes, function (r) { return r.path === hash() });
+    var route = routes[hash()];
     if (!route) {
       replaceHash(defaultPath);
       return;
@@ -110,14 +111,12 @@ function linkRoute(linker, route, tpl) {
   }
 
   function traceLink() {
-    var config = {
+    if (!linker.routeEl) return; // no x-view , no route link 
+    route.lastLinker = link({
+      el: linker.routeEl,
       model: route.model,
-      methods: route.actions,
-    };
-    if (linker.routeEl) {
-      config.el = linker.routeEl;
-    }
-    route.lastLinker = link(config);
+      methods: route.methods,
+    });
     if (isFunction(route.postLink)) {
       route.postLink.call(route, route.lastLinker);
     }
