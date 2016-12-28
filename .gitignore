@@ -1,5 +1,5 @@
 /node_modules
 /build
-/dist
+#/dist
 /**/*.map
-/demo/link.js
+#/demo/link.js
