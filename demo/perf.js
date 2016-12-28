@@ -77,6 +77,6 @@ function Benchmark(example) {
 }
 
 new Benchmark(function (items, done) {
-  link({ el: root, model: { item: items } });
-  done.call();
+  // link({ el: root, model: { item: items } });
+  // done.call();
 });
