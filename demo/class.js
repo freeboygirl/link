@@ -5,12 +5,14 @@ var model = {
   style: ''
 };
 
+var s = ['hilight', 'btn-default', 'btn-danger', 'btn-info'];
+
 var methods = {
   successHanlder: function () {
     this.success = !this.success;
   },
   hilight: function () {
-    this.style = 'hilight';
+    this.style = s[Math.floor(Math.random() * s.length)];
   }
 };
 
