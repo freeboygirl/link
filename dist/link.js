@@ -325,7 +325,7 @@ function modelHandler(linkContext) {
     }
   }
   else {
-    linkContext.el.value = exprVal;
+    el.value != exprVal && (el.value = exprVal);
   }
 }
 function makeOneClonedLinkerForRepeater(linkContext, itemData, itemIndex) {

@@ -14,6 +14,6 @@ function modelHandler(linkContext) {
     }
   }
   else {
-    linkContext.el.value = exprVal;
+    el.value != exprVal && (el.value = exprVal);
   }
 }
