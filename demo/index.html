@@ -7,7 +7,7 @@
 
 <body>
   <div id='demo'>
-    <div>upper name: <span x-bind='name | upper'></span></div>
+    <div>upper name: <span x-bind='name | uppercase'></span></div>
     <div> money age: <span x-bind='age | money'></span></div>
     <input type="button" value='sometime disabled' x-disabled='!name || !age' />
     <label>name:</label> <span x-bind='"my name is "+name+",and i am "+age'></span>

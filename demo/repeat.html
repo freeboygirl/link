@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>pagination demo</title>
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="bootstrap.css">
+  <link rel="stylesheet" href="demo.css">
+</head>
+
+<body>
+  <div class="main" id='demo'>
+    <div x-repeat='myloves'>
+      i love {{$item.name}} and he/she is {{$item.age}}
+      <input type="text" class="form-control" x-model='$item.name' x-on-focus='focus' x-on-blur='blur'>
+      <input type="text" class="form-control" x-model='$item.age'>
+      <button type="button" class="btn btn-danger" x-on-click="removeLove">Remove</button>
+    </div>
+    <div> <button type="button" class="btn btn-primary" x-on-click="addLove()">Add one more love</button></div>
+  </div>
+  <script src="link.js"></script>
+  <script src="repeat.js"></script>
+
+  </script>
+</body>
+
+</html>
