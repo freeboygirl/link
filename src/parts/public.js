@@ -11,7 +11,7 @@ Link.prototype.unlink = function unlink() {
   this.watchMap = null;
   // clean event binding 
   each(this.eventStore, function (event) {
-    removeEventListenerHanlder(event.el, event.event, event.handler);
+    removeEventListenerHandler(event.el, event.event, event.handler);
   });
   this.eventStore = null;
   if (this.model.$$child) {

@@ -161,7 +161,7 @@ function notify(watchMap, watch, arrayChangeInfo) {
   }
 }
 
-function addEventListenerHanlder(el, event, func, store) {
+function addEventListenerHandler(el, event, func, store) {
   if (el.addEventListener && isFunction(func)) {
     el.addEventListener(event, func, false);
     store.push({
@@ -172,7 +172,7 @@ function addEventListenerHanlder(el, event, func, store) {
   }
 }
 
-function removeEventListenerHanlder(el, event, func) {
+function removeEventListenerHandler(el, event, func) {
   if (el.removeEventListener && isFunction(func)) {
     el.removeEventListener(event, func, false);
   }

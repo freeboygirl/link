@@ -27,7 +27,7 @@
   model.pageCount = pageCount;
 
 
-  function pageChangeHanlder(type, vm, pagesProp) {
+  function pageChangeHandler(type, vm, pagesProp) {
     if (type === 'prev' && vm.page > 1) {
       --vm.page;
       loadMessage(vm);
@@ -103,10 +103,10 @@
       this.$item.up = !this.$item.up;
     },
     prev: function () {
-      pageChangeHanlder('prev', this, 'pageNumbers');
+      pageChangeHandler('prev', this, 'pageNumbers');
     },
     next: function () {
-      pageChangeHanlder('next', this, 'pageNumbers');
+      pageChangeHandler('next', this, 'pageNumbers');
     },
     pageChange: function () {
       var vm = this;

@@ -60,7 +60,7 @@ function loadTemplate(url, cb) {
   }];
 */
 function configRoutes(linker, routes, defaultPath) {
-  addEventListenerHanlder(window, 'hashchange', renderRouter, linker.eventStore);
+  addEventListenerHandler(window, 'hashchange', renderRouter, linker.eventStore);
   var hs = hash();
   if (hs) {
     renderRouter();

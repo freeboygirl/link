@@ -1,7 +1,7 @@
 
 function checkboxReact(linkContext) {
   var el = linkContext.el;
-  function checkboxHanlder() {
+  function checkboxHandler() {
     var value = el.value,
       checked = el.checked,
       propValue = evalLinkContext(linkContext);
@@ -22,5 +22,5 @@ function checkboxReact(linkContext) {
       setWatchValue(linkContext.prop, checked, linkContext.linker.model);
     }
   }
-  addEventListenerHanlder(el, 'click', checkboxHanlder, linkContext.linker.eventStore);
+  addEventListenerHandler(el, 'click', checkboxHandler, linkContext.linker.eventStore);
 }

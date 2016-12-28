@@ -1,4 +1,4 @@
-function showHideHanlder(linkContext) {
+function showHideHandler(linkContext) {
   // deal with both show and hide
   var el = linkContext.el,
     directive = linkContext.directive,

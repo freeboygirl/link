@@ -1,4 +1,4 @@
-function modelHanlder(linkContext) {
+function modelHandler(linkContext) {
   var el = linkContext.el,
     exprVal = evalLinkContext(linkContext);
   if (el.type === 'radio') {

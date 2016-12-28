@@ -13,7 +13,7 @@
   <div class="main" id='demo'>
     <h3> 点击文本也会改变样式</h3>
     <input type="text" x-model='name' class="form-control" placeholder="when name is wgc , the below text will be red">
-    <div class="alert" x-class='{"alert-success":success,"hilight-text":name==="wgc"}' x-on-click='successHanlder' role="alert">Well done! You successfully read this important alert message.</div>
+    <div class="alert" x-class='{"alert-success":success,"hilight-text":name==="wgc"}' x-on-click='successHandler' role="alert">Well done! You successfully read this important alert message.</div>
     <input type="text" x-model='style' class="form-control" placeholder="input class will apply to below">
     <div class="alert" role="alert" x-on-click='hilight()' x-class='style'>Heads up! This alert needs your attention, but it's not super important.</div>
   </div>

@@ -32,7 +32,7 @@ Link.prototype.bindEventLinkContext = function bindcontext(context) {
     }
   };
 
-  addEventListenerHanlder(context.el, context.event, func, this.eventStore);
+  addEventListenerHandler(context.el, context.event, func, this.eventStore);
 };
 
 

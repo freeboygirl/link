@@ -1,9 +1,9 @@
 var DIRETIVE_RENDER_MAP = {
-  'x-show': showHideHanlder,
-  'x-hide': showHideHanlder,
-  'x-bind': bindHanlder,
-  'x-disabled': disabledHanlder,
-  'x-repeat': repeatHanlder,
+  'x-show': showHideHandler,
+  'x-hide': showHideHandler,
+  'x-bind': bindHandler,
+  'x-disabled': disabledHandler,
+  'x-repeat': repeatHandler,
   'x-class': classHandler,
-  'x-model': modelHanlder
+  'x-model': modelHandler
 };

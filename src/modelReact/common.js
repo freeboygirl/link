@@ -3,5 +3,5 @@ function commonReact(linkContext, event) {
   function commonHandler() {
     setWatchValue(linkContext.prop, el.value || '', linkContext.linker.model);
   }
-  addEventListenerHanlder(el, event, commonHandler, linkContext.linker.eventStore);
+  addEventListenerHandler(el, event, commonHandler, linkContext.linker.eventStore);
 }

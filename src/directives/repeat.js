@@ -11,7 +11,7 @@ function makeOneClonedLinkerForRepeater(linkContext, itemData, itemIndex) {
   return { el: cloneEl, linker: new Link(cloneEl, Object.create(model, props)) };
 }
 
-function repeatHanlder(linkContext) {
+function repeatHandler(linkContext) {
   var warr = $eval(linkContext.prop, linkContext.linker.model),
     arr = warr && warr.arr,
     el = linkContext.el,

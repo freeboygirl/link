@@ -1,4 +1,4 @@
-function disabledHanlder(linkContext) {
+function disabledHandler(linkContext) {
   if (!!evalLinkContext(linkContext)) {
     linkContext.el.setAttribute("disabled", "disabled");
   }

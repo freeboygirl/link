@@ -3,16 +3,16 @@ Link.prototype.addWatchNotify = function addWatchNotify(linkContext) {
   var that = this;
   if (isArray(linkContext.prop)) {
     each(linkContext.prop, function (watch) {
-      that.addNofityHanlder(watch, linkContext);
+      that.addNofityHandler(watch, linkContext);
     });
   }
 
   else {
-    that.addNofityHanlder(linkContext.prop, linkContext);
+    that.addNofityHandler(linkContext.prop, linkContext);
   }
 };
 
-Link.prototype.addNofityHanlder = function addNofityHanlder(watch, linkContext) {
+Link.prototype.addNofityHandler = function addNofityHandler(watch, linkContext) {
   if (!this.watchMap[watch]) {
     this.watchMap[watch] = [];
   }

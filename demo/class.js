@@ -8,7 +8,7 @@ var model = {
 var s = ['hilight', 'btn-default', 'btn-danger', 'btn-info'];
 
 var methods = {
-  successHanlder: function () {
+  successHandler: function () {
     this.success = !this.success;
   },
   hilight: function () {
