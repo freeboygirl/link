@@ -11,12 +11,14 @@
 
 <body>
   <div class="main" id='demo'>
-    <button x-on-click='hello'>hello</button>
-    <button x-on-click='hello()'>hello1</button>
+    <button x-on-click='hello' class="btn">fn</button>
+    <button x-on-click='hello()' class="btn">fn()</button>
+    <div>age</div>
     <input type="text" x-model='age' class="form-control">
-    <button x-on-click='hi("leon",age)'>hi</button>
-    <button x-on-click='hi("leon",30)'>hi2</button>
-    <button x-on-click='age++'>expr</button>
+    <button x-on-click='hi("leon",age)' class="btn">fn(args with watch)</button>
+    <button x-on-click='hi("leon",30)' class="btn">fn(..args)</button>
+    <button x-on-click='age++' class="btn">expr: age++</button>
+    <button x-on-click='--age' class="btn">expr: age--</button>
 
   </div>
   <script src="link.js"></script>
