@@ -106,13 +106,11 @@ Link.prototype.getLinkContext = function getLinkContext(el, directive, expr) {
 };
 
 Link.prototype.compileDOM = function compileDOM(el) {
-  var attrs,
-    attrName,
+  var attrName,
     attrValue,
     that = this;
   if (el.nodeType === 1 && el.hasAttributes()) {
-    attrs = el.attributes;
-    each(attrs, function (attr) {
+    each(el.attributes, function (attr) {
       attrName = attr.name;
       attrValue = trim(attr.value);
       if (eventDirectiveRegex.test(attrName)) {
