@@ -20,7 +20,6 @@ Link.prototype.defineObserver = function defineObserver(model, prop, value, prop
 };
 
 Link.prototype.watchModel = function watchModel(model, propStack) {
-  propStack = propStack || [];
   var props = Object.keys(model),
     prop,
     value,
