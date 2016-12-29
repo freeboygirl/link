@@ -106,11 +106,12 @@ Link.prototype.getLinkContext = function getLinkContext(el, directive, expr) {
 };
 
 Link.prototype.compileDOM = function compileDOM(el) {
-  var attrs = el.attributes,
+  var attrs,
     attrName,
     attrValue,
     that = this;
-  if (el.hasAttributes && el.hasAttributes()) {
+  if (el.nodeType === 1 && el.hasAttributes()) {
+    attrs = el.attributes;
     each(attrs, function (attr) {
       attrName = attr.name;
       attrValue = trim(attr.value);
@@ -121,7 +122,6 @@ Link.prototype.compileDOM = function compileDOM(el) {
         that.getLinkContext(el, attrName, attrValue);
       }
     });
-
   } else if (el.nodeType === 3) {
     var expr = trim(el.textContent);
     if (expr && /\{\{[^\}]+\}\}/.test(expr)) {
