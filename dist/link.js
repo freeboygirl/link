@@ -26,9 +26,16 @@ var
   interpolationRegex = /\{\{(\$?[^\}]+)\}\}/g,
   watchRegex = /^\$?\w+(\.?\w+)*$/,
   eventDirectiveRegex = /^x-on-(\w+)$/, // x-on- with native dom event name to bind event handler 
-  directives = ['x-bind', 'x-model', 'x-repeat', 'x-show', 'x-hide', 'x-class', 'x-disabled', 'x-view'],
-  REPEATER = 'x-repeat',
+  REPEAT = 'x-repeat',
   VIEW = 'x-view',
+  BIND = 'x-bind',
+  MODEL = 'x-model',
+  SHOW = 'x-show',
+  HIDE = 'x-hide',
+  CLASS = 'x-class',
+  DISABLED = 'x-disabled',
+  VIEW = 'x-view',
+  directives = [BIND, MODEL, REPEAT, SHOW, HIDE, CLASS, DISABLED, VIEW],
   fnRegex = /^[a-zA-Z$_]\w*$/,
   fnCallRegex = /^[a-zA-Z$_]\w*\(\s*\)$/,
   fnCallParamsRegex = /^[a-zA-Z$_]\w*\(([^\)]+)\)$/,
@@ -424,12 +431,11 @@ function repeatHandler(linkContext) {
   linkContext.lastLinks = lastLinks;
 }
 function showHideHandler(linkContext) {
-  // deal with both show and hide
   var el = linkContext.el,
     directive = linkContext.directive,
     boolValue = !!evalLinkContext(linkContext);
-  if (directive === 'x-show' && boolValue
-    || directive === 'x-hide' && !boolValue) {
+  if (directive === SHOW && boolValue
+    || directive === HIDE && !boolValue) {
     removeClass(el, 'x-hide');
   }
   else {
@@ -574,8 +580,8 @@ Link.prototype.bootstrap = function () {
   if (this.model.hasOwnProperty('$$watched')) {
     throw linkError('this model had been used for some linker, please check...');
   }
-  this.watchModel(this.model);
   _def_const_prop_(this.model, '$$watched', true);
+  this.watchModel(this.model, []);
   this.compile(this.el);
   this.render();
   this.addBehaviors();
@@ -588,11 +594,11 @@ Link.prototype.getLinkContextsFromInterpolation = function getLinkContextsFromIn
     that = this;
   if (lexer.filterIndex > -1) {
     throw linkError('{0} does not support filter for {1} , please use {2} instead',
-      'link', 'interpolation expression', 'x-bind');
+      'link', 'interpolation expression', BIND);
   }
 
   each(watches, function (watch) {
-    that.addLinkContextAndSetWatch(el, watch, 'x-bind', expr);
+    that.addLinkContextAndSetWatch(el, watch, BIND, expr);
   });
 };
 
@@ -603,7 +609,7 @@ Link.prototype.addLinkContextAndSetWatch = function addLinkContextAndSetWatch(el
   }
   this.linkContextCollection.push(linkContext);
   this.addWatchNotify(linkContext);
-  if (directive === 'x-model') {
+  if (directive === MODEL) {
     modelReactDispatch(linkContext);
   }
 };
@@ -688,31 +694,21 @@ Link.prototype.getLinkContext = function getLinkContext(el, directive, expr) {
   }
 };
 
-/**
-   * 1. get directives and build linkContext context info.
-   * 2. when it's x-model , add form ui value change listener for 2 two-way linkContext.
-   * 3. add watch fn.
-   *
-   *  */
 Link.prototype.compileDOM = function compileDOM(el) {
-  var attrs = el.attributes,
-    attrName,
+  var attrName,
     attrValue,
     that = this;
-  if (el.hasAttributes && el.hasAttributes()) {
-    each(attrs, function (attr) {
+  if (el.nodeType === 1 && el.hasAttributes()) {
+    each(el.attributes, function (attr) {
       attrName = attr.name;
       attrValue = trim(attr.value);
       if (eventDirectiveRegex.test(attrName)) {
-        // event directive
         that.getEventLinkContext(el, attrName, attrValue);
       }
       else if (directives.indexOf(attrName) > -1) {
-        // ! event directive
         that.getLinkContext(el, attrName, attrValue);
       }
     });
-
   } else if (el.nodeType === 3) {
     var expr = trim(el.textContent);
     if (expr && /\{\{[^\}]+\}\}/.test(expr)) {
@@ -723,32 +719,25 @@ Link.prototype.compileDOM = function compileDOM(el) {
 
 Link.prototype.compile = function compile(el) {
   var that = this;
-  if (el.hasAttribute && el.hasAttribute(REPEATER)) {
-    var expr = trim(el.getAttribute(REPEATER)), // var in watch
-      w = expr.split(/\s+/);
-    if (w.length === 3) {
-      this.addLinkContextAndSetWatch(el, w[2], REPEATER, expr);
-    } else {
-      throw linkError('repeat only support exr like: var in array.')
-    }
-    el.removeAttribute(REPEATER);
-    return;
-  }
-
-  if (el.hasAttribute && el.hasAttribute(VIEW)) {
-    if (!this.routeEl) {
-      this.routeEl = el;
-      el.removeAttribute(VIEW);
+  if (el.nodeType === 1) {
+    if (el.hasAttribute(REPEAT)) {
+      var expr = trim(el.getAttribute(REPEAT)), // var in watch
+        w = expr.split(/\s+/);
+      if (w.length !== 3) throw linkError('repeat only support exr like: var in array.');
+      this.addLinkContextAndSetWatch(el, w[2], REPEAT, expr);
+      el.removeAttribute(REPEAT);
       return;
     }
-    else {
-      throw linkError('a link context can only have on more than one x-view');
+
+    if (el.hasAttribute(VIEW)) {
+      if (this.routeEl) throw linkError('a link context can only have on more than one x-view');
+      el.removeAttribute(VIEW);
+      this.routeEl = el;
+      return;
     }
   }
-
   this.compileDOM(el);
-
-  each(el.childNodes, function (node) {
+  el.hasChildNodes() && each(el.childNodes, function (node) {
     that.compile(node);
   });
 };
@@ -769,7 +758,7 @@ function $eval(expr, $this) {
 function evalLinkContext(linkContext) {
   var val = $eval(linkContext.expr, linkContext.linker.model);
 
-  if (linkContext.filter && linkContext.directive === 'x-bind') {
+  if (linkContext.filter && linkContext.directive === BIND) {
     var filters = linkContext.linker.filters,
       filter = linkContext.filter;
     if (filters[filter]) {
@@ -844,34 +833,21 @@ Link.prototype.bindEventLinkContext = function bindcontext(context) {
 function LinkContext(el, watches, directive, expr, linker) {
   this.el = el;
   this.prop = watches; // string, or string array of watches
-  this.directive = directive; // one directive could have multiple watches
-  this.expr = expr; // watch or watch expr 
+  this.directive = directive;
+  this.expr = expr; 
   this.linker = linker;
 }
 
-LinkContext.create = function (el, watches, directive, expr, linker) {
-  /**
-   * watches could be string and array
-   * array: interpilation and expr
-   * array+expr: expr
-   * array+interpilation: expr
-   *  */
-  return new LinkContext(el, watches, directive, expr, linker);
-};
-
-
-/**
- * event: string , event name e.g. click 
- * fn: string , function name, function will invoke using $model context, use this to refer wrapper $model
- * fn(el) execute
- *  */
 function EventLinkContext(el, event, fn, args) {
-  // event directive format: x-on-event
   this.el = el;
   this.event = event;
-  this.fn = fn; // fn name in behaviors 
+  this.fn = fn; // fn name
   this.args = args; // arguments pass by event directive
 }
+
+LinkContext.create = function (el, watches, directive, expr, linker) {
+  return new LinkContext(el, watches, directive, expr, linker);
+};
 
 EventLinkContext.create = function (el, event, fn, args) {
   return new EventLinkContext(el, event, fn, args);
@@ -899,7 +875,6 @@ Link.prototype.defineObserver = function defineObserver(model, prop, value, prop
 };
 
 Link.prototype.watchModel = function watchModel(model, propStack) {
-  propStack = propStack || [];
   var props = Object.keys(model),
     prop,
     value,
@@ -916,7 +891,6 @@ Link.prototype.watchModel = function watchModel(model, propStack) {
     }
   });
 };
-// get watches in an expr.
 function Lexer(text) {
   this.text = text;
   this.index = 0;
@@ -925,12 +899,10 @@ function Lexer(text) {
   this.filter = null;
   this.filterIndex = -1;
   this.filterEndIndex = -1;
-  // this.tokens = []; // add position info
 }
 
 Lexer.prototype = {
   constructor: Lexer,
-
   getWatches: function () {
     while (this.index < this.len) {
       var ch = this.text[this.index];
@@ -951,7 +923,6 @@ Lexer.prototype = {
       else if (ch === '|') {
         if (this._peek() !== '|') {
           //filter sign
-          // this.filter = trim(this.text.slice(this.index + 1));
           this.filterIndex = this.index++;
           this._getFilter();
           break; // following chars don't need going on.
@@ -995,7 +966,6 @@ Lexer.prototype = {
       }
     }
     this.watches.push(watch.join(''));
-    // this.tokens.push({ index: start, watch: watch.join('') });
   },
 
   _peek: function (i) {
