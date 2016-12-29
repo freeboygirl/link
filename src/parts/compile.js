@@ -134,7 +134,7 @@ Link.prototype.compile = function compile(el) {
     if (el.hasAttribute(REPEAT)) {
       var expr = trim(el.getAttribute(REPEAT)), // var in watch
         w = expr.split(/\s+/);
-      if (w.length !== 3) throw linkError('repeat only support exr like: var in array.');
+      if (w.length !== 3) throw linkError('repeat only support expr like: var in array.');
       this.addLinkContextAndSetWatch(el, w[2], REPEAT, expr);
       el.removeAttribute(REPEAT);
       return;
