@@ -105,12 +105,6 @@ Link.prototype.getLinkContext = function getLinkContext(el, directive, expr) {
   }
 };
 
-/**
-   * 1. get directives and build linkContext context info.
-   * 2. when it's x-model , add form ui value change listener for 2 two-way linkContext.
-   * 3. add watch fn.
-   *
-   *  */
 Link.prototype.compileDOM = function compileDOM(el) {
   var attrs = el.attributes,
     attrName,
@@ -121,11 +115,9 @@ Link.prototype.compileDOM = function compileDOM(el) {
       attrName = attr.name;
       attrValue = trim(attr.value);
       if (eventDirectiveRegex.test(attrName)) {
-        // event directive
         that.getEventLinkContext(el, attrName, attrValue);
       }
       else if (directives.indexOf(attrName) > -1) {
-        // ! event directive
         that.getLinkContext(el, attrName, attrValue);
       }
     });
@@ -140,31 +132,23 @@ Link.prototype.compileDOM = function compileDOM(el) {
 
 Link.prototype.compile = function compile(el) {
   var that = this;
-  if (el.hasAttribute && el.hasAttribute(REPEATER)) {
+  if (hasAttribute(el, REPEATER)) {
     var expr = trim(el.getAttribute(REPEATER)), // var in watch
       w = expr.split(/\s+/);
-    if (w.length === 3) {
-      this.addLinkContextAndSetWatch(el, w[2], REPEATER, expr);
-    } else {
-      throw linkError('repeat only support exr like: var in array.')
-    }
+    if (w.length !== 3) throw linkError('repeat only support exr like: var in array.');
+    this.addLinkContextAndSetWatch(el, w[2], REPEATER, expr);
     el.removeAttribute(REPEATER);
     return;
   }
 
-  if (el.hasAttribute && el.hasAttribute(VIEW)) {
-    if (!this.routeEl) {
-      this.routeEl = el;
-      el.removeAttribute(VIEW);
-      return;
-    }
-    else {
-      throw linkError('a link context can only have on more than one x-view');
-    }
+  if (hasAttribute(el, VIEW)) {
+    if (this.routeEl) throw linkError('a link context can only have on more than one x-view');
+    el.removeAttribute(VIEW);
+    this.routeEl = el;
+    return;
   }
 
   this.compileDOM(el);
-
   each(el.childNodes, function (node) {
     that.compile(node);
   });
