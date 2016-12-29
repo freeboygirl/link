@@ -5,5 +5,6 @@ var DIRETIVE_RENDER_MAP = {
   'x-disabled': disabledHandler,
   'x-repeat': repeatHandler,
   'x-class': classHandler,
-  'x-model': modelHandler
+  'x-model': modelHandler,
+  'x-readonly': readonlyHandler
 };
