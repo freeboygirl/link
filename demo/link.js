@@ -35,7 +35,8 @@ var
   CLASS = 'x-class',
   DISABLED = 'x-disabled',
   VIEW = 'x-view',
-  directives = [BIND, MODEL, REPEAT, SHOW, HIDE, CLASS, DISABLED, VIEW],
+  READONLY = 'x-readonly',
+  directives = [BIND, MODEL, REPEAT, SHOW, HIDE, CLASS, DISABLED, VIEW, READONLY],
   fnRegex = /^[a-zA-Z$_]\w*$/,
   fnCallRegex = /^[a-zA-Z$_]\w*\(\s*\)$/,
   fnCallParamsRegex = /^[a-zA-Z$_]\w*\(([^\)]+)\)$/,
@@ -315,7 +316,8 @@ var DIRETIVE_RENDER_MAP = {
   'x-disabled': disabledHandler,
   'x-repeat': repeatHandler,
   'x-class': classHandler,
-  'x-model': modelHandler
+  'x-model': modelHandler,
+  'x-readonly': readonlyHandler
 };
 function modelHandler(linkContext) {
   var el = linkContext.el,
@@ -334,6 +336,14 @@ function modelHandler(linkContext) {
   }
   else {
     el.value != exprVal && (el.value = exprVal);
+  }
+}
+function readonlyHandler(linkContext) {
+  if (!!evalLinkContext(linkContext)) {
+    linkContext.el.setAttribute("readonly", "readonly");
+  }
+  else {
+    linkContext.el.removeAttribute("readonly");
   }
 }
 function makeOneClonedLinkerForRepeater(linkContext, itemData, itemIndex) {
@@ -723,7 +733,7 @@ Link.prototype.compile = function compile(el) {
     if (el.hasAttribute(REPEAT)) {
       var expr = trim(el.getAttribute(REPEAT)), // var in watch
         w = expr.split(/\s+/);
-      if (w.length !== 3) throw linkError('repeat only support exr like: var in array.');
+      if (w.length !== 3) throw linkError('repeat only support expr like: var in array.');
       this.addLinkContextAndSetWatch(el, w[2], REPEAT, expr);
       el.removeAttribute(REPEAT);
       return;

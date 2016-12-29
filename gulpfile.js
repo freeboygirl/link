@@ -64,8 +64,8 @@ function buildScripts(destFileName) {
       return $.if(isDevMode(), $.sourcemaps.write('./'));
     })
     .pipe(gulp.dest, distScriptsFolder)
-    .pipe(gulp.dest, demoScriptsFolder).call();
-    // .pipe(gulp.dest, '../frontend-cmc/link').call();
+    .pipe(gulp.dest, demoScriptsFolder)
+    .pipe(gulp.dest, '../frontend-cmc/link').call();
 };
 
 gulp.task('watch', function () {
