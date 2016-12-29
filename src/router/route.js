@@ -1,6 +1,3 @@
-/**
- * x-router based on old browser hash   
-*/
 function hash(path) {
   if (typeof path === 'undefined') {
     var href = location.href,
@@ -22,31 +19,6 @@ function replaceHash(path) {
     location.replace(href + '#' + path);
   }
 }
-
-var templateStore = Object.create(null);
-
-function loadTemplate(url, cb) {
-  var tpl = templateStore[url];
-  if (tpl) {
-    cb.call(null, tpl);
-  }
-  else {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          templateStore[url] = xhr.responseText;
-          cb.call(null, xhr.responseText);
-        }
-      }
-    };
-
-    xhr.open('GET', url, true);
-    xhr.setRequestHeader('Accept', 'text/html');
-    xhr.send(null);
-  }
-}
-
 /**
   var routes = {
     'path':{
@@ -80,7 +52,7 @@ function configRoutes(linker, routes, defaultPath) {
     var template = trim(route.template);
     if (!template) {
       if (route.templateUrl) {
-        loadTemplate(route.templateUrl, function (tpl) {
+        loadTemplate(linker.routeStore, route.templateUrl, function (tpl) {
           linkRoute(linker, route, tpl);
         });
       } else {

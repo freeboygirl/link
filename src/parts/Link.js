@@ -6,6 +6,8 @@ function Link(el, data, behaviors, routeConfig) {
   this.linkContextCollection = []; // store linkContext
   this.watchMap = Object.create(null); // stores watch and watchfn map
   this.routeEl = null; // route template string container if it exists,it is not required.
+  this.routeStore = Object.create(null);
+  this.comStore = Object.create(null);
   this.bootstrap();
 
   if (routeConfig) {

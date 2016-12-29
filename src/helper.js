@@ -178,4 +178,25 @@ function removeEventListenerHandler(el, event, func) {
   }
 }
 
+function loadTemplate(templateStore, url, cb) {
+  var tpl = templateStore[url];
+  if (tpl) {
+    cb.call(null, tpl);
+  }
+  else {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          templateStore[url] = xhr.responseText;
+          cb.call(null, xhr.responseText);
+        }
+      }
+    };
+
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Accept', 'text/html');
+    xhr.send(null);
+  }
+}
 
