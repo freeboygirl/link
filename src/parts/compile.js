@@ -132,24 +132,25 @@ Link.prototype.compileDOM = function compileDOM(el) {
 
 Link.prototype.compile = function compile(el) {
   var that = this;
-  if (hasAttribute(el, REPEATER)) {
-    var expr = trim(el.getAttribute(REPEATER)), // var in watch
-      w = expr.split(/\s+/);
-    if (w.length !== 3) throw linkError('repeat only support exr like: var in array.');
-    this.addLinkContextAndSetWatch(el, w[2], REPEATER, expr);
-    el.removeAttribute(REPEATER);
-    return;
-  }
+  if (el.nodeType === 1) {
+    if (el.hasAttribute(REPEATER)) {
+      var expr = trim(el.getAttribute(REPEATER)), // var in watch
+        w = expr.split(/\s+/);
+      if (w.length !== 3) throw linkError('repeat only support exr like: var in array.');
+      this.addLinkContextAndSetWatch(el, w[2], REPEATER, expr);
+      el.removeAttribute(REPEATER);
+      return;
+    }
 
-  if (hasAttribute(el, VIEW)) {
-    if (this.routeEl) throw linkError('a link context can only have on more than one x-view');
-    el.removeAttribute(VIEW);
-    this.routeEl = el;
-    return;
+    if (el.hasAttribute(VIEW)) {
+      if (this.routeEl) throw linkError('a link context can only have on more than one x-view');
+      el.removeAttribute(VIEW);
+      this.routeEl = el;
+      return;
+    }
   }
-
   this.compileDOM(el);
-  each(el.childNodes, function (node) {
+  el.hasChildNodes() && each(el.childNodes, function (node) {
     that.compile(node);
   });
 };

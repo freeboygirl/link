@@ -151,10 +151,6 @@ function extend(target, varArgs) {
   }
 }
 
-function hasAttribute(el, attr) {
-  return el.hasAttribute && el.hasAttribute(attr);
-}
-
 function notify(watchMap, watch, arrayChangeInfo) {
   var renders = watchMap[watch],
     len;
