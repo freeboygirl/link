@@ -1,4 +1,3 @@
-// get watches in an expr.
 function Lexer(text) {
   this.text = text;
   this.index = 0;
@@ -7,7 +6,6 @@ function Lexer(text) {
   this.filter = null;
   this.filterIndex = -1;
   this.filterEndIndex = -1;
-  // this.tokens = []; // add position info
 }
 
 Lexer.prototype = {
@@ -33,7 +31,6 @@ Lexer.prototype = {
       else if (ch === '|') {
         if (this._peek() !== '|') {
           //filter sign
-          // this.filter = trim(this.text.slice(this.index + 1));
           this.filterIndex = this.index++;
           this._getFilter();
           break; // following chars don't need going on.
@@ -77,7 +74,6 @@ Lexer.prototype = {
       }
     }
     this.watches.push(watch.join(''));
-    // this.tokens.push({ index: start, watch: watch.join('') });
   },
 
   _peek: function (i) {
