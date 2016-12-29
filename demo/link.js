@@ -36,7 +36,8 @@ var
   quoteRegx = /[\'\"]/g,
   watchStartRegex = /[a-zA-Z$_]/,
   validWatchChar = /[a-zA-Z0-9$\.]/,
-  hasOwnProperty = Object.prototype.hasOwnProperty;
+  hasOwnProperty = Object.prototype.hasOwnProperty,
+  concat = Array.prototype.concat;
 function isObject(obj) {
   return !!obj && typeof obj === 'object'
 }
@@ -877,8 +878,8 @@ EventLinkContext.create = function (el, event, fn, args) {
 };
 
 Link.prototype.defineObserver = function defineObserver(model, prop, value, propStack, isArray) {
-  var watch = getWatchByPropStack(prop, propStack),
-    that = this;
+  var that = this,
+    watch = concat.call(propStack, prop).join('.');
   if (!isArray) {
     Object.defineProperty(model, prop, {
       get: function () {
@@ -898,7 +899,6 @@ Link.prototype.defineObserver = function defineObserver(model, prop, value, prop
 };
 
 Link.prototype.watchModel = function watchModel(model, propStack) {
-  //object
   propStack = propStack || [];
   var props = Object.keys(model),
     prop,
@@ -916,17 +916,6 @@ Link.prototype.watchModel = function watchModel(model, propStack) {
     }
   });
 };
-
-function getWatchByPropStack(prop, propStack) {
-  if (propStack) {
-    propStack.push(prop);
-  }
-  else {
-    propStack = [prop];
-  }
-
-  return propStack.join('.');
-}
 // get watches in an expr.
 function Lexer(text) {
   this.text = text;

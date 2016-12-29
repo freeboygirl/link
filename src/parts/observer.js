@@ -1,6 +1,6 @@
 Link.prototype.defineObserver = function defineObserver(model, prop, value, propStack, isArray) {
-  var watch = getWatchByPropStack(prop, propStack),
-    that = this;
+  var that = this,
+    watch = concat.call(propStack, prop).join('.');
   if (!isArray) {
     Object.defineProperty(model, prop, {
       get: function () {
@@ -20,7 +20,6 @@ Link.prototype.defineObserver = function defineObserver(model, prop, value, prop
 };
 
 Link.prototype.watchModel = function watchModel(model, propStack) {
-  //object
   propStack = propStack || [];
   var props = Object.keys(model),
     prop,
@@ -38,14 +37,3 @@ Link.prototype.watchModel = function watchModel(model, propStack) {
     }
   });
 };
-
-function getWatchByPropStack(prop, propStack) {
-  if (propStack) {
-    propStack.push(prop);
-  }
-  else {
-    propStack = [prop];
-  }
-
-  return propStack.join('.');
-}

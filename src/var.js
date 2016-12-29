@@ -12,4 +12,5 @@ var
   quoteRegx = /[\'\"]/g,
   watchStartRegex = /[a-zA-Z$_]/,
   validWatchChar = /[a-zA-Z0-9$\.]/,
-  hasOwnProperty = Object.prototype.hasOwnProperty;
+  hasOwnProperty = Object.prototype.hasOwnProperty,
+  concat = Array.prototype.concat;
