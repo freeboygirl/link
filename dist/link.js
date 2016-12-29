@@ -226,6 +226,27 @@ function removeEventListenerHandler(el, event, func) {
   }
 }
 
+function loadTemplate(templateStore, url, cb) {
+  var tpl = templateStore[url];
+  if (tpl) {
+    cb.call(null, tpl);
+  }
+  else {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          templateStore[url] = xhr.responseText;
+          cb.call(null, xhr.responseText);
+        }
+      }
+    };
+
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Accept', 'text/html');
+    xhr.send(null);
+  }
+}
 
 
 function WatchedArray(watchMap, watch, arr) {
@@ -563,6 +584,8 @@ function Link(el, data, behaviors, routeConfig) {
   this.linkContextCollection = []; // store linkContext
   this.watchMap = Object.create(null); // stores watch and watchfn map
   this.routeEl = null; // route template string container if it exists,it is not required.
+  this.routeStore = Object.create(null);
+  this.comStore = Object.create(null);
   this.bootstrap();
 
   if (routeConfig) {
@@ -596,6 +619,7 @@ Link.prototype.bootstrap = function () {
   this.render();
   this.addBehaviors();
 };
+
 
 Link.prototype.getLinkContextsFromInterpolation = function getLinkContextsFromInterpolation(el, text) {
   var expr = ['"', text, '"'].join('').replace(/(\{\{)/g, '"+(').replace(/(\}\})/g, ')+"');
@@ -1075,9 +1099,6 @@ function notifyFnFactory(linkContext) {
 function renderLink(linkContext) {
   DIRETIVE_RENDER_MAP[linkContext.directive].call(null, linkContext);
 }
-/**
- * x-router based on old browser hash   
-*/
 function hash(path) {
   if (typeof path === 'undefined') {
     var href = location.href,
@@ -1099,31 +1120,6 @@ function replaceHash(path) {
     location.replace(href + '#' + path);
   }
 }
-
-var templateStore = Object.create(null);
-
-function loadTemplate(url, cb) {
-  var tpl = templateStore[url];
-  if (tpl) {
-    cb.call(null, tpl);
-  }
-  else {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          templateStore[url] = xhr.responseText;
-          cb.call(null, xhr.responseText);
-        }
-      }
-    };
-
-    xhr.open('GET', url, true);
-    xhr.setRequestHeader('Accept', 'text/html');
-    xhr.send(null);
-  }
-}
-
 /**
   var routes = {
     'path':{
@@ -1157,7 +1153,7 @@ function configRoutes(linker, routes, defaultPath) {
     var template = trim(route.template);
     if (!template) {
       if (route.templateUrl) {
-        loadTemplate(route.templateUrl, function (tpl) {
+        loadTemplate(linker.routeStore, route.templateUrl, function (tpl) {
           linkRoute(linker, route, tpl);
         });
       } else {
