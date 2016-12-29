@@ -10,7 +10,6 @@ function Lexer(text) {
 
 Lexer.prototype = {
   constructor: Lexer,
-
   getWatches: function () {
     while (this.index < this.len) {
       var ch = this.text[this.index];
