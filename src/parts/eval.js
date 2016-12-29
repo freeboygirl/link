@@ -10,7 +10,7 @@ function $eval(expr, $this) {
 function evalLinkContext(linkContext) {
   var val = $eval(linkContext.expr, linkContext.linker.model);
 
-  if (linkContext.filter && linkContext.directive === 'x-bind') {
+  if (linkContext.filter && linkContext.directive === BIND) {
     var filters = linkContext.linker.filters,
       filter = linkContext.filter;
     if (filters[filter]) {

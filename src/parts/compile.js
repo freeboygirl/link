@@ -5,11 +5,11 @@ Link.prototype.getLinkContextsFromInterpolation = function getLinkContextsFromIn
     that = this;
   if (lexer.filterIndex > -1) {
     throw linkError('{0} does not support filter for {1} , please use {2} instead',
-      'link', 'interpolation expression', 'x-bind');
+      'link', 'interpolation expression', BIND);
   }
 
   each(watches, function (watch) {
-    that.addLinkContextAndSetWatch(el, watch, 'x-bind', expr);
+    that.addLinkContextAndSetWatch(el, watch, BIND, expr);
   });
 };
 
@@ -20,7 +20,7 @@ Link.prototype.addLinkContextAndSetWatch = function addLinkContextAndSetWatch(el
   }
   this.linkContextCollection.push(linkContext);
   this.addWatchNotify(linkContext);
-  if (directive === 'x-model') {
+  if (directive === MODEL) {
     modelReactDispatch(linkContext);
   }
 };
@@ -131,12 +131,12 @@ Link.prototype.compileDOM = function compileDOM(el) {
 Link.prototype.compile = function compile(el) {
   var that = this;
   if (el.nodeType === 1) {
-    if (el.hasAttribute(REPEATER)) {
-      var expr = trim(el.getAttribute(REPEATER)), // var in watch
+    if (el.hasAttribute(REPEAT)) {
+      var expr = trim(el.getAttribute(REPEAT)), // var in watch
         w = expr.split(/\s+/);
       if (w.length !== 3) throw linkError('repeat only support exr like: var in array.');
-      this.addLinkContextAndSetWatch(el, w[2], REPEATER, expr);
-      el.removeAttribute(REPEATER);
+      this.addLinkContextAndSetWatch(el, w[2], REPEAT, expr);
+      el.removeAttribute(REPEAT);
       return;
     }
 
