@@ -94,7 +94,7 @@ function arrayRemove(arr, value) {
   var len = arr.length;
   for (var i = 0; i < len; i++) {
     if (arr[i] === value) {
-      arr.splice(i, 1);
+      arr.splice(i--, 1);
       len--;
     }
   }
