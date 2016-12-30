@@ -3,3 +3,4 @@
 /dist
 /**/*.map
 /demo/link.js
+/test/coverage

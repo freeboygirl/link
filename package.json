@@ -4,8 +4,7 @@
   "description": "a tiny mvvm ui lib",
   "main": "link.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node_modules/.bin/webpack -d --progress --colors --watch"
+    "test": "node_modules/.bin/karma start"
   },
   "repository": {
     "type": "git",
@@ -49,6 +48,16 @@
     "gulp-useref": "^3.0.0",
     "gulp-util": "^3.0.6",
     "gulp-watch": "^4.2.4",
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.3.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-coverage": "^1.1.1",
+    "karma-firefox-launcher": "^1.0.0",
+    "karma-ie-launcher": "^1.0.0",
+    "karma-jasmine": "^1.1.0",
+    "karma-opera-launcher": "^1.0.0",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "karma-safari-launcher": "^1.0.0",
     "lazypipe": "^0.2.4",
     "nodemon": "^1.11.0",
     "open": "0.0.5",
