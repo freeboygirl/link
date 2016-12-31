@@ -1,4 +1,4 @@
-describe("helper test suite", function () {
+describe("bind test suite", function () {
   var el = document.createElement('div');
 
   describe('x-bind', function () {

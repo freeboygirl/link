@@ -1,4 +1,4 @@
-describe("helper test suite", function () {
+describe("show hide test suite", function () {
   var el = document.createElement('div');
   describe('x-show', function () {
     afterEach(function () {
