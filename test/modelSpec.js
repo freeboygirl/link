@@ -43,6 +43,22 @@ describe("model test suite", function () {
       expect(el.children[1].checked).toBe(true);
     });
 
+    it("checkbox", function () {
+      var tpl = '<input type="checkbox" x-model="rem" id="rem"><label for="rem">remember me</label>';
+      el.innerHTML = tpl;
+      var model = { rem: true };
+      link({ el: el, model: model });
+      expect(el.firstChild.checked).toBe(true);
+    });
+
+    it("checkbox", function () {
+      var tpl = '<input type="checkbox" x-model="rem" id="rem"><label for="rem">remember me</label>';
+      el.innerHTML = tpl;
+      var model = { rem: false };
+      link({ el: el, model: model });
+      expect(el.firstChild.checked).toBe(false);
+    });
+
   });
 
 });
