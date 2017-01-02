@@ -1,6 +1,6 @@
 describe("model test suite", function () {
   var el = document.createElement('div');
-  function createEvent(type) {
+  function raiseEvent(el, type) {
     var event;
     if ('Event' in window) {
       event = new Event(type);
@@ -9,7 +9,9 @@ describe("model test suite", function () {
       event = document.createEvent('Event');
       event.initEvent(type, true, true);
     }
-    return event;
+    if (el.dispatchEvent) {
+      el.dispatchEvent(event);
+    }
   }
   describe('x-model', function () {
     afterEach(function () {
@@ -23,8 +25,7 @@ describe("model test suite", function () {
       expect(el.firstChild.value).toBe('wgc');
 
       el.firstChild.value = 'leon';
-      var keyup = createEvent('keyup');
-      el.firstChild.dispatchEvent(keyup);
+      raiseEvent(el.firstChild, 'keyup');
       expect(el.firstChild.value).toBe('leon');
     });
 
@@ -36,8 +37,7 @@ describe("model test suite", function () {
       expect(el.children[0].checked).toBe(true);
       expect(el.children[1].checked).toBe(false);
 
-      var click = createEvent('click');
-      el.children[1].dispatchEvent(click);
+      raiseEvent(el.children[1], 'click');
       expect(model.sex === 'female').toBe(true);
       expect(el.children[0].checked).toBe(false);
       expect(el.children[1].checked).toBe(true);
